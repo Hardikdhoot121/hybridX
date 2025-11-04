@@ -1,0 +1,1 @@
+// this file contains the navbar layout with all the functional buttons
