@@ -1,15 +1,18 @@
 import React from "react";
+import { IoPersonCircle } from "react-icons/io5";
+import { AiFillThunderbolt } from "react-icons/ai";
+
 const Home = () => {
   return (
-    <div className="bg-[#15191e] min-h-screen">
+    <div className="bg-[#15191e] p-3 min-h-screen">
       {/* Top Banner */}
-      <div className="mx-auto mt-2 rounded-md flex items-center justify-center bg-[#3abbf5] text-white text-center font-display h-10 w-[370px]">
+      <div className="mx-auto pt-2 rounded-md flex items-center justify-center bg-[#3abbf5] text-white text-center font-display h-10 w-[370px]">
         Premium Test Series Sale Ends Soon, Get it Now
       </div>
 
       {/* Navbar */}
       <nav className="flex items-center justify-center px-8 py-4 text-white font-display">
-        <img className="rounded-1xl w-9 h-9" src="images/Hybrid Logo.jpg" alt="Hybrid Logo" />
+        <img className="rounded-1xl w-30 h-20" src="../src/images/hybrid_logo.jpg" alt="Hybrid Logo" />
         <ul className="flex space-x-7 ml-[100px] mr-[100px]">
           <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Home</li>
           <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Tests</li>
@@ -17,13 +20,13 @@ const Home = () => {
           <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Prices</li>
           <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Contact Us</li>
         </ul>
-        <img className="rounded-1xl w-9 h-9" src="images/Avatar.png" alt="User Avatar" />
+        <IoPersonCircle className="w-9 h-9" />
       </nav>
 
       {/* Hero Section */}
       <div className="bg-[#fefeff] mx-auto mt-8 rounded-md flex items-center justify-center text-center font-display h-[150px] w-[750px] space-x-7">
         <div>
-          <img src="images/Icon Container.png" alt="Icon" />
+          <AiFillThunderbolt className="w-10 h-10 text-black-500" />
         </div>
         <div className="text-4xl flex justify-center space-x-2 font-bold">
           <span className="text-[#3abbf5]">Unlock</span>
@@ -48,32 +51,32 @@ const Home = () => {
         </button>
       </div>
 
-      <div className="flex justify-center mt-20">
-        <img src="images/Banner.png" alt="Banner" />
-      </div>
+      <div className="flex justify-center mt-10">
+        <img src="../src/images/banner.jpeg" alt="Banner" className="h-50 w-100" />
+      </div> 
 
       {/* Chapter Section */}
-      <div className="mt-40 flex justify-center">
+      <div className="mt-20 flex justify-center">
         <span className="text-5xl font-semibold text-white">Chapter Wise PYQs</span>
       </div>
 
-      <div className="flex justify-center mt-10">
-        <div className="flex justify-center space-x-12 py-10 flex-wrap">
+      <div className="flex justify-center mt-3">
+        <div className="flex justify-center space-x-12 py-7 flex-wrap">
           {["JEE Mains", "JEE Advance", "Hybrid Test"].map((title) => (
             <div
               key={title}
               className="relative flex h-[140px] w-[320px] justify-center items-center rounded-xl bg-[#272E36] text-white text-3xl font-semibold shadow-lg"
             >
               <span>{title}</span>
-              <div className="absolute bottom-0 left-0 w-full h-[6px] bg-[#3BBAF4] rounded-b-xl"></div>
+              <div className="absolute bottom-0 left-0 w-full h-1.5 bg-[#3BBAF4] rounded-b-xl"></div>
             </div>
           ))}
         </div>
       </div>
 
       {/* Pricing Header */}
-      <div className="mt-40 flex justify-center text-5xl">
-        <span className="font-semibold text-white mb-30">Our Pricing</span>
+      <div className="mt-30 flex justify-center text-5xl">
+        <span className="font-semibold text-white mb-20">Our Pricing</span>
       </div>
 
       {/* Features Section */}
@@ -86,10 +89,10 @@ const Home = () => {
               ["Topic-Wise Tests", "Strengthen every chapter with targeted mini-tests and full-length mocks."],
             ].map(([title, desc], index) => (
               <div key={index} className="p-4 md:w-1/3 flex flex-col text-center items-center">
-                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 flex-shrink-0">
+                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
                   <span className="text-xl">{index + 1}</span>
                 </div>
-                <div className="flex-grow">
+                <div className="grow">
                   <h2 className="text-white text-lg title-font font-medium mb-3">{title}</h2>
                   <p className="leading-relaxed text-base">{desc}</p>
                 </div>
@@ -109,12 +112,12 @@ const Home = () => {
             JOIN NOW
           </button>
 
-          <div className="absolute bottom-0 left-0 w-full h-[8px] bg-[#42BA96] rounded-b-2xl"></div>
+          <div className="absolute bottom-0 left-0 w-full h-2 bg-[#42BA96] rounded-b-2xl"></div>
         </div>
       </div>
 
       {/* FAQ */}
-      <div className="mt-40 flex justify-center">
+      <div className="mt-30 flex justify-center">
         <span className="text-5xl font-semibold text-white">Frequently Asked Questions</span>
       </div>
 
@@ -126,11 +129,12 @@ const Home = () => {
       ].map((faq, index) => (
         <div
           key={index}
-          className="mx-auto mt-5 rounded-md flex items-center bg-[#272E36] text-white text-center font-display h-15 w-[370px]"
+          className="mx-auto mt-5 rounded-md flex items-center bg-[#272E36] text-white text-center font-display h-15 w-[70%]"
         >
           <span className="ml-5">{faq}</span>
         </div>
       ))}
+      <div className="mb-10"></div>
     </div>
   );
 };
