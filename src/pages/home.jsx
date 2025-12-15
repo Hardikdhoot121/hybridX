@@ -1,28 +1,13 @@
 import React from "react";
 import { IoPersonCircle } from "react-icons/io5";
 import { AiFillThunderbolt } from "react-icons/ai";
-
+import Navbar from "./navbar";
+import Footer from "./footer";
 const Home = () => {
   return (
+    <>
     <div className="bg-[#15191e] p-3 min-h-screen">
-      {/* Top Banner */}
-      <div className="mx-auto pt-2 rounded-md flex items-center justify-center bg-[#3abbf5] text-white text-center font-display h-10 w-[370px]">
-        Premium Test Series Sale Ends Soon, Get it Now
-      </div>
-
-      {/* Navbar */}
-      <nav className="flex items-center justify-center px-8 py-4 text-white font-display">
-        <img className="rounded-1xl w-30 h-20" src="../src/images/hybrid_logo.jpg" alt="Hybrid Logo" />
-        <ul className="flex space-x-7 ml-[100px] mr-[100px]">
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Home</li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Tests</li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Leaderboard</li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Prices</li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Contact Us</li>
-        </ul>
-        <IoPersonCircle className="w-9 h-9" />
-      </nav>
-
+      <Navbar />
       {/* Hero Section */}
       <div className="bg-[#fefeff] mx-auto mt-8 rounded-md flex items-center justify-center text-center font-display h-[150px] w-[750px] space-x-7">
         <div>
@@ -80,7 +65,7 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <section className="text-gray-600 body-font">
+      <section class="text-gray-600 body-font mt-10">
         <div className="container px-5 py-3 mx-auto">
           <div className="flex flex-wrap -mx-4 -mt-4 space-y-6 md:space-y-0">
             {[
@@ -100,7 +85,41 @@ const Home = () => {
             ))}
           </div>
         </div>
-      </section>
+
+      <div class="container px-5 py-3 mx-auto">
+        <div class="flex flex-wrap sm:-m-4 -mx-4  -mt-4 md:space-y-0 space-y-6">
+          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 hrink-0">
+              <a class="text-xl">4</a>
+            </div>
+            <div class="grow">
+              <h2 class="text-white text-lg title-font font-medium ">Expert-Curated Questions</h2>
+              <p class="leading-relaxed text-base">Designed by top educators with deep understanding of exam trends.</p>
+            </div>
+          </div>
+          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
+              <a class="text-xl">5</a>
+            </div>
+            <div class="grow">
+              <h2 class="text-white text-lg title-font font-medium ">Affordable Brilliance</h2>
+              <p class="leading-relaxed text-base">Premium-level content and analytics — all at just ₹5990.</p>
+              
+            </div>
+          </div>
+          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
+              <a class="text-xl">6</a>
+            </div>
+            <div class="grow">
+              <h2 class="text-white text-lg title-font font-medium ">Rank Comparison</h2>
+              <p class="leading-relaxed text-base">Compete with thousands of students and see where you truly stand.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+     </section>
+  
 
       {/* Price Card */}
       <div className="flex justify-center items-center mt-10 mb-16">
@@ -136,6 +155,8 @@ const Home = () => {
       ))}
       <div className="mb-10"></div>
     </div>
+    <Footer />
+      </>
   );
 };
 
