@@ -119,27 +119,7 @@ const Home = () => {
         </div>
       </div>
      </section>
-      {/* <section className="text-gray-600 body-font">
-        <div className="container px-5 py-3 mx-auto">
-          <div className="flex flex-wrap -mx-4 -mt-4 space-y-6 md:space-y-0">
-            {[
-              ["Real Exam Simulation", "Experience the exact pattern, difficulty, and timing of the actual exam."],
-              ["Smart Performance Insights", "Get AI-based analysis to track your growth and improve faster."],
-              ["Topic-Wise Tests", "Strengthen every chapter with targeted mini-tests and full-length mocks."],
-            ].map(([title, desc], index) => (
-              <div key={index} className="p-4 md:w-1/3 flex flex-col text-center items-center">
-                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-                  <span className="text-xl">{index + 1}</span>
-                </div>
-                <div className="grow">
-                  <h2 className="text-white text-lg title-font font-medium mb-3">{title}</h2>
-                  <p className="leading-relaxed text-base">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
+  
 
       {/* Price Card */}
       <div className="flex justify-center items-center mt-10 mb-16">
