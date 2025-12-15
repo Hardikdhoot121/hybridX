@@ -17,7 +17,6 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/pyq" element={<PYQ />} />
-
       </Routes>
     </Router>
   </>);
