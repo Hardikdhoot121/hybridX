@@ -6,6 +6,8 @@ import Navbar from "./pages/navbar";
 import Test from "./pages/test";
 import Leaderboard from "./pages/leaderboard";
 import PYQ from "./pages/pyq"
+import Login from "./pages/login";
+import Signup from "./pages/signup";  
 function App() {
   // react routing
 
@@ -17,6 +19,8 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/pyq" element={<PYQ />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
       </Routes>
     </Router>
