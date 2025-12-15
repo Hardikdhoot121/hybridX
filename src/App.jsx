@@ -3,14 +3,14 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/home.jsx';
 import TestOverview from './pages/test.jsx';
 import DppResult from './pages/dppResult.jsx';
-import CodePushBar from '../CodePushBar.jsx';
+import CodePushBar from './components/CodePushBar.jsx';
 
 const App = () => {
   const [pushStatus, setPushStatus] = useState('idle');
   const [pushMessage, setPushMessage] = useState('');
 
   const handleCodePush = () => {
-    if (pushStatus === 'pushing') return; // Prevent multiple pushes
+    if (pushStatus === 'pushing') return; 
     
     setPushStatus('pushing');
     setPushMessage('Pushing code...');
@@ -33,7 +33,7 @@ const App = () => {
     setPushMessage('');
   };
 
-  // Keyboard shortcut: Ctrl/Cmd + Shift + P to trigger push
+  
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'P') {
