@@ -8,6 +8,12 @@ import Leaderboard from "./pages/leaderboard";
 import PYQ from "./pages/pyq"
 import Login from "./pages/login";
 import Signup from "./pages/signup";  
+import Mains from "./pages/Mains";
+import Chemistry from "./pages/chemistrymains";
+import Physics from "./pages/physicsmains";
+import MainsPYQ from "./pages/mainsPYQ";
+import Maths from "./pages/mathematicsmains";
+
 function App() {
   // react routing
 
@@ -26,7 +32,7 @@ function App() {
         <Route path="/jeemains/chemistry" element={<Chemistry />} />
         <Route path="/jeemains/maths" element={<Maths />} />
         <Route path="/jeemains/physics" element={<Physics />} />
-        <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
+        <Route path="/jeemainspyq/:subject/:chapter" element={<MainsPYQ />} />
         </Routes>
 
     </Router>
