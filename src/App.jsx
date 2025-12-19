@@ -8,6 +8,11 @@ import Leaderboard from "./pages/leaderboard";
 import PYQ from "./pages/pyq"
 import Login from "./pages/login";
 import Signup from "./pages/signup";  
+import Mains from "./pages/Mains";
+import Chemistry from "./pages/chemistrymains";
+import Physics from "./pages/physicsmains";
+import Maths from "./pages/mathematicsmains";
+import MainsPYQ from"./pages/MainsPYQ";
 function App() {
   // react routing
 
