@@ -15,7 +15,6 @@ const Home = () => {
     <>
     <div className="bg-[#15191e] p-3 min-h-screen">
       <Navbar />
-      {/* Hero Section */}
       <div className="bg-[#fefeff] mx-auto mt-8 rounded-md flex items-center justify-center text-center font-display h-[150px] w-[750px] space-x-7">
         <div>
           <AiFillThunderbolt className="w-10 h-10 text-black-500" />
@@ -44,10 +43,9 @@ const Home = () => {
       </div>
 
       <div className="flex justify-center mt-10">
-        <img src="../src/images/banner.jpeg" alt="Banner" className="h-50 w-100" />
+        <img src="/src/images/banner.jpeg" alt="Banner" style={{ height: '200px', width: 'auto' }} />
       </div> 
 
-      {/* Chapter Section */}
       <div className="mt-20 flex justify-center">
         <span className="text-5xl font-semibold text-white">Chapter Wise PYQs</span>
       </div>
@@ -68,105 +66,8 @@ const Home = () => {
           ))}
         </div>
       </div>
-
-      {/* Pricing Header */}
-      <div className="mt-30 flex justify-center text-5xl">
-        <span className="font-semibold text-white mb-20">Our Pricing</span>
-      </div>
-
-      {/* Features Section */}
-      <section class="text-gray-600 body-font mt-10">
-        <div className="container px-5 py-3 mx-auto">
-          <div className="flex flex-wrap -mx-4 -mt-4 space-y-6 md:space-y-0">
-            {[
-              ["Real Exam Simulation", "Experience the exact pattern, difficulty, and timing of the actual exam."],
-              ["Smart Performance Insights", "Get AI-based analysis to track your growth and improve faster."],
-              ["Topic-Wise Tests", "Strengthen every chapter with targeted mini-tests and full-length mocks."],
-            ].map(([title, desc], index) => (
-              <div key={index} className="p-4 md:w-1/3 flex flex-col text-center items-center">
-                <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-                  <span className="text-xl">{index + 1}</span>
-                </div>
-                <div className="grow">
-                  <h2 className="text-white text-lg title-font font-medium mb-3">{title}</h2>
-                  <p className="leading-relaxed text-base">{desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-      <div class="container px-5 py-3 mx-auto">
-        <div class="flex flex-wrap sm:-m-4 -mx-4  -mt-4 md:space-y-0 space-y-6">
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 hrink-0">
-              <a class="text-xl">4</a>
-            </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Expert-Curated Questions</h2>
-              <p class="leading-relaxed text-base">Designed by top educators with deep understanding of exam trends.</p>
-            </div>
-          </div>
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-              <a class="text-xl">5</a>
-            </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Affordable Brilliance</h2>
-              <p class="leading-relaxed text-base">Premium-level content and analytics — all at just ₹5990.</p>
-              
-            </div>
-          </div>
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-              <a class="text-xl">6</a>
-            </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Rank Comparison</h2>
-              <p class="leading-relaxed text-base">Compete with thousands of students and see where you truly stand.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-     </section>
-  
-
-      {/* Price Card */}
-      <div className="flex justify-center items-center mt-10 mb-16">
-        <div className="relative bg-[#1c2229] text-white w-[420px] h-[200px] rounded-2xl shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex flex-col justify-center items-center">
-          <p className="text-gray-400 line-through text-xl font-semibold mb-1">₹7,990</p>
-          <p className="text-4xl font-extrabold mb-6">₹5,990</p>
-
-          <button className="bg-[#42BA96] hover:bg-[#2ea67f] text-white font-bold py-3 px-10 rounded-xl text-lg shadow-md">
-            JOIN NOW
-          </button>
-
-          <div className="absolute bottom-0 left-0 w-full h-2 bg-[#42BA96] rounded-b-2xl"></div>
-        </div>
-      </div>
-
-      {/* FAQ */}
-      <div className="mt-30 flex justify-center">
-        <span className="text-5xl font-semibold text-white">Frequently Asked Questions</span>
-      </div>
-
-      {[
-        "Who is eligible for this course?",
-        "What about the questions? Will I be required to do something else?",
-        "Why are Hybrid online test series best for IIT JEE exam Preparation?",
-        "Does the Hybrid IIT JEE test series provide solutions as well?",
-      ].map((faq, index) => (
-        <div
-          key={index}
-          className="mx-auto mt-5 rounded-md flex items-center bg-[#272E36] text-white text-center font-display h-15 w-[70%]"
-        >
-          <span className="ml-5">{faq}</span>
-        </div>
-      ))}
-      <div className="mb-10"></div>
     </div>
-    <Footer />
-      </>
+    </>
   );
 };
 

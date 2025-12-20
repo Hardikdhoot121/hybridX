@@ -9,17 +9,14 @@ export default function Physics() {
 
   const Data = Array.isArray(rawData) ? rawData : rawData.default;
 
-  // 🔍 FILTER physics QUESTIONS
   const physicsQuestions = Data.filter(
     (q) => q.subject?.toLowerCase() === "physics"
   );
 
-  // 🧠 GET UNIQUE CHAPTERS
   const chapters = [
     ...new Set(physicsQuestions.map((q) => q.chapter))
   ];
 
-  // 🪵 DEBUG (IMPORTANT — CHECK CONSOLE)
   console.log("Total questions:", Data.length);
   console.log("physics questions:", physicsQuestions.length);
   console.log("Chapters:", chapters);

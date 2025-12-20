@@ -1,30 +1,27 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import ContactUs from "./pages/contactUs";
 import Navbar from "./pages/navbar";
 import Test from "./pages/test";
-import Leaderboard from "./pages/leaderboard";
-import PYQ from "./pages/pyq"
+import PYQ from "./pages/pyq";
 import Login from "./pages/login";
-import Signup from "./pages/signup";  
+import Signup from "./pages/signup";
 import Mains from "./pages/Mains";
 import Chemistry from "./pages/chemistrymains";
 import Physics from "./pages/physicsmains";
 import MainsPYQ from "./pages/mainsPYQ";
 import Maths from "./pages/mathematicsmains";
+import Dashboard from "./pages/dashboard";
+import Overview from "./pages/overview";
+import DppResult from "./pages/dppResult";
 
 function App() {
-  // react routing
-
   return (
-  <>
-    <Router>
+    <>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact_us" element={<ContactUs />} />
         <Route path="/test" element={<Test />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/pyq" element={<PYQ />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -33,10 +30,13 @@ function App() {
         <Route path="/jeemains/maths" element={<Maths />} />
         <Route path="/jeemains/physics" element={<Physics />} />
         <Route path="/jeemainspyq/:subject/:chapter" element={<MainsPYQ />} />
-        </Routes>
-
-    </Router>
-  </>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/overview" element={<Overview />} />
+        <Route path="/dpp/:id" element={<DppResult />} />
+        <Route path="/navbar" element={<Navbar />} />
+      </Routes>
+    </>
   );
 }
 export default App;
+
