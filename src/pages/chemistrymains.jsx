@@ -9,17 +9,14 @@ export default function Chemistry() {
 
   const Data = Array.isArray(rawData) ? rawData : rawData.default;
 
-  // 🔍 FILTER CHEMISTRY QUESTIONS
   const chemistryQuestions = Data.filter(
     (q) => q.subject?.toLowerCase() === "chemistry"
   );
 
-  // 🧠 GET UNIQUE CHAPTERS
   const chapters = [
     ...new Set(chemistryQuestions.map((q) => q.chapter))
   ];
 
-  // 🪵 DEBUG (IMPORTANT — CHECK CONSOLE)
   console.log("Total questions:", Data.length);
   console.log("Chemistry questions:", chemistryQuestions.length);
   console.log("Chapters:", chapters);

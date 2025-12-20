@@ -68,7 +68,6 @@ function Login() {
         >
           <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
 
-          {/* Email */}
           <label className="text-white">Email</label>
           <input
             name="email"
@@ -79,7 +78,6 @@ function Login() {
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
-          {/* Password */}
           <label className="text-white">Password</label>
           <input
             name="password"

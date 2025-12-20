@@ -15,7 +15,6 @@ const Home = () => {
     <>
     <div className="bg-[#15191e] p-3 min-h-screen">
       <Navbar />
-      {/* Hero Section */}
       <div className="bg-[#fefeff] mx-auto mt-8 rounded-md flex items-center justify-center text-center font-display h-[150px] w-[750px] space-x-7">
         <div>
           <AiFillThunderbolt className="w-10 h-10 text-black-500" />
@@ -44,10 +43,9 @@ const Home = () => {
       </div>
 
       <div className="flex justify-center mt-10">
-        <img src="../src/images/banner.jpeg" alt="Banner" className="h-50 w-100" />
+        <img src="/src/images/banner.jpeg" alt="Banner" style={{ height: '200px', width: 'auto' }} />
       </div> 
 
-      {/* Chapter Section */}
       <div className="mt-20 flex justify-center">
         <span className="text-5xl font-semibold text-white">Chapter Wise PYQs</span>
       </div>

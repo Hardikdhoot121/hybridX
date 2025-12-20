@@ -1,4 +1,3 @@
-// Overview page - Test Analysis
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Trophy, Search } from "lucide-react";
@@ -8,13 +7,10 @@ const Overview = () => {
   const location = useLocation();
   const testInfo = location.state?.testData;
 
-  // Check if it's a minor test (only physics)
   const isMinorTest = testInfo?.name?.toLowerCase().includes("minor");
 
-  // Dummy data for test analysis - different for minor vs major tests
   const getTestData = () => {
     if (isMinorTest) {
-      // Physics Minor Test - only physics marks out of 100
       return {
         overallScore: {
           total: 52,
@@ -48,7 +44,6 @@ const Overview = () => {
         },
       };
     } else {
-      // Major tests - all subjects
       return {
         overallScore: {
           total: 135,
@@ -95,7 +90,6 @@ const Overview = () => {
   return (
     <div className="min-h-screen bg-[#050816] text-white">
       <div className="max-w-7xl mx-auto px-10 py-8">
-        {/* Back button */}
         <button
           onClick={handleBack}
           className="mb-6 flex h-10 w-10 items-center justify-center rounded-full border border-[#2b3647] bg-[#0b1220] hover:bg-[#111827] transition"
@@ -103,12 +97,9 @@ const Overview = () => {
           <span className="text-xl">←</span>
         </button>
 
-        {/* Page Title */}
         <h1 className="text-3xl font-semibold mb-8">Overview</h1>
 
-        {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* Overall Score Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 opacity-10">
               <Trophy className="w-32 h-32 text-gray-400" />
@@ -147,7 +138,6 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Predicted Percentile Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 opacity-10">
               <Search className="w-32 h-32 text-gray-400" />
@@ -164,9 +154,7 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Bottom Row - 3 cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          {/* QS Attempted Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">QS Attempted</h2>
             <div className="flex items-baseline">
@@ -179,7 +167,6 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Accuracy Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Accuracy</h2>
             <div className="flex items-baseline">
@@ -189,7 +176,6 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Positive Score Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Positive Score</h2>
             <div className="flex items-baseline">
@@ -203,9 +189,7 @@ const Overview = () => {
           </div>
         </div>
 
-        {/* Bottom Row - 3 more cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Marks Lost Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Marks Lost</h2>
             <div className="flex items-baseline">
@@ -218,7 +202,6 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Time Taken Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Time Taken</h2>
             <div className="flex items-baseline">
@@ -231,7 +214,6 @@ const Overview = () => {
             </div>
           </div>
 
-          {/* Top Marks Obtained Card */}
           <div className="rounded-2xl bg-[#0b1220] border border-[#1f2937] p-6 shadow-lg">
             <h2 className="text-lg font-semibold mb-4">Top Marks Obtained</h2>
             <div className="flex items-baseline">

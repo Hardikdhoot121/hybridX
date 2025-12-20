@@ -63,21 +63,19 @@ function Signup() {
         <form className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg" onSubmit={handleSignup}>
           <h1 className="text-2xl font-bold text-white mb-6">Sign Up</h1>
 
-          {/* Name */}
           <label className="text-white">Name</label>
           <input
-            name="name"                 // ✅ IMPORTANT
-            value={signupInfo.name}      // ✅ controlled input
+            name="name"
+            value={signupInfo.name}
             onChange={handleChange}
             type="text"
             placeholder="Name"
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
-          {/* Email */}
           <label className="text-white">Email</label>
           <input
-            name="email"                // ✅ IMPORTANT
+            name="email"
             value={signupInfo.email}
             onChange={handleChange}
             type="email"
@@ -85,10 +83,9 @@ function Signup() {
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
-          {/* Password */}
           <label className="text-white">Password</label>
           <input
-            name="password"             // ✅ IMPORTANT
+            name="password"
             value={signupInfo.password}
             onChange={handleChange}
             type="password"

@@ -28,13 +28,10 @@ function PYQ() {
         if (!text) return text;
 
         return text
-            // \buildrel {X} \over \longrightarrow  →  \xrightarrow{X}
             .replace(
                 /\\buildrel\s*\{([^}]*)\}\s*\\over\s*\\longrightarrow/g,
                 '\\xrightarrow{$1}'
             )
-
-            // Mg / ether style arrows
             .replace(
                 /\\mathrel\s*\{\\mathop\{\\kern0pt\\longrightarrow\}\\limits_\{([^}]*)\}\^\{([^}]*)\}\}/g,
                 '\\xrightarrow[$1]{$2}'

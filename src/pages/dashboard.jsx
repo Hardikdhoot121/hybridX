@@ -15,20 +15,16 @@ const Dashboard = () => {
   const [taskInput, setTaskInput] = useState('');
   const [editingTaskId, setEditingTaskId] = useState(null);
 
-  // Calendar logic
   const calendarData = useMemo(() => {
-    // Adjust first day: Monday = 0, Sunday = 6
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-    const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Convert Sunday=0 to Sunday=6, others shift by 1
+    const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const days = [];
     
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(null);
     }
     
-    // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
       const today = new Date();
@@ -40,7 +36,6 @@ const Dashboard = () => {
       days.push({ day, status, isToday });
     }
     
-    // Fill remaining cells to complete the last week (if needed)
     const remainingCells = 7 - (days.length % 7);
     if (remainingCells < 7) {
       for (let i = 0; i < remainingCells; i++) {
@@ -102,14 +97,12 @@ const Dashboard = () => {
   const handleSaveTask = () => {
     if (taskInput.trim()) {
       if (editingTaskId) {
-        // Edit existing task
         setTasks(tasks.map(task => 
           task.id === editingTaskId 
             ? { ...task, title: taskInput.trim() }
             : task
         ));
       } else {
-        // Add new task
         const newTask = {
           id: `task-${Date.now()}`,
           title: taskInput.trim(),
@@ -142,9 +135,7 @@ const Dashboard = () => {
   return (
     <div className="page">
       <div className="dashboard-grid">
-        {/* LEFT PANEL */}
         <div className="left-panel">
-          {/* Back Button */}
           <button
             onClick={() => navigate('/')}
             className="icon-button"
@@ -153,7 +144,6 @@ const Dashboard = () => {
             <ArrowLeft size={18} />
           </button>
 
-          {/* Daily Goal Card */}
           <div className="card goal-card">
             <div className="card-header">
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Daily Goal</h3>
@@ -180,7 +170,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Attendance Calendar */}
           <div className="card calendar-card">
             <h4 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600 }}>Attendance</h4>
             <div className="calendar-header">
@@ -236,7 +225,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Tasks Section */}
           <div className="card tasks-card">
             <h4 style={{ marginBottom: '12px', fontSize: '18px', fontWeight: 600 }}>Tasks</h4>
             <div className="tasks-list">
@@ -271,9 +259,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* RIGHT PANEL */}
         <div className="right-panel">
-          {/* Test Analysis Section */}
           <div className="section-block">
             <div className="section-header">
               <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>Test Analysis</h3>
@@ -306,7 +292,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* DPP Analysis Section */}
           <div className="section-block">
             <div className="section-header">
               <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>DPP Analysis</h3>
@@ -347,7 +332,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Daily Goal Modal */}
       {showGoalModal && (
         <div className="modal-backdrop" onClick={handleCancelGoal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -374,7 +358,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Create/Edit Task Modal */}
       {showTaskModal && (
         <div className="modal-backdrop" onClick={handleCancelTask}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
