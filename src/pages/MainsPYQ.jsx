@@ -10,42 +10,27 @@ import Footer from "./footer";
 function MainsPYQ() {
   const { subject, chapter } = useParams();
 
-  // ---------------- STATE ----------------
   const [data, setData] = useState([]);
   const [currIndex, setcurrIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
 
-  // ---------------- CLEAN BROKEN HTML ----------------
   const cleanHTML = (html) => {
   if (!html) return html;
 
   return html
-    // remove inline styles
     .replace(/style\s*=\s*["'][^"']*["']/gi, "")
-
-    // remove align attributes
     .replace(/align\s*=\s*["']?(right|left|center)["']?/gi, "")
-
-    // 🔥 REMOVE TABLE STRUCTURE BUT KEEP TEXT INLINE
     .replace(/<\/?table[^>]*>/gi, " ")
     .replace(/<\/?tr[^>]*>/gi, " ")
     .replace(/<\/?td[^>]*>/gi, " ")
-
-    // 🔥 REMOVE EMPTY TAGS
     .replace(/<p>\s*<\/p>/gi, "")
     .replace(/<div>\s*<\/div>/gi, "")
-
-    // normalize spaces
     .replace(/&nbsp;/gi, " ")
     .replace(/\s{2,}/g, " ")
-
-    // 🔥 ENSURE INLINE FLOW
     .trim();
 };
 
-
-  // ---------------- RENDER QUESTION ----------------
   const renderQuestion = (text) => {
     if (!text) return null;
 
@@ -63,7 +48,6 @@ function MainsPYQ() {
     );
   };
 
-  // ---------------- FIX LATEX ----------------
   const fixLatex = (text) => {
     if (!text) return text;
 
@@ -78,7 +62,6 @@ function MainsPYQ() {
       );
   };
 
-  // ---------------- LOAD FILTERED DATA ----------------
   useEffect(() => {
     const filtered = Data.filter((q) => {
       if (!q.subject || !q.chapter) return false;
@@ -108,7 +91,6 @@ function MainsPYQ() {
     );
   }
 
-  // ---------------- CURRENT QUESTION ----------------
   const currVal = data[currIndex];
   const currOptions = currVal.options;
 
@@ -119,20 +101,17 @@ function MainsPYQ() {
   const formatChapterTitle = (slug) =>
     slug.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
-  // ---------------- UI ----------------
   return (
     <>
       <div className="bg-[#15191E] text-white w-full min-h-screen">
         <Navbar />
 
-        {/* HEADER */}
         <div className="flex justify-center text-center font-bold">
           <p className="mt-10">
             JEE MAINS — {formatChapterTitle(chapter)}
           </p>
         </div>
 
-        {/* QUESTION CARD */}
         <div className="bg-[#272E36] rounded-xl p-6 m-5 mx-auto w-[70%] mt-10">
           <div className="flex justify-between font-medium opacity-75">
             <p>Question {currIndex + 1}</p>
@@ -146,7 +125,6 @@ function MainsPYQ() {
           </div>
         </div>
 
-        {/* OPTIONS */}
         <div className="grid grid-cols-2 gap-4 w-[70%] mx-auto">
           {currOptions.map((opt, i) => {
             let border = "border";
@@ -178,10 +156,8 @@ function MainsPYQ() {
           })}
         </div>
 
-        {/* SPACER */}
         <div className="h-60 bg-[#15191E]" />
 
-        {/* BOTTOM NAV */}
         <div className="fixed bottom-0 left-0 right-0 bg-[#15191E] py-5">
           <div className="mx-auto w-[70%] flex justify-around">
             <button
