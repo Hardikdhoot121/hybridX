@@ -6,13 +6,19 @@ import Navbar from "./pages/navbar";
 import Test from "./pages/test";
 import Leaderboard from "./pages/leaderboard";
 import PYQ from "./pages/pyq"
-import signup from "./pages/signup"
-import login from "./pages/login"
+import Login from "./pages/login";
+import Signup from "./pages/signup";  
+import Mains from "./pages/Mains";
+import Chemistry from "./pages/chemistrymains";
+import Physics from "./pages/physicsmains";
+import MainsPYQ from "./pages/mainsPYQ";
+import Maths from "./pages/mathematicsmains";
 
 function App() {
   // react routing
 
-  return (<>
+  return (
+  <>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -20,11 +26,17 @@ function App() {
         <Route path="/test" element={<Test />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/pyq" element={<PYQ />} />
-        <Route path="/signup" element={<signup />} />
-        <Route path="/login" element={<login />} />
-        <Route path="/navbar" element={<Navbar />} />
-      </Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/jeemains" element={<Mains />} />
+        <Route path="/jeemains/chemistry" element={<Chemistry />} />
+        <Route path="/jeemains/maths" element={<Maths />} />
+        <Route path="/jeemains/physics" element={<Physics />} />
+        <Route path="/jeemainspyq/:subject/:chapter" element={<MainsPYQ />} />
+        </Routes>
+
     </Router>
-  </>);
+  </>
+  );
 }
 export default App;
