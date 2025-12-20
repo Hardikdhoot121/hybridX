@@ -3,7 +3,14 @@ import { IoPersonCircle } from "react-icons/io5";
 import { AiFillThunderbolt } from "react-icons/ai";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
+  const navigate = useNavigate();
+  const subjects = [
+    { name: "JEE Mains", path: "jeemains" },
+    { name: "JEE Advance", path: "jeeadv" },
+    { name: "Hybrids Test", path: "hybrid" },
+  ];
   return (
     <>
     <div className="bg-[#15191e] p-3 min-h-screen">
@@ -47,14 +54,17 @@ const Home = () => {
 
       <div className="flex justify-center mt-3">
         <div className="flex justify-center space-x-12 py-7 flex-wrap">
-          {["JEE Mains", "JEE Advance", "Hybrid Test"].map((title) => (
-            <div
-              key={title}
-              className="relative flex h-[140px] w-[320px] justify-center items-center rounded-xl bg-[#272E36] text-white text-3xl font-semibold shadow-lg"
-            >
-              <span>{title}</span>
-              <div className="absolute bottom-0 left-0 w-full h-1.5 bg-[#3BBAF4] rounded-b-xl"></div>
-            </div>
+          {subjects.map((title) => (
+            
+            <button
+                key={title.name}
+                onClick={() => navigate(`/${title.path}`)}
+                className="rounded-md bg-[#272E36] text-white
+                           text-xl font-medium h-16 w-[260px]
+                           hover:bg-[#323a44] transition"
+              >
+                {title.name}
+              </button>
           ))}
         </div>
       </div>
