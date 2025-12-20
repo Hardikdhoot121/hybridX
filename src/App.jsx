@@ -9,7 +9,7 @@ import Signup from "./pages/signup";
 import Mains from "./pages/Mains";
 import Chemistry from "./pages/chemistrymains";
 import Physics from "./pages/physicsmains";
-import MainsPYQ from "./pages/mainsPYQ";
+import MainsPYQ from "./pages/MainsPYQ";
 import Maths from "./pages/mathematicsmains";
 import Dashboard from "./pages/dashboard";
 import Overview from "./pages/overview";
