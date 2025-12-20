@@ -9,17 +9,14 @@ export default function Maths() {
 
   const Data = Array.isArray(rawData) ? rawData : rawData.default;
 
-  // 🔍 FILTER maths QUESTIONS
   const mathsQuestions = Data.filter(
     (q) => q.subject?.toLowerCase() === "maths"
   );
 
-  // 🧠 GET UNIQUE CHAPTERS
   const chapters = [
     ...new Set(mathsQuestions.map((q) => q.chapter))
   ];
 
-  // 🪵 DEBUG (IMPORTANT — CHECK CONSOLE)
   console.log("Total questions:", Data.length);
   console.log("maths questions:", mathsQuestions.length);
   console.log("Chapters:", chapters);
