@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="mx-auto w-64 shrink-0 text-center md:mx-0 md:text-left">
           <a className="title-font flex items-center justify-center font-medium text-gray-900 md:justify-start">
             <img 
-              src="/images/hybrid_logo.jpg" 
+              src="../src/images/hybrid_logo.jpg" 
               className="w-10 rounded" 
               alt="Hybrid Logo" 
             />
