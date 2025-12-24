@@ -113,35 +113,35 @@ const Home = () => {
 
       
 
-      <section class="text-gray-600 body-font mt-10">
-      <div class="container px-5 py-3 mx-auto">
-        <div class="flex flex-wrap sm:-m-4 -mx-4  -mt-4 md:space-y-0 space-y-6">
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-              <a class="text-xl">4</a>
+      <section className="text-gray-600 body-font mt-10">
+      <div className="container px-5 py-3 mx-auto">
+        <div className="flex flex-wrap sm:-m-4 -mx-4  -mt-4 md:space-y-0 space-y-6">
+          <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
+              <a className="text-xl">4</a>
             </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Expert-Curated Questions</h2>
-              <p class="leading-relaxed text-base">Designed by top educators with deep understanding of exam trends.</p>
+            <div className="grow">
+              <h2 className="text-white text-lg title-font font-medium ">Expert-Curated Questions</h2>
+              <p className="leading-relaxed text-base">Designed by top educators with deep understanding of exam trends.</p>
             </div>
           </div>
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-              <a class="text-xl">5</a>
+          <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
+              <a className="text-xl">5</a>
             </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Affordable Brilliance</h2>
-              <p class="leading-relaxed text-base">Premium-level content and analytics — all at just ₹5990.</p>
+            <div className="grow">
+              <h2 className="text-white text-lg title-font font-medium ">Affordable Brilliance</h2>
+              <p className="leading-relaxed text-base">Premium-level content and analytics — all at just ₹5990.</p>
               
             </div>
           </div>
-          <div class="p-4 md:w-1/3 flex flex-col text-center items-center">
-            <div class="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
-              <a class="text-xl">6</a>
+          <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
+            <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
+              <a className="text-xl">6</a>
             </div>
-            <div class="grow">
-              <h2 class="text-white text-lg title-font font-medium ">Rank Comparison</h2>
-              <p class="leading-relaxed text-base">Compete with thousands of students and see where you truly stand.</p>
+            <div className="grow">
+              <h2 className="text-white text-lg title-font font-medium ">Rank Comparison</h2>
+              <p className="leading-relaxed text-base">Compete with thousands of students and see where you truly stand.</p>
             </div>
           </div>
         </div>
@@ -161,20 +161,20 @@ const Home = () => {
         </div>
       </div>
       
-      <div class="mt-40 flex justify-center">
-        <a class="text-5xl font-semibold text-white">Frequently Asked Questions</a>
+      <div className="mt-40 flex justify-center">
+        <a className="text-5xl font-semibold text-white">Frequently Asked Questions</a>
         </div>
-      <div class="mx-auto mt-10 rounded-md flex items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
-        <a class="ml-5"> Who is eligible for this course?</a>
+      <div className="mx-auto mt-10 rounded-md flex items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
+        <a className="ml-5"> Who is eligible for this course?</a>
       </div>
-      <div class="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
-          <a class="ml-5"> What about the questions? Will I be required to do something else?</a>
+      <div className="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
+          <a className="ml-5"> What about the questions? Will I be required to do something else?</a>
       </div>
-      <div class="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
-          <a class="ml-5">Why are Hybrid online test series best for IIT JEE exam Preparation?</a>
+      <div className="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
+          <a className="ml-5">Why are Hybrid online test series best for IIT JEE exam Preparation?</a>
       </div>
-      <div class="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
-          <a class="ml-5">Does the Hybrid IIT JEE test series provide solutions as well?</a>
+      <div className="mx-auto mt-5 rounded-md flex  items-center bg-[#272E36] text-white text-center font-display h-15 w-370">
+          <a className="ml-5">Does the Hybrid IIT JEE test series provide solutions as well?</a>
       </div>
 
       
