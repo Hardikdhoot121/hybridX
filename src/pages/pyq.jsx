@@ -53,6 +53,34 @@ function PYQ() {
         }
     }
 
+    const submitPracticeAttempt = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  const currVal = data[currIndex];
+
+  try {
+    await fetch("http://localhost:5000/api/practice/attempt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        questionId: currVal.question_id,          // ✅ from JSON
+        subject: currVal.subject,                 // physics / chemistry / maths
+        topic: currVal.topic || currVal.chapter,  // fallback
+        difficulty: "Medium",                     // static for now
+        isCorrect:
+          selectedOption === currVal.correct_option_index,
+      }),
+    });
+  } catch (err) {
+    console.error("Practice attempt failed", err);
+  }
+};
+
+
     useEffect(() => {
         getData();
     }, []);
@@ -80,7 +108,8 @@ function PYQ() {
 
                     const sub = () => {
                         setShowResult(true);
-                    }
+                        submitPracticeAttempt();
+                    };
 
 
                     return (

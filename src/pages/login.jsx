@@ -42,15 +42,16 @@ function Login() {
       });
 
       const result = await response.json();
-      const { success, message, jwtToken, name, error } = result;
+      const { success, message, token, error } = result;
 
-      if (success) {
-        handleSuccess(message);
-        localStorage.setItem("token", jwtToken);
-        localStorage.setItem("loggedInUser", name);
+if (success) {
+  handleSuccess(message);
 
-        setTimeout(() => navigate("/home"), 1000);
-      } else {
+  localStorage.setItem("token", token);
+
+  setTimeout(() => navigate("/home"), 1000);
+}
+ else {
         const details = error?.details?.[0]?.message || message;
         handleError(details);
       }
