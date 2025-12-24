@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../images/hybrid_logo.jpg"
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function Navbar() {
       <nav className="flex items-center justify-center px-8 py-4 text-white font-display">
         <img
           className="rounded-1xl w-9 h-9 cursor-pointer"
-          src="../src/images/hybrid_logo.jpg"
+          src={logo}
           alt="Hybrid Logo"
           onClick={() => navigate("/")}
         />
