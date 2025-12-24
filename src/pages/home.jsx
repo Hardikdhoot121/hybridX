@@ -4,6 +4,9 @@ import { AiFillThunderbolt } from "react-icons/ai";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { useNavigate } from "react-router-dom";
+
+import banner from "../images/banner.jpeg"
+
 const Home = () => {
   const navigate = useNavigate();
   const subjects = [
@@ -43,7 +46,7 @@ const Home = () => {
       </div>
 
       <div className="flex justify-center mt-10">
-        <img src="/src/images/banner.jpeg" alt="Banner" style={{ height: '200px', width: 'auto' }} />
+        <img src={banner} alt="Banner" style={{ height: '200px', width: 'auto' }} />
       </div> 
 
       <div className="mt-20 flex justify-center">
