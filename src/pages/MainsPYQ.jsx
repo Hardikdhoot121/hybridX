@@ -7,50 +7,34 @@ import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
+const API_BASE = "http://localhost:5000";
+
 function MainsPYQ() {
   const { subject, chapter } = useParams();
 
   const [data, setData] = useState([]);
-  const [currIndex, setcurrIndex] = useState(0);
+  const [currIndex, setCurrIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
 
+  /* ---------------- CLEANERS ---------------- */
+
   const cleanHTML = (html) => {
-  if (!html) return html;
+    if (!html) return html;
 
-  return html
-    .replace(/style\s*=\s*["'][^"']*["']/gi, "")
-    .replace(/align\s*=\s*["']?(right|left|center)["']?/gi, "")
-    .replace(/<\/?table[^>]*>/gi, " ")
-    .replace(/<\/?tr[^>]*>/gi, " ")
-    .replace(/<\/?td[^>]*>/gi, " ")
-    .replace(/<p>\s*<\/p>/gi, "")
-    .replace(/<div>\s*<\/div>/gi, "")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-};
-
-  const renderQuestion = (text) => {
-    if (!text) return null;
-
-    const parts = text.split("$$");
-
-    return parts.map((part, index) =>
-      index % 2 === 0 ? (
-        <span
-          key={index}
-          dangerouslySetInnerHTML={{ __html: part }}
-        />
-      ) : (
-        <BlockMath key={index} math={part} />
-      )
-    );
+    return html
+      .replace(/style\s*=\s*["'][^"']*["']/gi, "")
+      .replace(/align\s*=\s*["']?(right|left|center)["']?/gi, "")
+      .replace(/<\/?table[^>]*>/gi, " ")
+      .replace(/<\/?tr[^>]*>/gi, " ")
+      .replace(/<\/?td[^>]*>/gi, " ")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim();
   };
 
   const fixLatex = (text) => {
     if (!text) return text;
-
     return text
       .replace(
         /\\buildrel\s*\{([^}]*)\}\s*\\over\s*\\longrightarrow/g,
@@ -62,20 +46,31 @@ function MainsPYQ() {
       );
   };
 
+  
+
+  const renderQuestion = (text) => {
+    if (!text) return null;
+    const parts = text.split("$$");
+    return parts.map((part, i) =>
+      i % 2 === 0 ? (
+        <span key={i} dangerouslySetInnerHTML={{ __html: part }} />
+      ) : (
+        <BlockMath key={i} math={part} />
+      )
+    );
+  };
+
+  /* ---------------- DATA LOAD ---------------- */
+
   useEffect(() => {
-    const filtered = Data.filter((q) => {
-      if (!q.subject || !q.chapter) return false;
-
-      return (
-        q.subject.toLowerCase().trim() === subject.toLowerCase() &&
-        q.chapter.toLowerCase().trim() === chapter.toLowerCase()
-      );
-    });
-
-    console.log("Matched questions:", filtered.length);
+    const filtered = Data.filter(
+      (q) =>
+        q.subject?.toLowerCase() === subject.toLowerCase() &&
+        q.chapter?.toLowerCase() === chapter.toLowerCase()
+    );
 
     setData(filtered);
-    setcurrIndex(0);
+    setCurrIndex(0);
   }, [subject, chapter]);
 
   useEffect(() => {
@@ -94,49 +89,92 @@ function MainsPYQ() {
   const currVal = data[currIndex];
   const currOptions = currVal.options;
 
-  const prev = () => setcurrIndex((p) => Math.max(p - 1, 0));
-  const next = () => setcurrIndex((p) => Math.min(p + 1, data.length - 1));
-  const sub = () => setShowResult(true);
+  /* ---------------- BACKEND SUBMIT ---------------- */
 
-  const formatChapterTitle = (slug) =>
+  const submitPracticeAttempt = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to save progress");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/practice/attempt`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          questionId: currVal.question_id,
+          subject: currVal.subject,
+          topic: currVal.topic || currVal.chapter,
+          difficulty: "Medium",
+          isCorrect:
+            selectedOption === currVal.correct_option_index,
+        }),
+      });
+
+      const json = await res.json();
+      console.log("Saved attempt:", json);
+    } catch (err) {
+      console.error("Practice submit failed", err);
+    }
+  };
+
+  /* ---------------- CONTROLS ---------------- */
+
+  const prev = () => setCurrIndex((i) => Math.max(i - 1, 0));
+  const next = () => setCurrIndex((i) => Math.min(i + 1, data.length - 1));
+
+  const submit = () => {
+    if (selectedOption === null) {
+      alert("Select an option first");
+      return;
+    }
+    setShowResult(true);
+    submitPracticeAttempt();
+  };
+
+  const formatTitle = (slug) =>
     slug.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
+
+  /* ---------------- UI ---------------- */
 
   return (
     <>
-      <div className="bg-[#15191E] text-white w-full min-h-screen">
+      <div className="bg-[#15191E] text-white min-h-screen">
         <Navbar />
 
-        <div className="flex justify-center text-center font-bold">
-          <p className="mt-10">
-            JEE MAINS — {formatChapterTitle(chapter)}
-          </p>
-        </div>
+        <p className="text-center font-bold mt-10">
+          JEE MAINS — {formatTitle(chapter)}
+        </p>
 
-        <div className="bg-[#272E36] rounded-xl p-6 m-5 mx-auto w-[70%] mt-10">
-          <div className="flex justify-between font-medium opacity-75">
+        <div className="bg-[#272E36] rounded-xl p-6 mx-auto w-[70%] mt-10">
+          <div className="flex justify-between opacity-75">
             <p>Question {currIndex + 1}</p>
             <p>{subject.toUpperCase()}</p>
           </div>
 
-          <div className="font-bold mt-5 leading-7">
+          <div className="font-bold mt-5">
             {renderQuestion(
               fixLatex(cleanHTML(currVal.question))
             )}
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 w-[70%] mx-auto">
+        <div className="grid grid-cols-2 gap-4 w-[70%] mx-auto mt-6">
           {currOptions.map((opt, i) => {
-            let border = "border";
             let bg = "bg-[#272E36]";
+            let border = "border";
 
             if (showResult) {
               if (i === currVal.correct_option_index) {
-                border = "border-2 border-green-500";
                 bg = "bg-green-800";
+                border = "border-2 border-green-500";
               } else if (i === selectedOption) {
-                border = "border-2 border-red-500";
                 bg = "bg-red-800";
+                border = "border-2 border-red-500";
               }
             } else if (i === selectedOption) {
               border = "border-2 border-[#3DBBF4]";
@@ -146,7 +184,7 @@ function MainsPYQ() {
               <button
                 key={i}
                 onClick={() => setSelectedOption(i)}
-                className={`${border} ${bg} rounded-xl p-6 min-h-20`}
+                className={`${bg} ${border} rounded-xl p-6`}
               >
                 {renderQuestion(
                   fixLatex(cleanHTML(opt.content))
@@ -156,29 +194,17 @@ function MainsPYQ() {
           })}
         </div>
 
-        <div className="h-60 bg-[#15191E]" />
-
-        <div className="fixed bottom-0 left-0 right-0 bg-[#15191E] py-5">
-          <div className="mx-auto w-[70%] flex justify-around">
-            <button
-              className="border border-white px-12 py-4 rounded-lg font-semibold"
-              disabled={currIndex === 0}
-              onClick={prev}
-            >
+        <div className="fixed bottom-0 w-full bg-[#15191E] py-5">
+          <div className="flex justify-around w-[70%] mx-auto">
+            <button onClick={prev} disabled={currIndex === 0}>
               PREVIOUS
             </button>
-
-            <button
-              className="bg-[#3DBBF4] px-20 py-4 rounded-lg font-bold"
-              onClick={sub}
-            >
+            <button onClick={submit} className="bg-[#3DBBF4] px-10 py-3">
               SUBMIT
             </button>
-
             <button
-              className="border border-white px-12 py-4 rounded-lg font-semibold"
-              disabled={currIndex === data.length - 1}
               onClick={next}
+              disabled={currIndex === data.length - 1}
             >
               NEXT
             </button>

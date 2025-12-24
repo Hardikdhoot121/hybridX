@@ -1,5 +1,5 @@
 import express from "express";
-
+import practiceRoutes from "./practiceRoutes.js";
 import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
 import adminRoutes from "./adminRoutes.js";
@@ -29,7 +29,8 @@ router.use("/admin", adminRoutes);
 
 /**
  * HEALTH CHECK
- */
+*/
+router.use("/practice", practiceRoutes);
 router.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -37,5 +38,6 @@ router.get("/health", (req, res) => {
     timestamp: new Date(),
   });
 });
+
 
 export default router;
