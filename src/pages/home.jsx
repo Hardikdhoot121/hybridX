@@ -37,16 +37,16 @@ const Home = () => {
       </div>
 
       <div className="justify-center flex mt-10 space-x-3">
-        <button type="button" className="bg-[#3BBAF4] hover:bg-blue-500 text-white flex justify-center w-40 h-10 rounded-md items-center">
+        <button type="button" className="bg-[#3BBAF4] hover:bg-blue-500 text-white flex justify-center w-fit h-10 rounded-md items-center p-5">
           Explore Test Series
         </button>
-        <button type="button" className="bg-[#42BA96] hover:bg-green-500 text-white flex justify-center w-30 h-10 rounded-md items-center">
+        <button type="button" className="bg-[#42BA96] hover:bg-green-500 text-white flex justify-center w-fit h-10 rounded-md items-center p-5">
           View Pricing
         </button>
       </div>
 
       <div className="flex justify-center mt-10">
-        <img src={banner} alt="Banner" style={{ height: '200px', width: 'auto' }} />
+        <img src={banner} alt="Banner" className="home-ad" style={{ height: '200px', width: 'auto',  }} />
       </div> 
 
       <div className="mt-20 flex justify-center">
