@@ -8,44 +8,59 @@ export default function Navbar() {
   return (
     <>
       <div className="mx-auto mt-2 rounded-md flex items-center justify-center bg-[#3abbf5] text-white text-center font-display h-10 w-370">
-        Premium Test Series — Sale Ends Soon, Get it Now
+        Premium Test Series🌟 — Sale Ends Soon, Get it Now
       </div>
 
-      <nav className="flex items-center justify-center px-8 py-4 text-white font-display">
-        <img
-          className="rounded-1xl w-9 h-9 cursor-pointer"
-          src={logo}
-          alt="Hybrid Logo"
+      <nav className="flex items-center justify-between px-8 py-4 text-white font-display">
+
+        {/* Logo */}
+        <div
+          className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
-        />
-        <ul className="flex space-x-7 ml-100 mr-100">
-          <li 
+        >
+          <img
+            src={logo}
+            alt="Hybrid Logo"
+            className="h-15 w-auto object-contain border-2 border-amber-50 rounded-[8px] p-2 bg-white"
+          />
+        </div>
+
+        {/* Navigation Links */}
+        <ul className="flex items-center space-x-8">
+          <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
             onClick={() => navigate("/")}
           >
             Home
           </li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Tests</li>
-          <li 
+          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">
+            Tests
+          </li>
+          <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
             onClick={() => navigate("/dashboard")}
           >
             Dashboard
           </li>
-          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">Prices</li>
-          <li 
+          <li className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200">
+            Prices
+          </li>
+          <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
             onClick={() => navigate("/contact_us")}
           >
             Contact Us
           </li>
         </ul>
+
+        {/* Avatar */}
         <img
-          className="rounded-1xl w-9 h-9"
+          className="w-9 h-9 rounded-full object-cover cursor-pointer"
           src="/images/Avatar.png"
           alt="Avatar"
         />
       </nav>
+
     </>
   );
 }

@@ -16,6 +16,8 @@ function MainsPYQ() {
   const [currIndex, setCurrIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [integerAnswer, setIntegerAnswer] = useState("");
+
 
   /* ---------------- CLEANERS ---------------- */
 
@@ -46,7 +48,7 @@ function MainsPYQ() {
       );
   };
 
-  
+
 
   const renderQuestion = (text) => {
     if (!text) return null;
@@ -124,14 +126,16 @@ function MainsPYQ() {
 
   /* ---------------- CONTROLS ---------------- */
 
-  const prev = () => setCurrIndex((i) => Math.max(i - 1, 0));
-  const next = () => setCurrIndex((i) => Math.min(i + 1, data.length - 1));
+  const prev = () => {
+    setCurrIndex((i) => Math.max(i - 1, 0));
+    setIntegerAnswer(" ");
+  };
+  const next = () => {
+    setCurrIndex((i) => Math.min(i + 1, data.length - 1) );
+    setIntegerAnswer(" ");
+  }
 
   const submit = () => {
-    if (selectedOption === null) {
-      alert("Select an option first");
-      return;
-    }
     setShowResult(true);
     submitPracticeAttempt();
   };
@@ -139,6 +143,13 @@ function MainsPYQ() {
   const formatTitle = (slug) =>
     slug.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
+  function capitalizeEachWord(str) {
+    const words = str.split('-');
+    const capitalizedWords = words.map(word => {
+      return word[0].toUpperCase() + word.slice(1);
+    });
+    return capitalizedWords.join(' ');
+  }
   /* ---------------- UI ---------------- */
 
   return (
@@ -155,6 +166,9 @@ function MainsPYQ() {
             <p>Question {currIndex + 1}</p>
             <p>{subject.toUpperCase()}</p>
           </div>
+          <div >
+            <p className="opacity-75">{capitalizeEachWord(currVal.paper_id)}</p>
+          </div>
 
           <div className="font-bold mt-5">
             {renderQuestion(
@@ -163,48 +177,94 @@ function MainsPYQ() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 w-[70%] mx-auto mt-6">
-          {currOptions.map((opt, i) => {
-            let bg = "bg-[#272E36]";
-            let border = "border";
+        {currVal.question_type == "mcq" &&
+          <div className="grid grid-cols-2 gap-4 w-[70%] mx-auto mt-6">
+            {currOptions.map((opt, i) => {
+              let bg = "bg-[#272E36]";
+              let border = "border";
 
-            if (showResult) {
-              if (i === currVal.correct_option_index) {
-                bg = "bg-green-800";
-                border = "border-2 border-green-500";
+              if (showResult) {
+                if (i === currVal.correct_option_index) {
+                  bg = "bg-green-800";
+                  border = "border-2 border-green-500";
+                } else if (i === selectedOption) {
+                  bg = "bg-red-800";
+                  border = "border-2 border-red-500";
+                }
               } else if (i === selectedOption) {
-                bg = "bg-red-800";
-                border = "border-2 border-red-500";
+                border = "border-2 border-[#3DBBF4]";
               }
-            } else if (i === selectedOption) {
-              border = "border-2 border-[#3DBBF4]";
-            }
 
-            return (
-              <button
-                key={i}
-                onClick={() => setSelectedOption(i)}
-                className={`${bg} ${border} rounded-xl p-6`}
-              >
-                {renderQuestion(
-                  fixLatex(cleanHTML(opt.content))
-                )}
-              </button>
-            );
-          })}
-        </div>
+              return (
+                <button
+                  key={i}
+                  onClick={() => setSelectedOption(i)}
+                  className={`${bg} ${border} rounded-xl p-6`}
+                >
+                  {renderQuestion(
+                    fixLatex(cleanHTML(opt.content))
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        }
+
+        {currVal.question_type === "integer" && (
+          <div className="w-[70%] mx-auto mt-6">
+
+            {/* Input Box */}
+            <input
+            type="number"
+            value={integerAnswer}
+            onChange={(e) => setIntegerAnswer(e.target.value)}
+            disabled={showResult}
+            className={`w-full p-4 rounded-xl text-white bg-[#272E36]
+              border-solid!
+              ${showResult
+              ? Number(integerAnswer) === Number(currVal.answer)
+              ? "border-2 border-green-400!"
+              : "border-2 border-red-400!"
+              : "border-2 border-grey-400!"
+              }
+              outline-none focus:outline-none focus:ring-0
+            `}
+            placeholder="Enter your answer"
+            />
+
+          </div>
+        )}
+
+
+        {showResult && (
+          <div className="bg-[#272E36] w-[70%] mx-auto my-6 p-8 rounded-xl">
+            {
+              currVal.question_type==="integer" && 
+              <div className="text-green-500 mb-2">
+                Correct Answer is : {currVal.answer}
+              </div>
+            }
+            <p><b>EXPLANATION:</b></p>
+            <br></br>
+            
+            {renderQuestion(
+              fixLatex(cleanHTML(currVal.explanation))
+            )}
+          </div>
+        )}
 
         <div className="fixed bottom-0 w-full bg-[#15191E] py-5">
-          <div className="flex justify-around w-[70%] mx-auto">
-            <button onClick={prev} disabled={currIndex === 0}>
+          <div className="flex justify-around w-[70%] mx-auto ">
+            <button onClick={prev} disabled={currIndex === 0} className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white">
               PREVIOUS
             </button>
-            <button onClick={submit} className="bg-[#3DBBF4] px-10 py-3">
+            <button onClick={submit} className="bg-[#3DBBF4] px-10 py-3 rounded-xl w-40 hover:bg-[#3dbaf4d8]">
               SUBMIT
             </button>
             <button
               onClick={next}
               disabled={currIndex === data.length - 1}
+              className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white"
             >
               NEXT
             </button>
