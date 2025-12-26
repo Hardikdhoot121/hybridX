@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="body-font mt-10 bg-white text-gray-600">
       <div className="container mx-auto flex flex-col flex-wrap px-5 py-12 md:flex-row md:flex-nowrap md:items-start lg:items-start">
         
-        {}
+        {/* Logo and Contact Info Section */}
         <div className="mx-auto w-64 shrink-0 text-center md:mx-0 md:text-left">
           <a className="title-font flex items-center justify-center font-medium text-gray-900 md:justify-start">
             <img 
@@ -38,10 +38,10 @@ export default function Footer() {
           </nav>
         </div>
 
-        {}
+        {/* Links Navigation Section */}
         <div className="mt-10 flex grow flex-wrap text-center md:mt-0 md:pl-20 md:text-left">
           
-          {}
+          {/* Column 1: Home */}
           <div className="w-full px-4 md:w-1/3">
             <h2 className="title-font mb-3 text-sm font-medium tracking-widest uppercase text-gray-900">
               Home
@@ -54,7 +54,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {}
+          {/* Column 2: About Us */}
           <div className="w-full px-4 md:w-1/3">
             <h2 className="title-font mb-3 text-sm font-medium tracking-widest uppercase text-gray-900">
               About Us
@@ -66,7 +66,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {}
+          {/* Column 3: Social Media */}
           <div className="w-full px-4 md:w-1/3">
             <h2 className="title-font mb-3 text-sm font-medium tracking-widest uppercase text-gray-900">
               Follow Us
@@ -101,7 +101,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {}
+      {/* Bottom Bar */}
       <div className="bg-gray-100 py-4">
         <p className="text-center text-sm text-gray-500">
           © {new Date().getFullYear()} Hybrid Education Hub. All rights reserved.

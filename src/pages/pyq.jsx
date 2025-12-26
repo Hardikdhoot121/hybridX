@@ -3,11 +3,8 @@ import '../App.css'
 import Data from '../jee_mains_clean.json'
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
-import { useDailyGoal } from '../context/DailyGoalContext.jsx';
 
 function PYQ() {
-
-    const { recordAttempt } = useDailyGoal();
 
     const renderQuestion = (text) => {
         const parts = text.split('$$');
@@ -45,7 +42,6 @@ function PYQ() {
     const [currIndex, setcurrIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [showResult, setShowResult] = useState(false);
-    const [countedIndex, setCountedIndex] = useState(null);
 
 
     const getData = async () => {
@@ -64,17 +60,17 @@ function PYQ() {
   const currVal = data[currIndex];
 
   try {
-    await fetch("http://localhost:5000/practice/attempt", {
+    await fetch("http://localhost:5000/api/practice/attempt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        questionId: currVal.question_id,          
-        subject: currVal.subject,                 
-        topic: currVal.topic || currVal.chapter,  
-        difficulty: "Medium",                     
+        questionId: currVal.question_id,          // ✅ from JSON
+        subject: currVal.subject,                 // physics / chemistry / maths
+        topic: currVal.topic || currVal.chapter,  // fallback
+        difficulty: "Medium",                     // static for now
         isCorrect:
           selectedOption === currVal.correct_option_index,
       }),
@@ -92,7 +88,6 @@ function PYQ() {
     useEffect(() => {
         setSelectedOption(null);
         setShowResult(false);
-        setCountedIndex(null);
     }, [currIndex]);
 
     return (
@@ -112,11 +107,6 @@ function PYQ() {
                     }
 
                     const sub = () => {
-                        if (selectedOption === null) return;
-                        if (countedIndex !== currIndex) {
-                            recordAttempt(selectedOption === currVal.correct_option_index);
-                            setCountedIndex(currIndex);
-                        }
                         setShowResult(true);
                         submitPracticeAttempt();
                     };
@@ -170,7 +160,7 @@ function PYQ() {
                             <div className="fixed bottom-0 left-0 right-0 bg-[#15191E] py-5">
                                 <div className="mx-auto w-[70%] flex justify-around ">
                                     <button className="border border-white px-12 py-4 rounded-lg font-semibold" disabled={currIndex === 0} onClick={prev}>PREVIOUS</button>
-                                    <button className="bg-[#3DBBF4] px-20 py-4 rounded-lg font-bold" onClick={sub} disabled={selectedOption === null}>SUBMIT</button>
+                                    <button className="bg-[#3DBBF4] px-20 py-4 rounded-lg font-bold" onClick={sub}>SUBMIT</button>
                                     <button className="border border-white px-12 py-4 rounded-lg font-semibold " disabled={currIndex === data.length - 1} onClick={next}>NEXT</button>
                                 </div>
                             </div>
