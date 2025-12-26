@@ -5,9 +5,9 @@ const dateKey = (day) =>
   `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
 export const dashboardData = {
-  dailyGoal: { correct: 10, incorrect: 0, target: 15 },
+  dailyGoal: { solved: 10, target: 15 },
   attendance: {
-    month: currentMonth, 
+    month: currentMonth, // 0-indexed
     year: currentYear,
     days: {
       [dateKey(2)]: 'present',
@@ -71,3 +71,4 @@ export const dashboardData = {
     { id: 'task-2', title: 'Capacitor P.G.', status: 'pending' },
   ],
 };
+

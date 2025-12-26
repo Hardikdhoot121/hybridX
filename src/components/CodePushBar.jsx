@@ -72,3 +72,4 @@ const CodePushBar = ({ status = 'idle', message = '', onDismiss }) => {
 };
 
 export default CodePushBar;
+

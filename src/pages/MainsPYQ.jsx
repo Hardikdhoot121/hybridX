@@ -6,13 +6,11 @@ import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { useDailyGoal } from '../context/DailyGoalContext.jsx';
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "http://localhost:5000";
 
 function MainsPYQ() {
   const { subject, chapter } = useParams();
-  const { recordAttempt } = useDailyGoal();
 
   const [data, setData] = useState([]);
   const [currIndex, setCurrIndex] = useState(0);
@@ -21,6 +19,7 @@ function MainsPYQ() {
   const [integerAnswer, setIntegerAnswer] = useState("");
 
 
+  /* ---------------- CLEANERS ---------------- */
 
   const cleanHTML = (html) => {
     if (!html) return html;
@@ -63,6 +62,7 @@ function MainsPYQ() {
     );
   };
 
+  /* ---------------- DATA LOAD ---------------- */
 
   useEffect(() => {
     const filtered = Data.filter(
@@ -91,6 +91,7 @@ function MainsPYQ() {
   const currVal = data[currIndex];
   const currOptions = currVal.options;
 
+  /* ---------------- BACKEND SUBMIT ---------------- */
 
   const submitPracticeAttempt = async () => {
     const token = localStorage.getItem("token");
@@ -123,6 +124,7 @@ function MainsPYQ() {
     }
   };
 
+  /* ---------------- CONTROLS ---------------- */
 
   const prev = () => {
     setCurrIndex((i) => Math.max(i - 1, 0));
@@ -134,17 +136,6 @@ function MainsPYQ() {
   }
 
   const submit = () => {
-    if (selectedOption === null && currVal.question_type === "mcq") return;
-    if (integerAnswer === "" && currVal.question_type === "integer") return;
-    
-    let isCorrect = false;
-    if (currVal.question_type === "mcq") {
-      isCorrect = selectedOption === currVal.correct_option_index;
-    } else if (currVal.question_type === "integer") {
-      isCorrect = Number(integerAnswer) === Number(currVal.answer);
-    }
-    
-    recordAttempt(isCorrect);
     setShowResult(true);
     submitPracticeAttempt();
   };
@@ -159,6 +150,7 @@ function MainsPYQ() {
     });
     return capitalizedWords.join(' ');
   }
+  /* ---------------- UI ---------------- */
 
   return (
     <>
@@ -221,7 +213,7 @@ function MainsPYQ() {
         {currVal.question_type === "integer" && (
           <div className="w-[70%] mx-auto mt-6">
 
-            {}
+            {/* Input Box */}
             <input
             type="number"
             value={integerAnswer}
