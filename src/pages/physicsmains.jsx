@@ -36,7 +36,7 @@ export default function Physics() {
     <div className="bg-[#15191E] min-h-screen text-white p-6">
         <Navbar />
       <h1 className="text-4xl font-bold text-center mt-16">
-        physics Chapters
+        Physics Chapters
       </h1>
 
       <div className="max-w-xl mx-auto mt-10 space-y-4">
@@ -46,8 +46,12 @@ export default function Physics() {
             onClick={() =>
               navigate(`/jeemains/physics/${chapter}`)
             }
-            className="w-full bg-[#272E36] py-4 px-6 rounded-lg
-                       text-left hover:bg-[#323a44] transition"
+            className="
+rounded-md text-lg sm:text-xl font-medium
+h-12 sm:h-14 w-full max-w-3xl
+bg-[#3BBAF4] hover:bg-blue-500 text-white
+flex items-center justify-center transition p-3 mx-auto
+"
           >
             {chapter.replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase())}
           </button>
