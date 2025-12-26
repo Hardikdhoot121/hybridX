@@ -77,7 +77,7 @@ const Home = () => {
       <section className="text-gray-600 body-font mt-6">
         <div className="container px-5 py-3 mx-auto">
           <div className="flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6">
-            {}
+            {/* three feature cards */}
             <div className="p-4 md:w-1/3 flex flex-col text-center items-center">
               <div className="w-10 h-10 inline-flex items-center justify-center rounded-full bg-[#CAEEFF] text-[#3BBAF4] mb-5 shrink-0">
                 <span className="text-xl">1</span>
