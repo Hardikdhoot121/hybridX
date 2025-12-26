@@ -53,7 +53,6 @@ export const DailyGoalProvider = ({ children, defaultTarget = 15 }) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
-      // ignore
     }
   }, [state]);
 

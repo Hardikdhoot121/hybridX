@@ -27,11 +27,11 @@ const GoalEditModal = ({ isOpen, onClose, currentGoal, onSave }) => {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
       <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 shadow-lg border border-white/5 relative overflow-hidden w-[400px]">
-        {/* Glow effect */}
+        {}
         <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/20 to-teal-400/20 rounded-xl blur opacity-20"></div>
         
         <div className="relative">
-          {/* Header */}
+          {}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-white">Edit Daily Goal</h2>
             <button 
@@ -43,7 +43,7 @@ const GoalEditModal = ({ isOpen, onClose, currentGoal, onSave }) => {
             </button>
           </div>
 
-          {/* Content */}
+          {}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-2">
@@ -66,7 +66,7 @@ const GoalEditModal = ({ isOpen, onClose, currentGoal, onSave }) => {
             </div>
           </div>
 
-          {/* Actions */}
+          {}
           <div className="flex space-x-3 mt-6">
             <button 
               onClick={onClose}

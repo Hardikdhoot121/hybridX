@@ -7,7 +7,7 @@ const dateKey = (day) =>
 export const dashboardData = {
   dailyGoal: { correct: 10, incorrect: 0, target: 15 },
   attendance: {
-    month: currentMonth, // 0-indexed
+    month: currentMonth, 
     year: currentYear,
     days: {
       [dateKey(2)]: 'present',
@@ -71,4 +71,3 @@ export const dashboardData = {
     { id: 'task-2', title: 'Capacitor P.G.', status: 'pending' },
   ],
 };
-

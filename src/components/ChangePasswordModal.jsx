@@ -16,7 +16,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  // Reset form when modal opens/closes
+  
   useEffect(() => {
     if (!isOpen) {
       setFormData({
@@ -56,9 +56,6 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     
     if (!formData.currentPassword) {
       newErrors.currentPassword = 'Current password is required';
-    } else if (formData.currentPassword === 'wrong') {
-      // Simulate wrong password check (in real app, this would be an API call)
-      newErrors.currentPassword = 'Incorrect current password';
     }
     
     if (!formData.newPassword) {
@@ -90,13 +87,13 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
+      
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Show success message
+      
       setShowSuccess(true);
       
-      // Close modal after success
+      
       setTimeout(() => {
         onClose();
         setShowSuccess(false);
@@ -112,7 +109,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error for this field when user starts typing
+    
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -132,21 +129,21 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Success Toast */}
+      {}
       {showSuccess && (
         <div className="fixed top-4 right-4 z-[60] bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2 animate-pulse">
           <span className="text-sm font-medium">Password updated successfully!</span>
         </div>
       )}
 
-      {/* Modal */}
+      {}
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
         <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 shadow-lg border border-white/5 relative overflow-hidden w-[450px]">
-          {/* Glow effect */}
+          {}
           <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/20 to-teal-400/20 rounded-xl blur opacity-20"></div>
           
           <div className="relative">
-            {/* Header */}
+            {}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-white">Change Password</h2>
               <button 
@@ -158,9 +155,9 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
               </button>
             </div>
 
-            {/* Form */}
+            {}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Current Password */}
+              {}
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Current Password
@@ -190,7 +187,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* New Password */}
+              {}
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   New Password
@@ -220,7 +217,7 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* Confirm New Password */}
+              {}
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Confirm New Password
@@ -250,14 +247,14 @@ const ChangePasswordModal = ({ isOpen, onClose }) => {
                 )}
               </div>
 
-              {/* Submit Error */}
+              {}
               {errors.submit && (
                 <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
                   <p className="text-sm text-red-400">{errors.submit}</p>
                 </div>
               )}
 
-              {/* Actions */}
+              {}
               <div className="flex space-x-3 pt-4">
                 <button 
                   type="button"

@@ -52,4 +52,3 @@ const DppResult = () => {
 };
 
 export default DppResult;
-

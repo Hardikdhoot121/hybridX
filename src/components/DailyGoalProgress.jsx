@@ -15,11 +15,9 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
   const [flashArc, setFlashArc] = useState(null);
   const [flashKey, setFlashKey] = useState(0);
   
-  // Update progress when props change
   useEffect(() => {
     setProgress({ correct, incorrect });
     
-    // Trigger glow effect when goal is completed
     if (correct + incorrect >= initialDailyGoal) {
       setGlow(true);
     } else {
@@ -46,7 +44,6 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
     };
   }, [correct, incorrect]);
   
-  // Focus the input when editing starts
   useEffect(() => {
     if (editingGoal && inputRef.current) {
       inputRef.current.focus();
@@ -55,12 +52,12 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
   }, [editingGoal]);
   
   const handleGoalChange = (e) => {
-    const value = e.target.value.replace(/\D/g, ''); // Only allow numbers
+    const value = e.target.value.replace(/\D/g, ''); 
     setTempGoal(value ? parseInt(value, 10) : '');
   };
   
   const handleSaveGoal = () => {
-    const newGoal = tempGoal > 0 ? tempGoal : 1; // Ensure at least 1
+    const newGoal = tempGoal > 0 ? tempGoal : 1; 
     if (onGoalChange) {
       onGoalChange(newGoal);
     }
@@ -87,7 +84,6 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
     }
   };
   
-  // Animation variants for the glow effect
   const glowVariant = {
     initial: { filter: 'drop-shadow(0 0 0px rgba(74, 222, 128, 0)) drop-shadow(0 0 0px rgba(239, 68, 68, 0))' },
     glowing: {
@@ -104,11 +100,9 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
     },
   };
 
-  // Check if goal is completed
   const totalAttempted = progress.correct + progress.incorrect;
   const isGoalCompleted = totalAttempted >= initialDailyGoal;
 
-  // Calculate arc parameters
   const size = 220;
   const center = size / 2;
   const radius = 86;
@@ -214,7 +208,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
           </defs>
 
           <g transform={`rotate(-90 ${center} ${center})`}>
-          {/* Background circle */}
+          {}
             <circle
               cx={center}
               cy={center}
@@ -225,7 +219,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
             />
 
             <motion.g initial="initial" animate={glow ? 'glowing' : 'initial'} variants={glowVariant}>
-              {/* Incorrect answers arc */}
+              {}
               {hasIncorrect && (
                 <>
                   {isGoalCompleted && (
@@ -298,7 +292,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
                 </>
               )}
 
-              {/* Correct answers arc */}
+              {}
               {hasCorrect && (
                 <>
                   {isGoalCompleted && (
@@ -370,7 +364,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
           </g>
         </svg>
 
-        {/* Center text */}
+        {}
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
           <div className="text-[44px] font-semibold leading-none text-white">
             {totalAttempted}
@@ -380,7 +374,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
         </div>
       </div>
       
-      {/* Legend */}
+      {}
       <div className="mt-5 flex items-center justify-center gap-8">
         <div className="flex items-center gap-2">
           <div className="h-3 w-3 rounded-full bg-[#22C55E]" />
@@ -392,7 +386,7 @@ const DailyGoalProgress = ({ dailyGoal: initialDailyGoal = 15, correct = 2, inco
         </div>
       </div>
 
-      {/* Goal Edit Modal */}
+      {}
       <GoalEditModal
         isOpen={showGoalModal}
         onClose={() => setShowGoalModal(false)}

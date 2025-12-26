@@ -19,6 +19,70 @@ const Field = ({ label, name, value, editing = false, onChange, type = 'text' })
   </div>
 );
 
+const TagsInput = ({ label, name, values = [], onAddTag, onRemoveTag, editing = false }) => {
+  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef(null);
+
+  const handleKeyDown = (e) => {
+    if ((e.key === 'Enter' || e.key === ',') && inputValue.trim()) {
+      e.preventDefault();
+      onAddTag(name, inputValue.trim());
+      setInputValue('');
+    } else if (e.key === 'Backspace' && !inputValue && values.length > 0) {
+      onRemoveTag(name, values[values.length - 1]);
+    }
+  };
+
+  return (
+    <div className="flex flex-col py-3 border-b border-white/10">
+      <span className="text-sm text-gray-400 mb-1">{label}</span>
+      {editing ? (
+        <div className="flex flex-wrap gap-2 items-center bg-[#1E293B] rounded px-3 py-2 min-h-[42px]">
+          {values.map((tag, index) => (
+            <div key={index} className="flex items-center bg-blue-500/20 text-blue-200 px-2 py-1 rounded-full text-sm">
+              {tag}
+              <button
+                type="button"
+                onClick={() => onRemoveTag(name, tag)}
+                className="ml-1 text-blue-300 hover:text-white"
+              >
+                <XIcon size={14} />
+              </button>
+            </div>
+          ))}
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={() => {
+              if (inputValue.trim()) {
+                onAddTag(name, inputValue.trim());
+                setInputValue('');
+              }
+            }}
+            placeholder="Type and press Enter"
+            className="flex-1 bg-transparent border-none outline-none text-white min-w-[120px]"
+          />
+        </div>
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {values.length > 0 ? (
+            values.map((tag, index) => (
+              <span key={index} className="bg-blue-500/20 text-blue-200 px-2 py-1 rounded-full text-sm">
+                {tag}
+              </span>
+            ))
+          ) : (
+            <span className="text-white/60">Not set</span>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const StudentProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -54,78 +118,13 @@ const StudentProfile = () => {
     }));
   };
 
-
-  const TagsInput = ({ label, name, values = [], onAddTag, onRemoveTag, editing = false }) => {
-    const [inputValue, setInputValue] = useState('');
-    const inputRef = useRef(null);
-
-    const handleKeyDown = (e) => {
-      if ((e.key === 'Enter' || e.key === ',') && inputValue.trim()) {
-        e.preventDefault();
-        onAddTag(name, inputValue.trim());
-        setInputValue('');
-      } else if (e.key === 'Backspace' && !inputValue && values.length > 0) {
-        onRemoveTag(name, values[values.length - 1]);
-      }
-    };
-
-    return (
-      <div className="flex flex-col py-3 border-b border-white/10">
-        <span className="text-sm text-gray-400 mb-1">{label}</span>
-        {editing ? (
-          <div className="flex flex-wrap gap-2 items-center bg-[#1E293B] rounded px-3 py-2 min-h-[42px]">
-            {values.map((tag, index) => (
-              <div key={index} className="flex items-center bg-blue-500/20 text-blue-200 px-2 py-1 rounded-full text-sm">
-                {tag}
-                <button
-                  type="button"
-                  onClick={() => onRemoveTag(name, tag)}
-                  className="ml-1 text-blue-300 hover:text-white"
-                >
-                  <XIcon size={14} />
-                </button>
-              </div>
-            ))}
-            <input
-              ref={inputRef}
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onBlur={() => {
-                if (inputValue.trim()) {
-                  onAddTag(name, inputValue.trim());
-                  setInputValue('');
-                }
-              }}
-              placeholder="Type and press Enter"
-              className="flex-1 bg-transparent border-none outline-none text-white min-w-[120px]"
-            />
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {values.length > 0 ? (
-              values.map((tag, index) => (
-                <span key={index} className="bg-blue-500/20 text-blue-200 px-2 py-1 rounded-full text-sm">
-                  {tag}
-                </span>
-              ))
-            ) : (
-              <span className="text-white/60">Not set</span>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  };
-
   return (
     <div className="bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-xl p-6 shadow-lg border border-white/5 relative overflow-hidden">
-      {/* Glow effect */}
+      {}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400/20 to-teal-400/20 rounded-xl blur opacity-20"></div>
       
       <div className="relative">
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-white">Student Profile</h2>
           <div className="flex space-x-2">
@@ -140,7 +139,7 @@ const StudentProfile = () => {
                 </button>
                 <button 
                   onClick={() => setShowPasswordModal(true)}
-                  className="px-4 py-2 rounded-full bg-gray-700 text-white hover:bg-gray-600 transition-colors font-medium"
+                  className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition-colors text-sm font-medium"
                 >
                   Change Password
                 </button>
@@ -166,7 +165,7 @@ const StudentProfile = () => {
           </div>
         </div>
 
-        {/* Avatar */}
+        {}
         <div className="flex items-center mb-6">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center text-white text-xl font-bold mr-4">
             {((isEditing ? editData.fullName : profile.fullName) ?? '')
@@ -181,9 +180,9 @@ const StudentProfile = () => {
           </div>
         </div>
 
-        {/* Profile Fields */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Row 1: Full Name | Email */}
+          {}
           <Field 
             label="Full Name" 
             name="fullName" 
@@ -200,7 +199,7 @@ const StudentProfile = () => {
             onChange={handleChange}
           />
           
-          {/* Row 2: Phone Number | Class */}
+          {}
           <Field 
             label="Phone Number" 
             name="phone" 
@@ -217,7 +216,7 @@ const StudentProfile = () => {
             onChange={handleChange}
           />
           
-          {/* Row 3: Batch | Target Year */}
+          {}
           <div className="flex flex-col">
             <label className="text-sm text-gray-400 mb-1">Batch</label>
             <div className="flex space-x-4 mt-1">
@@ -250,7 +249,7 @@ const StudentProfile = () => {
         </div>
       </div>
 
-      {/* Change Password Modal */}
+      {}
       <ChangePasswordModal
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
