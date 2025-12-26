@@ -29,9 +29,10 @@ export default function Mains() {
               <button
                 key={sub.name}
                 onClick={() => navigate(`/jeemains/${sub.path}`)}
-                className="rounded-md bg-[#272E36] text-white
-                           text-xl font-medium h-16 w-[260px]
-                           hover:bg-[#323a44] transition"
+                className="rounded-md text-lg sm:text-xl font-medium
+          h-12 sm:h-14 w-full sm:w-[260px] md:w-[300px] lg:w-[320px]
+          bg-[#42BA96] hover:bg-green-500 text-white
+          flex items-center justify-center transition p-3"
               >
                 {sub.name}
               </button>
