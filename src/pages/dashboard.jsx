@@ -2,12 +2,13 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit2, Trash2, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { dashboardData } from '../data/sampleData.js';
+import DailyGoalProgress from '../components/DailyGoalProgress';
+import StudentProfile from '../components/StudentProfile';
+import { useDailyGoal } from '../context/DailyGoalContext.jsx';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [dailyGoal, setDailyGoal] = useState(dashboardData.dailyGoal);
-  const [showGoalModal, setShowGoalModal] = useState(false);
-  const [goalInput, setGoalInput] = useState(dailyGoal.target);
+  const { target, correct, incorrect, setTarget } = useDailyGoal();
   const [currentMonth, setCurrentMonth] = useState(dashboardData.attendance.month);
   const [currentYear, setCurrentYear] = useState(dashboardData.attendance.year);
   const [tasks, setTasks] = useState(dashboardData.tasks);
@@ -68,26 +69,6 @@ const Dashboard = () => {
     }
   };
 
-  const handleSaveGoal = () => {
-    setDailyGoal({ ...dailyGoal, target: parseInt(goalInput) || 15 });
-    setShowGoalModal(false);
-  };
-
-  const handleCancelGoal = () => {
-    setGoalInput(dailyGoal.target);
-    setShowGoalModal(false);
-  };
-
-  const progressPercentage = (dailyGoal.solved / dailyGoal.target) * 100;
-
-  const handleViewAnalysis = (test) => {
-    navigate('/overview', { state: { testData: test } });
-  };
-
-  const handleViewDppAnalysis = (dpp) => {
-    navigate(`/dpp/${dpp.id}`);
-  };
-
   const handleCreateTask = () => {
     setShowTaskModal(true);
     setEditingTaskId(null);
@@ -144,31 +125,12 @@ const Dashboard = () => {
             <ArrowLeft size={18} />
           </button>
 
-          <div className="card goal-card">
-            <div className="card-header">
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Daily Goal</h3>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: 600 }}>Solved</span>
-              <div className="progress-bar" style={{ flex: 1 }}>
-                <div
-                  className="progress-fill"
-                  style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                  {dailyGoal.solved} / {dailyGoal.target}
-                </span>
-                <button
-                  className="pill-button small"
-                  onClick={() => setShowGoalModal(true)}
-                >
-                  Edit
-                </button>
-              </div>
-            </div>
-          </div>
+          <DailyGoalProgress
+            dailyGoal={target}
+            correct={correct}
+            incorrect={incorrect}
+            onGoalChange={setTarget}
+          />
 
           <div className="card calendar-card">
             <h4 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600 }}>Attendance</h4>
@@ -260,103 +222,9 @@ const Dashboard = () => {
         </div>
 
         <div className="right-panel">
-          <div className="section-block">
-            <div className="section-header">
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>Test Analysis</h3>
-              <div className="filter-row">
-                <button className="chip active">All</button>
-                <button className="chip">Upcoming</button>
-              </div>
-            </div>
-            <div className="list">
-              {dashboardData.tests.map((test) => (
-                <div key={test.id} className="list-card">
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: 0, marginBottom: '6px', fontSize: '16px', fontWeight: 600 }}>
-                      {test.name}
-                    </h4>
-                    <p className="muted" style={{ margin: 0, fontSize: '13px' }}>
-                      {test.examType} • {test.date}
-                    </p>
-                  </div>
-                  <button
-                    className="link-button"
-                    onClick={() => handleViewAnalysis(test)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                  >
-                    View Analysis
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="section-block">
-            <div className="section-header">
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>DPP Analysis</h3>
-              <div className="filter-row">
-                <button className="chip active">All</button>
-                <button className="chip">Upcoming</button>
-              </div>
-            </div>
-            <div className="list">
-              {dashboardData.dpps.map((dpp) => (
-                <div key={dpp.id} className="list-card">
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: 0, marginBottom: '6px', fontSize: '16px', fontWeight: 600 }}>
-                      {dpp.title}
-                    </h4>
-                    <p className="muted" style={{ margin: 0, fontSize: '13px' }}>
-                      {dpp.examType} • {dpp.date}
-                    </p>
-                  </div>
-                  {dpp.attempted ? (
-                    <button
-                      className="link-button"
-                      onClick={() => handleViewDppAnalysis(dpp)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                    >
-                      View Analysis
-                      <ArrowRight size={16} />
-                    </button>
-                  ) : (
-                    <button className="pill-button attempt small">
-                      Attempt
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <StudentProfile />
         </div>
       </div>
-
-      {showGoalModal && (
-        <div className="modal-backdrop" onClick={handleCancelGoal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Edit Daily Goal</h3>
-            <div>
-              <label className="input-label">Target (number of problems)</label>
-              <input
-                type="number"
-                value={goalInput}
-                onChange={(e) => setGoalInput(e.target.value)}
-                min="1"
-                style={{ width: '100%', marginTop: '8px' }}
-              />
-            </div>
-            <div className="modal-actions">
-              <button className="pill-button ghost small" onClick={handleCancelGoal}>
-                Cancel
-              </button>
-              <button className="pill-button small" onClick={handleSaveGoal}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showTaskModal && (
         <div className="modal-backdrop" onClick={handleCancelTask}>

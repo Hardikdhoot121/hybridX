@@ -29,7 +29,7 @@ function Signup() {
   }
 
   try {
-    const url = "http://localhost:5000/api/auth/signup";
+    const url = "http://localhost:5000/auth/signup";
 
     const response = await fetch(url, {
       method: "POST",
