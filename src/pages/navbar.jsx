@@ -13,7 +13,7 @@ export default function Navbar() {
 
       <nav className="flex items-center justify-between px-8 py-4 text-white font-display">
 
-        {}
+        {/* Logo */}
         <div
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
@@ -25,7 +25,7 @@ export default function Navbar() {
           />
         </div>
 
-        {}
+        {/* Navigation Links */}
         <ul className="flex items-center space-x-8">
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
@@ -53,7 +53,7 @@ export default function Navbar() {
           </li>
         </ul>
 
-        {}
+        {/* Avatar */}
         <img
           className="w-9 h-9 rounded-full object-cover cursor-pointer"
           src="/images/Avatar.png"
