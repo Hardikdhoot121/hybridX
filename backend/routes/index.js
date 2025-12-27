@@ -3,8 +3,11 @@ import practiceRoutes from "./practiceRoutes.js";
 import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
 import adminRoutes from "./adminRoutes.js";
+import analyticsRoutes from "./analyticsRoutes.js";
+
 
 const router = express.Router();
+router.use("/api/analytics", analyticsRoutes);
 
 /**
  * AUTH ROUTES (Public)
@@ -14,23 +17,27 @@ const router = express.Router();
 router.use("/auth", authRoutes);
 
 /**
- * USER ROUTES (Protected – Student/User Panel)
+ * USER ROUTES (Protected)
  * /api/users/profile
- * /api/users/...
  */
 router.use("/users", userRoutes);
 
 /**
  * ADMIN ROUTES (Protected + Role-based)
- * /api/admin/dashboard
  * /api/admin/...
  */
 router.use("/admin", adminRoutes);
 
 /**
- * HEALTH CHECK
-*/
+ * PRACTICE ROUTES (Protected)
+ * /api/practice/attempt
+ */
 router.use("/practice", practiceRoutes);
+
+/**
+ * HEALTH CHECK
+ * /api/health
+ */
 router.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -38,6 +45,5 @@ router.get("/health", (req, res) => {
     timestamp: new Date(),
   });
 });
-
 
 export default router;

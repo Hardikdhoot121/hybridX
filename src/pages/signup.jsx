@@ -4,63 +4,68 @@ import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utils";
 
 function Signup() {
-  const [signupInfo, setsignupInfo] = useState({
+  const [signupInfo, setSignupInfo] = useState({
     name: "",
     email: "",
     password: "",
+    phone: "",
+    classLevel: "",
+    batch: "",
+    targetYear: "",
   });
+
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setsignupInfo((prev) => ({
+    setSignupInfo((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  console.log("signupInfo ->", signupInfo);
   const handleSignup = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { name, email, password } = signupInfo;
-  if (!name || !email || !password) {
-    return handleError("name, email and password are required");
-  }
+    const { name, email, password, phone, classLevel } = signupInfo;
 
-  try {
-    const url = "http://localhost:5000/api/auth/signup";
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(signupInfo),
-    });
-
-    const result = await response.json();
-    const { success, message, error } = result;
-
-    if (success) {
-      handleSuccess(message);
-      setTimeout(() => navigate("/login"), 1000);
-    } else if (error) {
-      const details = error?.details?.[0]?.message || message;
-      handleError(details);
-      
-    } else if (!success) {
-        handleError(message);
+    if (!name || !email || !password || !phone || !classLevel) {
+      return handleError(
+        "Name, email, password, phone number and class are required"
+      );
     }
-  } catch (err) {
-    handleError(err.message || "Something went wrong");
-  }
-};
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(signupInfo),
+        }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        handleSuccess(result.message);
+        setTimeout(() => navigate("/login"), 1000);
+      } else {
+        handleError(result.message || "Signup failed");
+      }
+    } catch (err) {
+      handleError(err.message || "Something went wrong");
+    }
+  };
 
   return (
     <>
       <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <form className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg" onSubmit={handleSignup}>
+        <form
+          className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg"
+          onSubmit={handleSignup}
+        >
           <h1 className="text-2xl font-bold text-white mb-6">Sign Up</h1>
 
           <label className="text-white">Name</label>
@@ -69,7 +74,6 @@ function Signup() {
             value={signupInfo.name}
             onChange={handleChange}
             type="text"
-            placeholder="Name"
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
@@ -79,7 +83,49 @@ function Signup() {
             value={signupInfo.email}
             onChange={handleChange}
             type="email"
-            placeholder="Email"
+            className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
+          />
+
+          <label className="text-white">Phone Number</label>
+          <input
+            name="phone"
+            value={signupInfo.phone}
+            onChange={handleChange}
+            type="text"
+            className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
+          />
+
+          <label className="text-white">Class</label>
+          <select
+            name="classLevel"
+            value={signupInfo.classLevel}
+            onChange={handleChange}
+            className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
+          >
+            <option value="">Select Class</option>
+            <option value="11th">11th</option>
+            <option value="12th">12th</option>
+            <option value="Dropper">Dropper</option>
+          </select>
+
+          <label className="text-white">Batch (optional)</label>
+          <select
+            name="batch"
+            value={signupInfo.batch}
+            onChange={handleChange}
+            className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
+          >
+            <option value="">Select Batch</option>
+            <option value="Batch 1">Batch 1</option>
+            <option value="Batch 2">Batch 2</option>
+          </select>
+
+          <label className="text-white">Target Year (optional)</label>
+          <input
+            name="targetYear"
+            value={signupInfo.targetYear}
+            onChange={handleChange}
+            type="number"
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
@@ -89,7 +135,6 @@ function Signup() {
             value={signupInfo.password}
             onChange={handleChange}
             type="password"
-            placeholder="Password"
             className="w-full mb-6 px-4 py-3 rounded bg-slate-700 text-white"
           />
 
@@ -99,9 +144,13 @@ function Signup() {
           >
             Sign Up
           </button>
-          <span>Already have an account ?
-            <Link to="/login">Login</Link>
-          </span>
+
+          <p className="text-white mt-4 text-sm">
+            Already have an account?{" "}
+            <Link className="text-blue-400" to="/login">
+              Login
+            </Link>
+          </p>
         </form>
       </div>
 

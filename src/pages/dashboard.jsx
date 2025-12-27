@@ -1,401 +1,302 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit2, Trash2, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
-import { dashboardData } from '../data/sampleData.js';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
+import { motion } from "framer-motion";
+
+const API_BASE = "http://localhost:5000/api";
+
+/* ================= AUTH HEADERS ================= */
+const getAuthHeaders = () => {
+  const token = localStorage.getItem("token");
+  if (!token) throw new Error("No token");
+  return {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [dailyGoal, setDailyGoal] = useState(dashboardData.dailyGoal);
+
+  /* ================= PROFILE ================= */
+  const [profile, setProfile] = useState(null);
+  const [editProfile, setEditProfile] = useState(false);
+  const [profileDraft, setProfileDraft] = useState({});
+
+  /* ================= ANALYTICS ================= */
+  const [weeklyStats, setWeeklyStats] = useState({
+    totalSolved: 0,
+    correct: 0,
+    accuracy: 0,
+    challengesTaken: 0,
+  });
+
+  const [weeklyGoal, setWeeklyGoal] = useState(15);
+  const [goalInput, setGoalInput] = useState(15);
   const [showGoalModal, setShowGoalModal] = useState(false);
-  const [goalInput, setGoalInput] = useState(dailyGoal.target);
-  const [currentMonth, setCurrentMonth] = useState(dashboardData.attendance.month);
-  const [currentYear, setCurrentYear] = useState(dashboardData.attendance.year);
-  const [tasks, setTasks] = useState(dashboardData.tasks);
-  const [showTaskModal, setShowTaskModal] = useState(false);
-  const [taskInput, setTaskInput] = useState('');
-  const [editingTaskId, setEditingTaskId] = useState(null);
 
-  const calendarData = useMemo(() => {
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-    const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const days = [];
-    
-    for (let i = 0; i < firstDay; i++) {
-      days.push(null);
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-      const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const today = new Date();
-      const isToday = today.getDate() === day && 
-                      today.getMonth() === currentMonth && 
-                      today.getFullYear() === currentYear;
-      const status = dashboardData.attendance.days[dateKey] || null;
-      
-      days.push({ day, status, isToday });
-    }
-    
-    const remainingCells = 7 - (days.length % 7);
-    if (remainingCells < 7) {
-      for (let i = 0; i < remainingCells; i++) {
-        days.push(null);
+  /* ================= FETCH DASHBOARD ================= */
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        const profileRes = await fetch(
+          `${API_BASE}/users/profile`,
+          { headers: getAuthHeaders() }
+        );
+        const profileJson = await profileRes.json();
+        setProfile(profileJson.user);
+        setProfileDraft(profileJson.user);
+
+        const statsRes = await fetch(
+          `${API_BASE}/analytics/weekly`,
+          { headers: getAuthHeaders() }
+        );
+        const stats = await statsRes.json();
+        setWeeklyStats(stats);
+
+const goalRes = await fetch(
+  `${API_BASE}/analytics/weekly-goal`,
+  { headers: getAuthHeaders() }
+);
+
+        const goal = await goalRes.json();
+        setWeeklyGoal(goal.target ?? 15);
+        setGoalInput(goal.target ?? 15);
+      } catch (err) {
+        console.error("Dashboard load failed:", err);
       }
-    }
-    
-    return days;
-  }, [currentMonth, currentYear]);
+    };
 
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                      'July', 'August', 'September', 'October', 'November', 'December'];
-  const dayNames = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+    loadDashboard();
+  }, []);
 
-  const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
+  /* ================= DERIVED ================= */
+  const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
+  const glow = weeklyStats.correct >= weeklyGoal;
+
+  /* ================= PROFILE SAVE ================= */
+  const handleProfileSave = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/users/profile`, {
+        method: "PUT",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(profileDraft),
+      });
+      const data = await res.json();
+      setProfile(data.user);
+      setProfileDraft(data.user);
+      setEditProfile(false);
+    } catch {
+      alert("Profile update failed");
     }
   };
+  
+  /* ================= GOAL SAVE ================= */
+  const handleSaveGoal = async () => {
+await fetch(`${API_BASE}/analytics/weekly-goal`, {
+  method: "POST",
+  headers: getAuthHeaders(),
+  body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
+});
 
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
-
-  const handleSaveGoal = () => {
-    setDailyGoal({ ...dailyGoal, target: parseInt(goalInput) || 15 });
+    setWeeklyGoal(parseInt(goalInput) || 15);
     setShowGoalModal(false);
   };
 
-  const handleCancelGoal = () => {
-    setGoalInput(dailyGoal.target);
-    setShowGoalModal(false);
-  };
 
-  const progressPercentage = (dailyGoal.solved / dailyGoal.target) * 100;
+  
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Login to view dashboard...
+      </div>
+    );
+  }
+  
 
-  const handleViewAnalysis = (test) => {
-    navigate('/overview', { state: { testData: test } });
-  };
+  /* ================= CIRCLE CALC ================= */
+  const size = 220;
+  const center = size / 2;
+  const radius = 86;
+  const stroke = 16;
+  const circumference = 2 * Math.PI * radius;
+  const progress =
+    weeklyGoal > 0
+      ? Math.min(weeklyStats.correct / weeklyGoal, 1)
+      : 0;
 
-  const handleViewDppAnalysis = (dpp) => {
-    navigate(`/dpp/${dpp.id}`);
-  };
-
-  const handleCreateTask = () => {
-    setShowTaskModal(true);
-    setEditingTaskId(null);
-    setTaskInput('');
-  };
-
-  const handleSaveTask = () => {
-    if (taskInput.trim()) {
-      if (editingTaskId) {
-        setTasks(tasks.map(task => 
-          task.id === editingTaskId 
-            ? { ...task, title: taskInput.trim() }
-            : task
-        ));
-      } else {
-        const newTask = {
-          id: `task-${Date.now()}`,
-          title: taskInput.trim(),
-          status: 'pending'
-        };
-        setTasks([...tasks, newTask]);
-      }
-      setShowTaskModal(false);
-      setTaskInput('');
-      setEditingTaskId(null);
-    }
-  };
-
-  const handleCancelTask = () => {
-    setShowTaskModal(false);
-    setTaskInput('');
-    setEditingTaskId(null);
-  };
-
-  const handleEditTask = (task) => {
-    setEditingTaskId(task.id);
-    setTaskInput(task.title);
-    setShowTaskModal(true);
-  };
-
-  const handleDeleteTask = (taskId) => {
-    setTasks(tasks.filter(task => task.id !== taskId));
-  };
-
+  /* ================= UI ================= */
   return (
-    <div className="page">
-      <div className="dashboard-grid">
-        <div className="left-panel">
-          <button
-            onClick={() => navigate('/')}
-            className="icon-button"
-            style={{ alignSelf: 'flex-start', marginBottom: '8px' }}
-          >
-            <ArrowLeft size={18} />
-          </button>
+    <div className="min-h-screen bg-[#0b1020] text-white px-4 md:px-6 py-4">
 
-          <div className="card goal-card">
-            <div className="card-header">
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Daily Goal</h3>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: 600 }}>Solved</span>
-              <div className="progress-bar" style={{ flex: 1 }}>
-                <div
-                  className="progress-fill"
-                  style={{ width: `${Math.min(progressPercentage, 100)}%` }}
-                />
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '14px', fontWeight: 600 }}>
-                  {dailyGoal.solved} / {dailyGoal.target}
-                </span>
+      <button
+        onClick={() => navigate("/")}
+        className="mb-4 flex items-center gap-2 text-gray-300 hover:text-white"
+      >
+        <ArrowLeft size={18} /> Back
+      </button>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+        {/* ================= LEFT ================= */}
+        <div className="xl:col-span-2 space-y-6">
+
+          {/* PROFILE */}
+          <div className="rounded-xl bg-[#0e1628] p-6 border border-white/5">
+            <div className="flex justify-between mb-4">
+              <h2 className="text-xl font-semibold">Student Profile</h2>
+
+              {!editProfile ? (
                 <button
-                  className="pill-button small"
-                  onClick={() => setShowGoalModal(true)}
+                  onClick={() => setEditProfile(true)}
+                  className="pill-button small flex items-center gap-2"
                 >
-                  Edit
+                  <Edit2 size={14} /> Edit
                 </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="card calendar-card">
-            <h4 style={{ marginBottom: '16px', fontSize: '18px', fontWeight: 600 }}>Attendance</h4>
-            <div className="calendar-header">
-              <div className="calendar-nav">
-                <button
-                  onClick={handlePrevMonth}
-                  className="icon-button small"
-                  style={{ background: 'transparent', border: 'none', color: '#c5cfdd' }}
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <span style={{ fontSize: '14px', fontWeight: 600, minWidth: '120px', textAlign: 'center' }}>
-                  {monthNames[currentMonth]} {currentYear}
-                </span>
-                <button
-                  onClick={handleNextMonth}
-                  className="icon-button small"
-                  style={{ background: 'transparent', border: 'none', color: '#c5cfdd' }}
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-            <div className="calendar-grid">
-              <div className="calendar-row days-row">
-                {dayNames.map((day, idx) => (
-                  <span key={idx} style={{ color: '#ff6b35', fontWeight: 500 }}>{day}</span>
-                ))}
-              </div>
-              {Array.from({ length: Math.ceil(calendarData.length / 7) }).map((_, weekIdx) => (
-                <div key={weekIdx} className="calendar-row">
-                  {calendarData.slice(weekIdx * 7, (weekIdx + 1) * 7).map((date, dayIdx) => {
-                    if (date === null) {
-                      return <div key={`empty-${weekIdx}-${dayIdx}`} style={{ padding: '6px 0' }} />;
-                    }
-                    const dayClasses = ['calendar-day'];
-                    if (date.status === 'present') dayClasses.push('present');
-                    if (date.status === 'absent') dayClasses.push('absent');
-                    if (date.isToday) dayClasses.push('today');
-                    
-                    return (
-                      <div
-                        key={`day-${date.day}`}
-                        className={dayClasses.join(' ')}
-                        style={{ cursor: 'default' }}
-                      >
-                        {date.day}
-                      </div>
-                    );
-                  })}
+              ) : (
+                <div className="flex gap-2">
+                  <button onClick={handleProfileSave}><Check /></button>
+                  <button onClick={() => setEditProfile(false)}><X /></button>
                 </div>
-              ))}
+              )}
             </div>
-          </div>
 
-          <div className="card tasks-card">
-            <h4 style={{ marginBottom: '12px', fontSize: '18px', fontWeight: 600 }}>Tasks</h4>
-            <div className="tasks-list">
-              {tasks.map((task, idx) => (
-                <div key={task.id} className="task-row">
-                  <div className="task-index">{idx + 1}</div>
-                  <div className="task-title">{task.title}</div>
-                  <div className="task-actions">
-                    <button 
-                      className="icon-button small"
-                      onClick={() => handleEditTask(task)}
-                    >
-                      <Edit2 size={14} />
-                    </button>
-                    <button 
-                      className="icon-button small"
-                      onClick={() => handleDeleteTask(task.id)}
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button 
-              className="pill-button" 
-              style={{ marginTop: '12px', width: '100%' }}
-              onClick={handleCreateTask}
-            >
-              Create New Task
-            </button>
-          </div>
-        </div>
-
-        <div className="right-panel">
-          <div className="section-block">
-            <div className="section-header">
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>Test Analysis</h3>
-              <div className="filter-row">
-                <button className="chip active">All</button>
-                <button className="chip">Upcoming</button>
-              </div>
-            </div>
-            <div className="list">
-              {dashboardData.tests.map((test) => (
-                <div key={test.id} className="list-card">
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: 0, marginBottom: '6px', fontSize: '16px', fontWeight: 600 }}>
-                      {test.name}
-                    </h4>
-                    <p className="muted" style={{ margin: 0, fontSize: '13px' }}>
-                      {test.examType} • {test.date}
-                    </p>
-                  </div>
-                  <button
-                    className="link-button"
-                    onClick={() => handleViewAnalysis(test)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                  >
-                    View Analysis
-                    <ArrowRight size={16} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="section-block">
-            <div className="section-header">
-              <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 600 }}>DPP Analysis</h3>
-              <div className="filter-row">
-                <button className="chip active">All</button>
-                <button className="chip">Upcoming</button>
-              </div>
-            </div>
-            <div className="list">
-              {dashboardData.dpps.map((dpp) => (
-                <div key={dpp.id} className="list-card">
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ margin: 0, marginBottom: '6px', fontSize: '16px', fontWeight: 600 }}>
-                      {dpp.title}
-                    </h4>
-                    <p className="muted" style={{ margin: 0, fontSize: '13px' }}>
-                      {dpp.examType} • {dpp.date}
-                    </p>
-                  </div>
-                  {dpp.attempted ? (
-                    <button
-                      className="link-button"
-                      onClick={() => handleViewDppAnalysis(dpp)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-                    >
-                      View Analysis
-                      <ArrowRight size={16} />
-                    </button>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                ["name", "Full Name"],
+                ["email", "Email"],
+                ["phone", "Phone"],
+                ["classLevel", "Class"],
+                ["batch", "Batch"],
+                ["targetYear", "Target Year"],
+              ].map(([key, label]) => (
+                <div key={key}>
+                  <p className="text-sm text-gray-400 mb-1">{label}</p>
+                  {editProfile ? (
+                    <input
+                      name={key}
+                      value={profileDraft[key] || ""}
+                      onChange={(e) =>
+                        setProfileDraft({ ...profileDraft, [key]: e.target.value })
+                      }
+                      className="w-full bg-black/30 px-3 py-2 rounded"
+                    />
                   ) : (
-                    <button className="pill-button attempt small">
-                      Attempt
-                    </button>
+                    <p>{profile[key] || "Not set"}</p>
                   )}
                 </div>
               ))}
             </div>
           </div>
+          
+
+          {/* ================= WEEKLY GOAL (CIRCULAR) ================= */}
+          <div className="rounded-xl bg-[#0e1628] p-6 text-center">
+            <div className="flex justify-between mb-3">
+              <h3 className="font-semibold">Weekly Goal</h3>
+              <button
+                onClick={() => setShowGoalModal(true)}
+                className="pill-button small flex items-center"
+              >
+                <Pencil size={14} className="mr-2" />
+                Edit
+              </button>
+            </div>
+
+            <div className="relative flex justify-center mt-6">
+              <svg width={size} height={size}>
+                <defs>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                <g transform={`rotate(-90 ${center} ${center})`}>
+                  <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeWidth={stroke}
+                    fill="none"
+                  />
+
+                  <motion.circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    stroke="#22C55E"
+                    strokeWidth={stroke}
+                    strokeLinecap="round"
+                    fill="none"
+                    strokeDasharray={`${progress * circumference} ${circumference}`}
+                    filter={glow ? "url(#glow)" : "none"}
+                    animate={{
+                      opacity: glow ? [0.6, 1, 0.6] : 1,
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: glow ? Infinity : 0,
+                    }}
+                  />
+                </g>
+              </svg>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <div className="text-4xl font-bold">
+                  {weeklyStats.correct}
+                  <span className="text-white/50"> / {weeklyGoal}</span>
+                </div>
+                <div className="text-xs tracking-widest text-white/50 mt-1">
+                  CORRECT
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between mt-6 text-sm">
+              <span className="text-green-400">✔ {weeklyStats.correct}</span>
+              <span className="text-red-400">✖ {incorrect}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ================= RIGHT ================= */}
+        <div className="rounded-xl bg-[#0e1628] p-6">
+          <h3 className="mb-4 font-semibold">Analytics </h3>
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
+            <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
+            <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
+            <div className="stat-card"><span>{weeklyStats.challengesTaken}</span><p>Challenges</p></div>
+          </div>
         </div>
       </div>
-
+                    
+      {/* GOAL MODAL */}
       {showGoalModal && (
-        <div className="modal-backdrop" onClick={handleCancelGoal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>Edit Daily Goal</h3>
-            <div>
-              <label className="input-label">Target (number of problems)</label>
-              <input
-                type="number"
-                value={goalInput}
-                onChange={(e) => setGoalInput(e.target.value)}
-                min="1"
-                style={{ width: '100%', marginTop: '8px' }}
-              />
-            </div>
-            <div className="modal-actions">
-              <button className="pill-button ghost small" onClick={handleCancelGoal}>
-                Cancel
-              </button>
-              <button className="pill-button small" onClick={handleSaveGoal}>
-                Save
-              </button>
-            </div>
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-[#0e1628] p-6 rounded-xl w-72">
+            <h3 className="mb-3">Edit Weekly Goal</h3>
+            <input
+              type="number"
+              min="1"
+              value={goalInput}
+              onChange={(e) => setGoalInput(e.target.value)}
+              className="w-full mb-4 px-3 py-2 rounded bg-black"
+            />
+            <button onClick={handleSaveGoal} className="pill-button w-full">
+              Save
+            </button>
           </div>
         </div>
       )}
-
-      {showTaskModal && (
-        <div className="modal-backdrop" onClick={handleCancelTask}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 600 }}>
-              {editingTaskId ? 'Edit Task' : 'Create New Task'}
-            </h3>
-            <div>
-              <label className="input-label">Task Title</label>
-              <input
-                type="text"
-                value={taskInput}
-                onChange={(e) => setTaskInput(e.target.value)}
-                placeholder="Enter task title"
-                style={{ width: '100%', marginTop: '8px' }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    handleSaveTask();
-                  }
-                }}
-              />
-            </div>
-            <div className="modal-actions">
-              <button className="pill-button ghost small" onClick={handleCancelTask}>
-                Cancel
-              </button>
-              <button 
-                className="pill-button small" 
-                onClick={handleSaveTask}
-                disabled={!taskInput.trim()}
-                style={{ opacity: !taskInput.trim() ? 0.5 : 1 }}
-              >
-                {editingTaskId ? 'Save' : 'Create'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
+    
   );
 };
 
