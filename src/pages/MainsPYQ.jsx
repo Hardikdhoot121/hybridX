@@ -93,36 +93,45 @@ function MainsPYQ() {
 
   /* ---------------- BACKEND SUBMIT ---------------- */
 
-  const submitPracticeAttempt = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please login to save progress");
-      return;
-    }
+const submitPracticeAttempt = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    console.error("❌ No token");
+    return;
+  }
 
-    try {
-      const res = await fetch(`${API_BASE}/api/practice/attempt`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          questionId: currVal.question_id,
-          subject: currVal.subject,
-          topic: currVal.topic || currVal.chapter,
-          difficulty: "Medium",
-          isCorrect:
-            selectedOption === currVal.correct_option_index,
-        }),
-      });
+  const currVal = data[currIndex];
 
-      const json = await res.json();
-      console.log("Saved attempt:", json);
-    } catch (err) {
-      console.error("Practice submit failed", err);
-    }
+  // 🛑 HARD VALIDATION (THIS FIXES YOUR ERROR)
+  if (!currVal || selectedOption === null) {
+    console.error("❌ Invalid attempt", currVal, selectedOption);
+    return;
+  }
+
+  const payload = {
+    questionId: currVal.question_id,
+    subject: currVal.subject.toLowerCase(),
+    topic: currVal.topic || currVal.chapter,
+    difficulty: "Medium",
+    isCorrect: selectedOption === currVal.correct_option_index
   };
+
+  console.log("✅ Sending payload:", payload);
+
+  try {
+    await fetch("http://localhost:5000/api/practice/attempt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.error("❌ Failed to submit attempt", err);
+  }
+};
+
 
   /* ---------------- CONTROLS ---------------- */
 

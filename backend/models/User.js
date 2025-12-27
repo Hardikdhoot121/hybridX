@@ -25,6 +25,26 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "admin"],
       default: "student",
     },
+    phone:{
+      type:String,
+      default:"",
+    },
+    classLevel: {
+      type: String,
+      enum: ["9th","10th","11th", "12th", "Dropper"],
+      default: "12th",
+    },
+
+    batch: {
+      type: String,
+      enum: ["Batch 1", "Batch 2"],
+      default: "Batch 1",
+    },
+
+    targetYear: {
+      type: Number,
+      default: new Date().getFullYear() + 1,
+    },
   },
   { timestamps: true }
 );

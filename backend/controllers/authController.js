@@ -5,13 +5,13 @@ import jwt from "jsonwebtoken";
 // ================= SIGNUP =================
 export const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, phone,classLevel,batch,targetYear } = req.body;
 
     // validation
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !phone || !classLevel) {
       return res.status(400).json({
         success: false,
-        message: "Name, email and password are required",
+        message: "fill all the fields",
       });
     }
 
@@ -31,6 +31,10 @@ export const signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+       phone,
+      classLevel,
+      batch: batch || "Batch 1",          // default if not provided
+      targetYear: targetYear || undefined // schema default applies
     });
 
     return res.status(201).json({
