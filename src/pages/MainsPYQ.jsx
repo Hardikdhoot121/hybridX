@@ -281,7 +281,6 @@ const submitPracticeAttempt = async () => {
         </div>
       </div>
 
-      <Footer />
     </>
   );
 }
