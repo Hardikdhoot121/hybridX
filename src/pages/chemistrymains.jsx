@@ -46,8 +46,12 @@ export default function Chemistry() {
             onClick={() =>
               navigate(`/jeemains/chemistry/${chapter}`)
             }
-            className="w-full bg-[#272E36] py-4 px-6 rounded-lg
-                       text-left hover:bg-[#323a44] transition"
+            className="
+rounded-md text-lg sm:text-xl font-medium
+h-12 sm:h-14 w-full max-w-4xl
+bg-[#3BBAF4] hover:bg-blue-500 text-white
+flex items-center justify-center transition p-3 mx-auto
+"
           >
             {chapter.replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase())}
           </button>
