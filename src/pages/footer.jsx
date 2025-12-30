@@ -62,10 +62,14 @@ const Footer = () => {
               Home
             </h2>
             <nav className="mb-6 list-none space-y-2">
-              <li><a href="#benefits" className="hover:text-gray-800">Benefits</a></li>
-              <li><a href="#test-series" className="hover:text-gray-800">Our Test Series</a></li>
-              <li><a href="#educators" className="hover:text-gray-800">Our Educators</a></li>
-              <li><a href="#faqs" className="hover:text-gray-800">Our FAQs</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Our Achievements</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Chapter-Wise PYQs</a></li>
+              <li><a  className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Hybrid Material</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>FAQs</a></li>
             </nav>
           </div>
 
@@ -84,7 +88,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Faculty
+                  Director
                 </a>
               </li>
               <li>
@@ -92,7 +96,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Support Staff
+                  HOD
                 </a>
               </li>
               <li>
@@ -100,7 +104,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Tech Team
+                  Dev Team
                 </a>
               </li>
             </nav>
@@ -113,13 +117,7 @@ const Footer = () => {
               Follow Us
             </h2>
             <nav className="flex list-none justify-center space-x-5 md:justify-start">
-              <li>
-                <a  className="text-gray-600 hover:text-[#1DA1F2] cursor-pointer">
-                  <li className="mr-2">
-                    <FaTwitter size={22} />
-                  </li>
-                </a>
-              </li>
+            
               <li>
                 <a  className="text-gray-600 hover:text-[#E4405F] cursor-pointer">
                   <li className="mr-2 ">

@@ -27,58 +27,6 @@ const ContactUs = () => {
     }
   ];
 
-  const faculty = [
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Mustaq",
-    role: "Chemistry Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Sandeep Sharma",
-    role: "Physics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-
-  ];
-
-  const staff = [
-    {
-    name: "Mahinder",
-    role: "Management",
-    phone: "8888888888",
-    email: "support@example.com",
-    img: "https://via.placeholder.com/300"
-  },
-  {
-    name: "Isha Soni",
-    role: "Management",
-    phone: "8888888888",
-    email: "support@example.com",
-    img: "https://via.placeholder.com/300"
-  },
-
-];
-
   const tech = [
     {
     name: "Hardik Dhoot",
@@ -155,14 +103,10 @@ const ContactUs = () => {
       </section>
 
 
-      {/* ===== Faculty Members ===== */}
-      <Section title="Faculty Members" data={faculty} Card={Card} />
 
-      {/* ===== Support Staff ===== */}
-      <Section title="Support Staff" data={staff} Card={Card} />
 
       {/* ===== Tech Team ===== */}
-      <Section title="Tech Team" data={tech} Card={Card} />
+      <Section title="Dev Team" data={tech} Card={Card} />
 
     </div>
     <Footer />

@@ -1,13 +1,14 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { iframe } from "framer-motion/client";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const SmallMediaSlider = ({ youtubeLinks = [] }) => {
+const SmallMediaSlider = ({ youtubeLinks = [] , googledrive = []}) => {
   return (
     <section className=" py-10 text-white">
-      <h2 className="text-3xl font-bold text-center mb-8">Highlights</h2>
+      <h2 className="text-5xl font-bold text-center mt-10 mb-8">Our Achievements</h2>
 
       <Swiper
         modules={[Navigation, Pagination]}
@@ -31,6 +32,19 @@ const SmallMediaSlider = ({ youtubeLinks = [] }) => {
               </a>
             </SwiperSlide>
           );
+        })}
+
+        {googledrive.map((url,i) => {
+          const id = url.split("d/")[1]?.split("/")[0];
+          return (
+            <>
+            <SwiperSlide key = {i}>            
+            <img src = {`https://drive.google.com/file/d/${id}/preview`} alt = "Thumbnail Image" className = "w-100 h-400" ></img>
+
+            </SwiperSlide>
+
+            </>
+          )
         })}
       </Swiper>
     </section>
