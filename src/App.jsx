@@ -15,6 +15,7 @@ import Dashboard from "./pages/dashboard";
 import Overview from "./pages/overview";
 import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
+import Ncertplus from "./pages/ncert+";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/dpp/:id" element={<DppResult />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/hybrid" element={<Hybrid/>} />
+        <Route path="/ncert+" element={<Ncertplus/>} />
       </Routes>
     </>
   );

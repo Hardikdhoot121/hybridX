@@ -90,8 +90,14 @@ const Home = ({ videos = [], instagram = [] }) => {
       <SmallMediaSlider
         youtubeLinks={[
           "https://www.youtube.com/watch?v=HquG9qXIAl0",
-          "https://www.youtube.com/watch?v=CtldIsaycWI"
+          "https://www.youtube.com/watch?v=CtldIsaycWI"      
+          
         ]}
+        googledrive={[
+          "https://drive.google.com/file/d/1OQ7wKXwi12lZzRMt6vrZziDNmStH_iC2/view"
+
+        ]}
+        
       />
 
       {/* 📌 Section Title */}
