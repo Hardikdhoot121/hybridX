@@ -7,7 +7,7 @@ import analyticsRoutes from "./analyticsRoutes.js";
 
 
 const router = express.Router();
-router.use("/api/analytics", analyticsRoutes);
+router.use("/analytics", analyticsRoutes);
 
 /**
  * AUTH ROUTES (Public)
