@@ -15,6 +15,8 @@ import Dashboard from "./pages/dashboard";
 import Overview from "./pages/overview";
 import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import AdminAllDetails from "./admin/pages/AdminAllDetails";
 
 function App() {
   return (
@@ -36,6 +38,8 @@ function App() {
         <Route path="/dpp/:id" element={<DppResult />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/hybrid" element={<Hybrid/>} />
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
       </Routes>
     </>
   );
