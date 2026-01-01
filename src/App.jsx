@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/home";
 import ContactUs from "./pages/contactUs";
 import Navbar from "./pages/navbar";
-import Test from "./pages/test";
 import PYQ from "./pages/pyq";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
@@ -22,7 +21,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/contact_us" element={<ContactUs />} />
-        <Route path="/test" element={<Test />} />
         <Route path="/pyq" element={<PYQ />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
