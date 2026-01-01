@@ -62,9 +62,8 @@ export default function Navbar() {
         </div>):(//else
         <div className="cursor-pointer"> 
           <IoPersonCircle className="h-14 w-14 rounded-full bg-gray-800 "
-          onclick={()=>navigate("/login")}/>
-        </div>)
-}
+          onClick={()=>navigate("/login")}/>
+        </div>)}
         {/* Hamburger Menu - Mobile */}
         <button
           className="block md:hidden text-2xl"
