@@ -3,7 +3,6 @@ import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 /* ================= AUTH HEADERS ================= */
@@ -18,17 +17,14 @@ const getAuthHeaders = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const handleLogout=()=>{
-  localStorage.removeItem("token");
-  navigate("/")
-};
 
-  /* ================= PROFILE ================= */
+  /* ================= STATE ================= */
   const [profile, setProfile] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileDraft, setProfileDraft] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  /* ================= ANALYTICS ================= */
   const [weeklyStats, setWeeklyStats] = useState({
     totalSolved: 0,
     correct: 0,
@@ -40,40 +36,68 @@ const Dashboard = () => {
   const [goalInput, setGoalInput] = useState(15);
   const [showGoalModal, setShowGoalModal] = useState(false);
 
+  /* ================= LOGOUT ================= */
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   /* ================= FETCH DASHBOARD ================= */
   useEffect(() => {
     const loadDashboard = async () => {
       try {
-        const profileRes = await fetch(
-          `${API_BASE}/users/profile`,
-          { headers: getAuthHeaders() }
-        );
+        const [profileRes, statsRes, goalRes] = await Promise.all([
+          fetch(`${API_BASE}/users/profile`, { headers: getAuthHeaders() }),
+          fetch(`${API_BASE}/analytics/weekly`, { headers: getAuthHeaders() }),
+          fetch(`${API_BASE}/analytics/weekly-goal`, {
+            headers: getAuthHeaders(),
+          }),
+        ]);
+
+        if (!profileRes.ok) throw new Error("Unauthorized");
+
         const profileJson = await profileRes.json();
+        const stats = await statsRes.json();
+        const goal = await goalRes.json();
+
         setProfile(profileJson.user);
         setProfileDraft(profileJson.user);
-
-        const statsRes = await fetch(
-          `${API_BASE}/analytics/weekly`,
-          { headers: getAuthHeaders() }
-        );
-        const stats = await statsRes.json();
         setWeeklyStats(stats);
-
-const goalRes = await fetch(
-  `${API_BASE}/analytics/weekly-goal`,
-  { headers: getAuthHeaders() }
-);
-
-        const goal = await goalRes.json();
         setWeeklyGoal(goal.target ?? 15);
         setGoalInput(goal.target ?? 15);
       } catch (err) {
         console.error("Dashboard load failed:", err);
+        setProfile(null);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadDashboard();
   }, []);
+
+  /* ================= GUARDS ================= */
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white">
+        <div className="animate-pulse text-lg">Loading dashboard...</div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-white">
+        <p className="mb-4">Session expired. Please login again.</p>
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-blue-600 px-6 py-2 rounded hover:bg-blue-700"
+        >
+          Login
+        </button>
+      </div>
+    );
+  }
 
   /* ================= DERIVED ================= */
   const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
@@ -95,30 +119,18 @@ const goalRes = await fetch(
       alert("Profile update failed");
     }
   };
-  
+
   /* ================= GOAL SAVE ================= */
   const handleSaveGoal = async () => {
-await fetch(`${API_BASE}/analytics/weekly-goal`, {
-  method: "POST",
-  headers: getAuthHeaders(),
-  body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
-});
+    await fetch(`${API_BASE}/analytics/weekly-goal`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
+    });
 
     setWeeklyGoal(parseInt(goalInput) || 15);
     setShowGoalModal(false);
   };
-
-
-  
-  if (!profile) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white">
-        <div>Login to view dashboard...</div>
-        <button className="bg-blue-500 mt-2 p-2 pr-10 pl-10 rounded-2xl hover:cursor-pointer hover:bg-blue-600" onClick={()=>{navigate("/login")}}> LOGIN </button>
-      </div>
-    );
-  }
-  
 
   /* ================= CIRCLE CALC ================= */
   const size = 220;
@@ -134,7 +146,6 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
   /* ================= UI ================= */
   return (
     <div className="min-h-screen bg-[#0b1020] text-white px-4 md:px-6 py-4">
-
       <button
         onClick={() => navigate("/")}
         className="mb-4 flex items-center gap-2 text-gray-300 hover:text-white"
@@ -143,10 +154,8 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
       </button>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-
         {/* ================= LEFT ================= */}
         <div className="xl:col-span-2 space-y-6">
-
           {/* PROFILE */}
           <div className="rounded-xl bg-[#0e1628] p-6 border border-white/5">
             <div className="flex justify-between mb-4">
@@ -161,8 +170,12 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                 </button>
               ) : (
                 <div className="flex gap-2">
-                  <button onClick={handleProfileSave}><Check /></button>
-                  <button onClick={() => setEditProfile(false)}><X /></button>
+                  <button onClick={handleProfileSave}>
+                    <Check />
+                  </button>
+                  <button onClick={() => setEditProfile(false)}>
+                    <X />
+                  </button>
                 </div>
               )}
             </div>
@@ -180,10 +193,12 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                   <p className="text-sm text-gray-400 mb-1">{label}</p>
                   {editProfile ? (
                     <input
-                      name={key}
                       value={profileDraft[key] || ""}
                       onChange={(e) =>
-                        setProfileDraft({ ...profileDraft, [key]: e.target.value })
+                        setProfileDraft({
+                          ...profileDraft,
+                          [key]: e.target.value,
+                        })
                       }
                       className="w-full bg-black/30 px-3 py-2 rounded"
                     />
@@ -191,37 +206,21 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     <p>{profile[key] || "Not set"}</p>
                   )}
                 </div>
-              ))}               
+              ))}
             </div>
-            {/* ================= LOGOUT ================= */}
-<div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
-  <button
-    className="
-      gap-2
-      px-5 py-2
-      rounded-lg
-      bg-red-500/10
-      text-red-400
-      hover:bg-red-500/20
-      hover:text-red-300
-      transition-all
-      font-medium
-    "
-    
-    onClick={() => {
-     if (window.confirm("Are you sure you want to logout?")) {
-    handleLogout();
-  }
-}}
-  >
-    🚪 Logout
-  </button>
-</div>
 
+            {/* LOGOUT */}
+            <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+              <button
+                onClick={() => setShowLogoutModal(true)}
+                className="px-5 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition"
+              >
+                🚪 Logout
+              </button>
+            </div>
           </div>
-          
 
-          {/* ================= WEEKLY GOAL (CIRCULAR) ================= */}
+          {/* WEEKLY GOAL */}
           <div className="rounded-xl bg-[#0e1628] p-6 text-center">
             <div className="flex justify-between mb-3">
               <h3 className="font-semibold">Weekly Goal</h3>
@@ -229,23 +228,12 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                 onClick={() => setShowGoalModal(true)}
                 className="pill-button small flex items-center"
               >
-                <Pencil size={14} className="mr-2" />
-                Edit
+                <Pencil size={14} className="mr-2" /> Edit
               </button>
             </div>
 
             <div className="relative flex justify-center mt-6">
               <svg width={size} height={size}>
-                <defs>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
                 <g transform={`rotate(-90 ${center} ${center})`}>
                   <circle
                     cx={center}
@@ -255,79 +243,42 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     strokeWidth={stroke}
                     fill="none"
                   />
-
                   <motion.circle
                     cx={center}
                     cy={center}
                     r={radius}
                     stroke="#22C55E"
                     strokeWidth={stroke}
-                    strokeLinecap="round"
                     fill="none"
                     strokeDasharray={`${progress * circumference} ${circumference}`}
-                    filter={glow ? "url(#glow)" : "none"}
-                    animate={{
-                      opacity: glow ? [0.6, 1, 0.6] : 1,
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: glow ? Infinity : 0,
-                    }}
+                    animate={{ opacity: glow ? [0.6, 1, 0.6] : 1 }}
+                    transition={{ duration: 2, repeat: glow ? Infinity : 0 }}
                   />
                 </g>
               </svg>
-
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className="text-4xl font-bold">
-                  {weeklyStats.correct}
-                  <span className="text-white/50"> / {weeklyGoal}</span>
-                </div>
-                <div className="text-xs tracking-widest text-white/50 mt-1">
-                  CORRECT
-                </div>
-              </div>
             </div>
-
-            <div className="flex justify-between mt-6 text-sm">
-              <span className="text-green-400">✔ {weeklyStats.correct}</span>
-              <span className="text-red-400">✖ {incorrect}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= RIGHT ================= */}
-        <div className="rounded-xl bg-[#0e1628] p-6">
-          <h3 className="mb-4 font-semibold">Analytics </h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
-            <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
-            <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
-            <div className="stat-card"><span>{weeklyStats.challengesTaken}</span><p>Challenges</p></div>
           </div>
         </div>
       </div>
-                    
-      {/* GOAL MODAL */}
-      {showGoalModal && (
+
+      {/* LOGOUT MODAL */}
+      {showLogoutModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-[#0e1628] p-6 rounded-xl w-72">
-            <h3 className="mb-3">Edit Weekly Goal</h3>
-            <input
-              type="number"
-              min="1"
-              value={goalInput}
-              onChange={(e) => setGoalInput(e.target.value)}
-              className="w-full mb-4 px-3 py-2 rounded bg-black"
-            />
-            <button onClick={handleSaveGoal} className="pill-button w-full">
-              Save
-            </button>
+          <div className="bg-[#0e1628] p-6 rounded-xl w-80">
+            <h3 className="text-lg mb-4">Confirm Logout</h3>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowLogoutModal(false)}>Cancel</button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-600 px-4 py-2 rounded"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       )}
-      
     </div>
-    
   );
 };
 
