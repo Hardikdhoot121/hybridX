@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMenu, FiX } from "react-icons/fi";
 import logo from "../images/hybrid_logo.jpg";
-
+import { FcBusinessman } from "react-icons/fc";
+import { IoPersonCircle } from "react-icons/io5";
 export default function Navbar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
+  const isLoggedIn = !!localStorage.getItem("token");
   return (
     <>
+    
       {/* 🔔 Announcement Banner */}
       <div className="w-full bg-[#3abbf5] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
         🌟 Premium Test Series — Sale Ending Soon! Grab Your Access Now 🚀
@@ -52,14 +54,17 @@ export default function Navbar() {
             Contact Us
           </li>
         </ul>
-
-        {/* Avatar (Desktop Only) */}
-        <img
-          className="hidden md:block w-9 h-9 rounded-full object-cover cursor-pointer"
-          src="/images/Avatar.png"
-          alt="Avatar"
-        />
-
+        {/* Avatar (Desktop Only tab hota jab hidden used hota hidden and md:block works together) */}
+        {isLoggedIn?(
+        <div className="cursor-pointer"> 
+          <FcBusinessman className="h-14 w-14 rounded-full bg-gray-800 "
+          onClick={() => navigate("/dashboard")} />
+        </div>):(//else
+        <div className="cursor-pointer"> 
+          <IoPersonCircle className="h-14 w-14 rounded-full bg-gray-800 "
+          onclick={()=>navigate("/login")}/>
+        </div>)
+}
         {/* Hamburger Menu - Mobile */}
         <button
           className="block md:hidden text-2xl"
@@ -72,6 +77,7 @@ export default function Navbar() {
       {/* Mobile Dropdown Menu */}
       {open && (
         <div className="md:hidden bg-[#0d1117] text-white px-6 py-4 space-y-3 font-medium border-t border-gray-700">
+          
           <p onClick={() => { navigate("/"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Home</p>
           <p onClick={() => { window.open("https://hybrideduhub.collegedoors.com"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Tests</p>
           <p onClick={() => { navigate("/dashboard"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Dashboard</p>
