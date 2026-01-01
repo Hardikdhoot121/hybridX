@@ -127,7 +127,7 @@ if (!profile) {
       <div>Session expired. Please login again.</div>
       <button
         className="bg-blue-500 mt-3 px-6 py-2 rounded"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/login")}
       >
         Login
       </button>
