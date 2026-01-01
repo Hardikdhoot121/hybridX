@@ -7,7 +7,8 @@ import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 
 function MainsPYQ() {
   const { subject, chapter } = useParams();
@@ -119,7 +120,8 @@ const submitPracticeAttempt = async () => {
   console.log("✅ Sending payload:", payload);
 
   try {
-    await fetch("http://localhost:5000/api/practice/attempt", {
+    await fetch(`${API_BASE}/api/practice/attempt`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
