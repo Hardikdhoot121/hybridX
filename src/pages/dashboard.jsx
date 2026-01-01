@@ -45,26 +45,33 @@ const Dashboard = () => {
 useEffect(() => {
   const loadDashboard = async () => {
     try {
-     const res = await fetch(`${API_BASE}/dashboard`, {
-  headers: getAuthHeaders(),
-});
+      const profileRes = await fetch(
+        `${API_BASE}/users/profile`,
+        { headers: getAuthHeaders() }
+      );
+      const profileJson = await profileRes.json();
 
-if (!res.ok) {
-  throw new Error(`HTTP ${res.status}`);
-}
+      setProfile(profileJson.user);
+      setProfileDraft(profileJson.user);
 
-const data = await res.json();
+      const statsRes = await fetch(
+        `${API_BASE}/analytics/weekly`,
+        { headers: getAuthHeaders() }
+      );
+      setWeeklyStats(await statsRes.json());
 
-      setProfile(data.user);
-      setProfileDraft(data.user);
-      setWeeklyStats(data.weeklyStats);
-      setWeeklyGoal(data.weeklyGoal);
-      setGoalInput(data.weeklyGoal);
+      const goalRes = await fetch(
+        `${API_BASE}/analytics/weekly-goal`,
+        { headers: getAuthHeaders() }
+      );
+      const goal = await goalRes.json();
+      setWeeklyGoal(goal.target ?? 15);
+      setGoalInput(goal.target ?? 15);
 
     } catch (err) {
-      console.error(err);
+      console.error("Dashboard load failed:", err);
     } finally {
-      setLoading(false);
+      setLoading(false); // 🔑 VERY IMPORTANT
     }
   };
 
@@ -312,6 +319,7 @@ if (!profile) {
             <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
             <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
             <div className="stat-card"><span>0</span><p>Challenges</p></div>
+            {/* {weeklyStats.challengesTaken} */}
           </div>
         </div>
       </div>
