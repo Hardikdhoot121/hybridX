@@ -4,9 +4,9 @@ import Footer from "./footer";
 import { loadFromDrive } from "./drive"; // 👈 Correct path
 
 // 📌 MAIN NCERT+ FOLDER ID
-const NCERT_FOLDER = "1U-Mavl6eEihIlhEvQHnUaLVZ_jX_8bVA";
+const NCERT_FOLDER = "1XnI3a_IKcukE8sJsroDr-t_5Dq1pMW6V";
 
-export default function NcertPlus() {
+export default function Notes() {
   const [currentFolder, setCurrentFolder] = useState(NCERT_FOLDER);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +24,7 @@ export default function NcertPlus() {
       <Navbar />
 
       <div className="mt-24 text-center">
-        <h2 className="text-5xl font-bold text-white">NCERT+</h2>
+        <h2 className="text-5xl font-bold text-white">Notes</h2>
       </div>
 
       {/* 🔙 Back Navigation */}
