@@ -1,54 +1,41 @@
+// components/AchievementSlider.jsx
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-import { iframe } from "framer-motion/client";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const SmallMediaSlider = ({ youtubeLinks = [] , googledrive = []}) => {
+export default function AchievementSlider({ images = [] }) {
   return (
-    <section className=" py-10 text-white">
-      <h2 className="text-5xl font-bold text-center mt-10 mb-8">Our Achievements</h2>
+    <div className="w-[95%] mx-auto my-10">
+      <h2 className="text-4xl font-bold text-center mb-8 text-white">
+        Our Achievements
+      </h2>
 
       <Swiper
-        modules={[Navigation, Pagination]}
+        modules={[Navigation, Pagination, Autoplay]}
         navigation
         pagination={{ clickable: true }}
-        slidesPerView={1}
+        autoplay={{ delay: 2500 }}
         loop={true}
-        className="max-w-3xl mx-auto rounded-xl"
-        style={{ height: "240px" }}
+        spaceBetween={10}
+        slidesPerView={1}   // ⬅ Only 1 image at a time
+        className="mySwiper"
       >
-        {youtubeLinks.map((url, i) => {
-          const id = url.split("v=")[1]?.split("&")[0]; // extract ID
-          return (
-            <SwiperSlide key={i}>
-              <a href={url} target="_blank" rel="noopener noreferrer">
-                <img
-                  src={`https://img.youtube.com/vi/${id}/mqdefault.jpg`}
-                  alt="YouTube Thumbnail"
-                  className="w-full h-full object-cover rounded-xl"
-                />
-              </a>
-            </SwiperSlide>
-          );
-        })}
-
-        {googledrive.map((url,i) => {
-          const id = url.split("d/")[1]?.split("/")[0];
-          return (
-            <>
-            <SwiperSlide key = {i}>            
-            <img src = {`https://drive.google.com/file/d/${id}/preview`} alt = "Thumbnail Image" className = "w-100 h-400" ></img>
-
-            </SwiperSlide>
-
-            </>
-          )
-        })}
+        {images.map((img, index) => (
+          <SwiperSlide key={index}>
+            <div className="rounded-xl overflow-hidden shadow-lg border border-gray-700 h-[350px] flex justify-center items-center ">
+              <img 
+                src={img}
+                alt={`Achievement-${index}`}
+                className="w-full h-full object-contain bg-black"
+              />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
-    </section>
+    </div>
   );
-};
-
-export default SmallMediaSlider;
+}

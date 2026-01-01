@@ -13,7 +13,7 @@ const ContactUs = () => {
       role: "Director",
       phone: "99503 64747",
       email: "director@example.com",
-      img: "https://via.placeholder.com/300" // replace with real image link
+      img: ""
     }
   ];
 
@@ -33,15 +33,15 @@ const ContactUs = () => {
     role: "Webiste Development Head",
     phone: "63789 49658",
     email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    img: "../src/images/Hardik.jpeg"
     },
 
     {
     name: "Garvit Mathur",
     role: "Website Development Member",
     phone: "90792 12029",
-    email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    email: "mathurgarvti@gmail.com",
+    img: "../src/images/Garvit.jpeg"
     },
 
     {
@@ -49,7 +49,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "86962 44108",
     email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    img: "../src/images/Utkarsh.webp"
     },
 
     {
@@ -57,7 +57,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "98295 91055",
     email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    img: "../src/images/Paksa.jpeg"
     },
 ];
 
