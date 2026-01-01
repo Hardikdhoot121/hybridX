@@ -213,27 +213,26 @@ if (!profile) {
             {/* ================= LOGOUT ================= */}
 <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
   <button
+    onClick={handleLogout}
     className="
-      gap-2
+      flex items-center gap-2
       px-5 py-2
       rounded-lg
-      bg-red-500/10
+      bg-gradient-to-r from-red-500/20 to-red-600/20
       text-red-400
-      hover:bg-red-500/20
+      border border-red-500/30
+      hover:from-red-500/30 hover:to-red-600/30
       hover:text-red-300
-      transition-all
-      font-medium
+      hover:shadow-lg hover:shadow-red-500/20
+      transition-all duration-200
+      font-semibold
+      active:scale-95
     "
-    
-    onClick={() => {
-     if (window.confirm("Are you sure you want to logout?")) {
-    handleLogout();
-  }
-}}
   >
     🚪 Logout
   </button>
 </div>
+
 
           </div>
           
