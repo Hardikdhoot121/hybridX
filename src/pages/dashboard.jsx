@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE = "http://localhost:5000/api";
+
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
@@ -17,11 +18,16 @@ const getAuthHeaders = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const handleLogout=()=>{
+  localStorage.removeItem("token");
+  navigate("/")
+};
 
   /* ================= PROFILE ================= */
   const [profile, setProfile] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileDraft, setProfileDraft] = useState({});
+  const [loading, setLoading] = useState(true);
 
   /* ================= ANALYTICS ================= */
   const [weeklyStats, setWeeklyStats] = useState({
@@ -36,39 +42,41 @@ const Dashboard = () => {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   /* ================= FETCH DASHBOARD ================= */
-  useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const profileRes = await fetch(
-          `${API_BASE}/users/profile`,
-          { headers: getAuthHeaders() }
-        );
-        const profileJson = await profileRes.json();
-        setProfile(profileJson.user);
-        setProfileDraft(profileJson.user);
+useEffect(() => {
+  const loadDashboard = async () => {
+    try {
+      const profileRes = await fetch(
+        `${API_BASE}/users/profile`,
+        { headers: getAuthHeaders() }
+      );
+      const profileJson = await profileRes.json();
 
-        const statsRes = await fetch(
-          `${API_BASE}/analytics/weekly`,
-          { headers: getAuthHeaders() }
-        );
-        const stats = await statsRes.json();
-        setWeeklyStats(stats);
+      setProfile(profileJson.user);
+      setProfileDraft(profileJson.user);
 
-const goalRes = await fetch(
-  `${API_BASE}/analytics/weekly-goal`,
-  { headers: getAuthHeaders() }
-);
+      const statsRes = await fetch(
+        `${API_BASE}/analytics/weekly`,
+        { headers: getAuthHeaders() }
+      );
+      setWeeklyStats(await statsRes.json());
 
-        const goal = await goalRes.json();
-        setWeeklyGoal(goal.target ?? 15);
-        setGoalInput(goal.target ?? 15);
-      } catch (err) {
-        console.error("Dashboard load failed:", err);
-      }
-    };
+      const goalRes = await fetch(
+        `${API_BASE}/analytics/weekly-goal`,
+        { headers: getAuthHeaders() }
+      );
+      const goal = await goalRes.json();
+      setWeeklyGoal(goal.target ?? 15);
+      setGoalInput(goal.target ?? 15);
 
-    loadDashboard();
-  }, []);
+    } catch (err) {
+      console.error("Dashboard load failed:", err);
+    } finally {
+      setLoading(false); // 🔑 VERY IMPORTANT
+    }
+  };
+
+  loadDashboard();
+}, []);
 
   /* ================= DERIVED ================= */
   const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
@@ -105,13 +113,28 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
 
 
   
-  if (!profile) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Login to view dashboard...
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      Loading dashboard...
+    </div>
+  );
+}
+
+if (!profile) {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center text-white">
+      <div>Login to view dashboard...</div>
+      <button
+        className="bg-blue-500 mt-3 px-6 py-2 rounded"
+        onClick={() => navigate("/login")}
+      >
+        Login
+      </button>
+    </div>
+  );
+}
+
   
 
   /* ================= CIRCLE CALC ================= */
@@ -185,8 +208,32 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     <p>{profile[key] || "Not set"}</p>
                   )}
                 </div>
-              ))}
+              ))}               
             </div>
+            {/* ================= LOGOUT ================= */}
+<div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+  <button
+    onClick={handleLogout}
+    className="
+      flex items-center gap-2
+      px-5 py-2
+      rounded-lg
+      bg-linear-to-r from-red-500/20 to-red-600/20
+      text-red-400
+      border border-red-500/30
+      hover:from-red-500/30 hover:to-red-600/30
+      hover:text-red-300
+      hover:shadow-lg hover:shadow-red-500/20
+      transition-all duration-200
+      font-semibold
+      active:scale-95
+    "
+  >
+    🚪 Logout
+  </button>
+</div>
+
+
           </div>
           
 
