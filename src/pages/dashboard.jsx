@@ -218,7 +218,7 @@ if (!profile) {
       flex items-center gap-2
       px-5 py-2
       rounded-lg
-      bg-gradient-to-r from-red-500/20 to-red-600/20
+      bg-linear-to-r from-red-500/20 to-red-600/20
       text-red-400
       border border-red-500/30
       hover:from-red-500/30 hover:to-red-600/30
