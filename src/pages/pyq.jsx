@@ -4,6 +4,11 @@ import Data from '../jee_mains_clean.json'
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
 
+
+// This page is currently not in use ... sample page 
+
+
+
 function PYQ() {
 
     const renderQuestion = (text) => {

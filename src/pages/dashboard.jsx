@@ -318,7 +318,7 @@ if (!profile) {
             <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
             <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
             <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
-            <div className="stat-card"><span>{weeklyStats.challengesTaken}</span><p>Challenges</p></div>
+            <div className="stat-card"><span>0</span><p>Challenges</p></div>
           </div>
         </div>
       </div>
