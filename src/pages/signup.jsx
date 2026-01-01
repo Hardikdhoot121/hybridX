@@ -32,7 +32,7 @@ function Signup() {
 
     if (!name || !email || !password || !phone || !classLevel) {
       return handleError(
-        "Name, email, password, phone number and class are required"
+        "Fill all the required Field."
       );
     }
 
