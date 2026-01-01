@@ -45,11 +45,15 @@ const Dashboard = () => {
 useEffect(() => {
   const loadDashboard = async () => {
     try {
-      const res = await fetch(`${API_BASE}/dashboard`, {
-        headers: getAuthHeaders(),
-      });
+     const res = await fetch(`${API_BASE}/dashboard`, {
+  headers: getAuthHeaders(),
+});
 
-      const data = await res.json();
+if (!res.ok) {
+  throw new Error(`HTTP ${res.status}`);
+}
+
+const data = await res.json();
 
       setProfile(data.user);
       setProfileDraft(data.user);
