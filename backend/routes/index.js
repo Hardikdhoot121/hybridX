@@ -4,7 +4,7 @@ import authRoutes from "./authRoutes.js";
 import userRoutes from "./userRoutes.js";
 import adminRoutes from "./adminRoutes.js";
 import analyticsRoutes from "./analyticsRoutes.js";
-
+import dashboardRoutes from "./dashboardRoutes.js";
 
 const router = express.Router();
 router.use("/analytics", analyticsRoutes);
@@ -33,7 +33,7 @@ router.use("/admin", adminRoutes);
  * /api/practice/attempt
  */
 router.use("/practice", practiceRoutes);
-
+router.use("/dashboard", dashboardRoutes);
 /**
  * HEALTH CHECK
  * /api/health

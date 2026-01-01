@@ -45,33 +45,22 @@ const Dashboard = () => {
 useEffect(() => {
   const loadDashboard = async () => {
     try {
-      const profileRes = await fetch(
-        `${API_BASE}/users/profile`,
-        { headers: getAuthHeaders() }
-      );
-      const profileJson = await profileRes.json();
+      const res = await fetch(`${API_BASE}/dashboard`, {
+        headers: getAuthHeaders(),
+      });
 
-      setProfile(profileJson.user);
-      setProfileDraft(profileJson.user);
+      const data = await res.json();
 
-      const statsRes = await fetch(
-        `${API_BASE}/analytics/weekly`,
-        { headers: getAuthHeaders() }
-      );
-      setWeeklyStats(await statsRes.json());
-
-      const goalRes = await fetch(
-        `${API_BASE}/analytics/weekly-goal`,
-        { headers: getAuthHeaders() }
-      );
-      const goal = await goalRes.json();
-      setWeeklyGoal(goal.target ?? 15);
-      setGoalInput(goal.target ?? 15);
+      setProfile(data.user);
+      setProfileDraft(data.user);
+      setWeeklyStats(data.weeklyStats);
+      setWeeklyGoal(data.weeklyGoal);
+      setGoalInput(data.weeklyGoal);
 
     } catch (err) {
-      console.error("Dashboard load failed:", err);
+      console.error(err);
     } finally {
-      setLoading(false); // 🔑 VERY IMPORTANT
+      setLoading(false);
     }
   };
 
