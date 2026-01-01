@@ -124,7 +124,7 @@ if (loading) {
 if (!profile) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-white">
-      <div>Session expired. Please login again.</div>
+      <div>Login to view dashboard...</div>
       <button
         className="bg-blue-500 mt-3 px-6 py-2 rounded"
         onClick={() => navigate("/login")}
