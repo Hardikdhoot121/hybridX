@@ -30,7 +30,7 @@ const ContactUs = () => {
   const tech = [
     {
     name: "Hardik Dhoot",
-    role: "Webiste Development Head",
+    role: "Webisite Development Head",
     phone: "63789 49658",
     email: "tech@example.com",
     img: "../src/images/Hardik.jpeg"
