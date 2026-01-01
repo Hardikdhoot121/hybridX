@@ -27,6 +27,7 @@ const Dashboard = () => {
   const [profile, setProfile] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileDraft, setProfileDraft] = useState({});
+  const [loading, setLoading] = useState(true);
 
   /* ================= ANALYTICS ================= */
   const [weeklyStats, setWeeklyStats] = useState({
@@ -41,39 +42,41 @@ const Dashboard = () => {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   /* ================= FETCH DASHBOARD ================= */
-  useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const profileRes = await fetch(
-          `${API_BASE}/users/profile`,
-          { headers: getAuthHeaders() }
-        );
-        const profileJson = await profileRes.json();
-        setProfile(profileJson.user);
-        setProfileDraft(profileJson.user);
+useEffect(() => {
+  const loadDashboard = async () => {
+    try {
+      const profileRes = await fetch(
+        `${API_BASE}/users/profile`,
+        { headers: getAuthHeaders() }
+      );
+      const profileJson = await profileRes.json();
 
-        const statsRes = await fetch(
-          `${API_BASE}/analytics/weekly`,
-          { headers: getAuthHeaders() }
-        );
-        const stats = await statsRes.json();
-        setWeeklyStats(stats);
+      setProfile(profileJson.user);
+      setProfileDraft(profileJson.user);
 
-const goalRes = await fetch(
-  `${API_BASE}/analytics/weekly-goal`,
-  { headers: getAuthHeaders() }
-);
+      const statsRes = await fetch(
+        `${API_BASE}/analytics/weekly`,
+        { headers: getAuthHeaders() }
+      );
+      setWeeklyStats(await statsRes.json());
 
-        const goal = await goalRes.json();
-        setWeeklyGoal(goal.target ?? 15);
-        setGoalInput(goal.target ?? 15);
-      } catch (err) {
-        console.error("Dashboard load failed:", err);
-      }
-    };
+      const goalRes = await fetch(
+        `${API_BASE}/analytics/weekly-goal`,
+        { headers: getAuthHeaders() }
+      );
+      const goal = await goalRes.json();
+      setWeeklyGoal(goal.target ?? 15);
+      setGoalInput(goal.target ?? 15);
 
-    loadDashboard();
-  }, []);
+    } catch (err) {
+      console.error("Dashboard load failed:", err);
+    } finally {
+      setLoading(false); // 🔑 VERY IMPORTANT
+    }
+  };
+
+  loadDashboard();
+}, []);
 
   /* ================= DERIVED ================= */
   const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
@@ -110,14 +113,28 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
 
 
   
-  if (!profile) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white">
-        <div>Login to view dashboard...</div>
-        <button className="bg-blue-500 mt-2 p-2 pr-10 pl-10 rounded-2xl hover:cursor-pointer hover:bg-blue-600" onClick={()=>{navigate("/login")}}> LOGIN </button>
-      </div>
-    );
-  }
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      Loading dashboard...
+    </div>
+  );
+}
+
+if (!profile) {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center text-white">
+      <div>Session expired. Please login again.</div>
+      <button
+        className="bg-blue-500 mt-3 px-6 py-2 rounded"
+        onClick={() => navigate("/login")}
+      >
+        Login
+      </button>
+    </div>
+  );
+}
+
   
 
   /* ================= CIRCLE CALC ================= */
