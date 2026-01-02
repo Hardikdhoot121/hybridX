@@ -11,7 +11,6 @@ import Physics from "./pages/physicsmains";
 import MainsPYQ from "./pages/MainsPYQ";
 import Maths from "./pages/mathematicsmains";
 import Dashboard from "./pages/dashboard";
-import Overview from "./pages/overview";
 import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
 import Ncertplus from "./pages/ncert+";
@@ -32,7 +31,6 @@ function App() {
         <Route path="/jeemains/physics" element={<Physics />} />
         <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/overview" element={<Overview />} />
         <Route path="/dpp/:id" element={<DppResult />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/hybrid" element={<Hybrid/>} />
