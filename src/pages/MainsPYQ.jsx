@@ -264,23 +264,34 @@ const submitPracticeAttempt = async () => {
           </div>
         )}
 
-        <div className="fixed bottom-0 w-full bg-[#15191E] py-5">
-          <div className="flex justify-around w-[70%] mx-auto ">
-            <button onClick={prev} disabled={currIndex === 0} className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white">
-              PREVIOUS
-            </button>
-            <button onClick={submit} className="bg-[#3DBBF4] px-10 py-3 rounded-xl w-40 hover:bg-[#3dbaf4d8]">
-              SUBMIT
-            </button>
-            <button
-              onClick={next}
-              disabled={currIndex === data.length - 1}
-              className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white"
-            >
-              NEXT
-            </button>
-          </div>
-        </div>
+        {/* Bottom Buttons */}
+<div className="fixed bottom-0 left-0 w-full bg-[#15191E] py-4 border-t border-white/10 z-50">
+  <div className="flex gap-2 px-4 sm:px-0 sm:w-[70%] mx-auto">
+    <button
+      onClick={prev}
+      disabled={currIndex === 0}
+      className="w-1/3 border border-white/50 py-3 rounded-xl text-xs sm:text-base hover:border-white"
+    >
+      PREVIOUS
+    </button>
+
+    <button
+      onClick={submit}
+      className="w-1/3 bg-[#3DBBF4] py-3 rounded-xl text-xs sm:text-base hover:bg-[#35a9df]"
+    >
+      SUBMIT
+    </button>
+
+    <button
+      onClick={next}
+      disabled={currIndex === data.length - 1}
+      className="w-1/3 border border-white/50 py-3 rounded-xl text-xs sm:text-base hover:border-white"
+    >
+      NEXT
+    </button>
+  </div>
+</div>
+
       </div>
 
     </>
