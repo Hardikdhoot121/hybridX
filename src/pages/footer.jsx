@@ -41,6 +41,7 @@ const Footer = () => {
               <a href="tel:+919451248755" className="hover:text-gray-800">
                 +91 90248 84949
               </a>
+
             </ul>
             <ul className="flex items-center justify-center md:justify-start">
               <li className="mr-2">

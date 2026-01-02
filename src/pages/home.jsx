@@ -14,17 +14,20 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SmallMediaSlider from "./SmallMediaSlider";
 
-
-
+// images 
+import img1 from "../images/10th Achievement hybrid.jpeg";
+import img2 from "../images/NEET.jpeg";
+import img3 from "../images/JEE.jpeg";
+import img4 from "../images/RBSE.jpeg";
 
 
 const Home = ({ images = [], videos = [], instagram = [] }) => {
 
    const achievementImages = [
-     "../src/images/10th Achievement hybrid.jpeg",
-     "../src/images/NEET.jpeg",
-    "../src/images/JEE.jpeg",
-    "../src/images/RBSE.jpeg"
+     img1,
+     img2,
+     img3,
+     img4
    ];
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
