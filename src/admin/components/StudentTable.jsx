@@ -2,8 +2,6 @@ import students from "../classData/12th";
 import { useNavigate } from "react-router-dom";
 
   
-  
-
   const StudentsTable = () => {
     const navigate = useNavigate();
     return (
@@ -47,7 +45,7 @@ import { useNavigate } from "react-router-dom";
                 </td>
   
                 <td className="px-6 py-4 text-right">
-                  <button onClick={() => navigate(`/admin/details/{studuent.id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
+                  <button onClick={() => navigate(`/admin/details/${student.id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
                     View Details
                   </button>
                 </td>
