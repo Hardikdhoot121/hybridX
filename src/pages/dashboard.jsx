@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -17,6 +18,10 @@ const getAuthHeaders = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const handleLogout=()=>{
+  localStorage.removeItem("token");
+  navigate("/")
+};
 
   /* ================= PROFILE ================= */
   const [profile, setProfile] = useState(null);
@@ -107,8 +112,9 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
   
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        Login to view dashboard...
+      <div className="min-h-screen flex flex-col items-center justify-center text-white">
+        <div>Login to view dashboard...</div>
+        <button className="bg-blue-500 mt-2 p-2 pr-10 pl-10 rounded-2xl hover:cursor-pointer hover:bg-blue-600" onClick={()=>{navigate("/login")}}> LOGIN </button>
       </div>
     );
   }
@@ -185,8 +191,33 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     <p>{profile[key] || "Not set"}</p>
                   )}
                 </div>
-              ))}
+              ))}               
             </div>
+            {/* ================= LOGOUT ================= */}
+<div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+  <button
+    className="
+      gap-2
+      px-5 py-2
+      rounded-lg
+      bg-red-500/10
+      text-red-400
+      hover:bg-red-500/20
+      hover:text-red-300
+      transition-all
+      font-medium
+    "
+    
+    onClick={() => {
+     if (window.confirm("Are you sure you want to logout?")) {
+    handleLogout();
+  }
+}}
+  >
+    🚪 Logout
+  </button>
+</div>
+
           </div>
           
 
