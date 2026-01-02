@@ -13,6 +13,8 @@ import Maths from "./pages/mathematicsmains";
 import Dashboard from "./pages/dashboard";
 import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
+import AdminDashboard from "./admin/pages/AdminDashboard";
+import AdminAllDetails from "./admin/pages/AdminAllDetails";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 
@@ -34,6 +36,8 @@ function App() {
         <Route path="/dpp/:id" element={<DppResult />} />
         <Route path="/navbar" element={<Navbar />} />
         <Route path="/hybrid" element={<Hybrid/>} />
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
         <Route path="/ncert+" element={<Ncertplus/>} />
         <Route path="/notes" element={<Notes />} />
       </Routes>

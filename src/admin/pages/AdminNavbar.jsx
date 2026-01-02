@@ -1,0 +1,90 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiMenu, FiX } from "react-icons/fi";
+import logo from "../../images/hybrid_logo.jpg"
+
+export default function AdminNavbar() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      {/* 🔔 Announcement Banner */}
+      <div className="w-full bg-[#3abbf5] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
+        🌟 Premium Test Series — Sale Ending Soon! Grab Your Access Now 🚀
+      </div>
+
+      <nav className="bg-[#10141b] text-white px-6 py-3 flex items-center justify-between shadow-md relative">
+
+        {/* Logo */}
+        <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
+          <img
+            src={logo}
+            alt="Hybrid Logo"
+            className="h-12 w-auto object-contain border-2 border-white rounded-md p-1 bg-white"
+          />
+        </div>
+
+        {/* Desktop Links */}
+        <ul className="hidden md:flex items-center space-x-6 font-medium">
+          <li
+            className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
+            onClick={() => navigate("/")}
+          >
+            Home
+          </li> 
+          <li
+            className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
+            onClick={() => navigate("/dashboard")}
+          >
+            Students Info
+          </li>
+          <li
+            className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
+            onClick={() => navigate("/dashboard")}
+          >
+            Attendance
+          </li>
+          <li
+            className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
+            onClick={() => navigate("/contact_us")}
+          >
+            Analytics
+          </li>
+          <li
+            className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
+            onClick={() => navigate("/contact_us")}
+          >
+            Content Management
+          </li>
+        </ul>
+
+        {/* Avatar (Desktop Only) */}
+        <img
+          className="hidden md:block w-9 h-9 rounded-full object-cover cursor-pointer"
+          src="/images/Avatar.png"
+          alt="Avatar"
+        />
+
+        {/* Hamburger Menu - Mobile */}
+        <button
+          className="block md:hidden text-2xl"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <FiX /> : <FiMenu />}
+        </button>
+      </nav>
+
+      {/* Mobile Dropdown Menu */}
+      {open && (
+        <div className="md:hidden bg-[#0d1117] text-white px-6 py-4 space-y-3 font-medium border-t border-gray-700">
+          <p onClick={() => { navigate("/"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Home</p>
+          <p onClick={() => { navigate("/dashboard"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Students Info</p>
+          <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Attendance</p>
+          <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Analytics</p>
+          <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Content Management</p>
+        </div>
+      )}
+    </>
+  );
+}
