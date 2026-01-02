@@ -246,6 +246,44 @@ const submitPracticeAttempt = async () => {
           </div>
         )}
 
+        <div className="pb-32">
+
+        
+          {showResult && (
+            <div className="bg-[#272E36] w-[70%] mx-auto my-6 p-8 rounded-xl">
+              {
+                currVal.question_type==="integer" && 
+                <div className="text-green-500 mb-2">
+                  Correct Answer is : {currVal.answer}
+                </div>
+              }
+              <p><b>EXPLANATION:</b></p>
+              <br></br>
+              
+              {renderQuestion(
+                fixLatex(cleanHTML(currVal.explanation))
+              )}
+            </div>
+          )}
+
+          <div className="fixed bottom-0 w-full bg-[#15191E] py-5 ">
+            <div className="flex justify-around w-[70%] mx-auto ">
+              <button onClick={prev} disabled={currIndex === 0} className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white">
+                PREVIOUS
+              </button>
+              <button onClick={submit} className="bg-[#3DBBF4] px-10 py-3 rounded-xl w-40 hover:bg-[#3dbaf4d8]">
+                SUBMIT
+              </button>
+              <button
+                onClick={next}
+                disabled={currIndex === data.length - 1}
+                className="rounded-xl border border-white/50 px-10 py-3 w-40 hover:border-white"
+              >
+                NEXT
+              </button>
+            </div>
+          </div>
+        </div>
 
         {showResult && (
           <div className="bg-[#272E36] w-[70%] mx-auto my-6 p-8 rounded-xl">
@@ -293,7 +331,6 @@ const submitPracticeAttempt = async () => {
 </div>
 
       </div>
-
     </>
   );
 }
