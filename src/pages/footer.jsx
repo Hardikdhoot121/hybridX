@@ -26,30 +26,31 @@ const Footer = () => {
 
           <nav className="mt-4 mb-8 list-none">
           
-            <li className="mb-2 flex items-center justify-center md:justify-start">
+            <ul className="mb-2 flex items-center justify-center md:justify-start">
               <li className="mr-2">
                 <IoMdMail size={22} />
               </li>
               <a href="mailto:hybrideducationhub@email.com" className="mr-2 hover:text-gray-800">
-                hybrideducationhub@email.com
+                hybrideduhub@gmail.com
               </a>
-            </li>
-            <li className="mb-2 flex items-center justify-center md:justify-start">
+            </ul>
+            <ul className="mb-2 flex items-center justify-center md:justify-start">
               <li className="mr-2">
                 <FaPhoneAlt size={22} />
               </li>
               <a href="tel:+919451248755" className="hover:text-gray-800">
                 +91 90248 84949
               </a>
-            </li>
-            <li className="flex items-center justify-center md:justify-start">
+
+            </ul>
+            <ul className="flex items-center justify-center md:justify-start">
               <li className="mr-2">
                 <IoLocationSharp size={22} />
               </li>
               <span className="text-sm cursor-pointer" onClick={() => window.open ("https://share.google/4BS6PqtFtJIuQVAOW", "_blank")}>
-                A-58, Shri Ram Nagar, Jodhpur, Rajasthan 342014
+                A-58, Shri Ram Nagar, Jodhpur, Rajasthan 342008
               </span>
-            </li>
+            </ul>
           </nav>
         </div>
 
@@ -62,10 +63,14 @@ const Footer = () => {
               Home
             </h2>
             <nav className="mb-6 list-none space-y-2">
-              <li><a href="#benefits" className="hover:text-gray-800">Benefits</a></li>
-              <li><a href="#test-series" className="hover:text-gray-800">Our Test Series</a></li>
-              <li><a href="#educators" className="hover:text-gray-800">Our Educators</a></li>
-              <li><a href="#faqs" className="hover:text-gray-800">Our FAQs</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Our Achievements</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Chapter-Wise PYQs</a></li>
+              <li><a  className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>Hybrid Material</a></li>
+              <li><a className="hover:text-gray-800 cursor-pointer"
+              onClick={() => navigate(`/`)}>FAQs</a></li>
             </nav>
           </div>
 
@@ -84,7 +89,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Faculty
+                  Director
                 </a>
               </li>
               <li>
@@ -92,7 +97,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Support Staff
+                  HOD
                 </a>
               </li>
               <li>
@@ -100,7 +105,7 @@ const Footer = () => {
                   className="hover:text-gray-800 cursor-pointer"
                   onClick={() => navigate(`/contact_us`)}
                 >
-                  Tech Team
+                  Dev Team
                 </a>
               </li>
             </nav>
@@ -113,27 +118,21 @@ const Footer = () => {
               Follow Us
             </h2>
             <nav className="flex list-none justify-center space-x-5 md:justify-start">
-              <li>
-                <a  className="text-gray-600 hover:text-[#1DA1F2] cursor-pointer">
-                  <li className="mr-2">
-                    <FaTwitter size={22} />
-                  </li>
-                </a>
-              </li>
-              <li>
+            
+              <ul>
                 <a  className="text-gray-600 hover:text-[#E4405F] cursor-pointer">
                   <li className="mr-2 ">
                     <FaYoutube size={22} onClick={() => window.open("https://www.youtube.com/@hybrideducationhub")}/>
                   </li>
                 </a>
-              </li>
-              <li>
+              </ul>
+              <ul>
                 <a className="text-gray-600 hover:text-[#0A66C2] cursor-pointer">
                   <li className="mr-2">
                     <FaInstagram size={22} onClick={() => window.open("https://www.instagram.com/hybrid.edu.hub?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==")}/>
                   </li>
                 </a>
-              </li>
+              </ul>
             </nav>
           </div>
         </div>

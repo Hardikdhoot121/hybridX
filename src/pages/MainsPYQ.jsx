@@ -7,7 +7,8 @@ import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
-const API_BASE = "http://localhost:5000";
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 
 function MainsPYQ() {
   const { subject, chapter } = useParams();
@@ -119,7 +120,8 @@ const submitPracticeAttempt = async () => {
   console.log("✅ Sending payload:", payload);
 
   try {
-    await fetch("http://localhost:5000/api/practice/attempt", {
+    await fetch(`${API_BASE}/practice/attempt`, {
+
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -282,6 +284,52 @@ const submitPracticeAttempt = async () => {
             </div>
           </div>
         </div>
+
+        {showResult && (
+          <div className="bg-[#272E36] w-[70%] mx-auto my-6 p-8 rounded-xl">
+            {
+              currVal.question_type==="integer" && 
+              <div className="text-green-500 mb-2">
+                Correct Answer is : {currVal.answer}
+              </div>
+            }
+            <p><b>EXPLANATION:</b></p>
+            <br></br>
+            
+            {renderQuestion(
+              fixLatex(cleanHTML(currVal.explanation))
+            )}
+          </div>
+        )}
+
+        {/* Bottom Buttons */}
+<div className="fixed bottom-0 left-0 w-full bg-[#15191E] py-4 border-t border-white/10 z-50">
+  <div className="flex gap-2 px-4 sm:px-0 sm:w-[70%] mx-auto">
+    <button
+      onClick={prev}
+      disabled={currIndex === 0}
+      className="w-1/3 border border-white/50 py-3 rounded-xl text-xs sm:text-base hover:border-white"
+    >
+      PREVIOUS
+    </button>
+
+    <button
+      onClick={submit}
+      className="w-1/3 bg-[#3DBBF4] py-3 rounded-xl text-xs sm:text-base hover:bg-[#35a9df]"
+    >
+      SUBMIT
+    </button>
+
+    <button
+      onClick={next}
+      disabled={currIndex === data.length - 1}
+      className="w-1/3 border border-white/50 py-3 rounded-xl text-xs sm:text-base hover:border-white"
+    >
+      NEXT
+    </button>
+  </div>
+</div>
+
       </div>
     </>
   );

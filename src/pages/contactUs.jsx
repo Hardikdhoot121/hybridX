@@ -4,6 +4,12 @@ import Navbar from "./navbar";
 import { IoMdMail } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
 
+// images 
+import img3 from "../images/Hardik.jpeg";
+import img4 from "../images/Garvit.jpeg";
+import img5 from "../images/Utkarsh.webp";
+import img6 from "../images/Paksa.jpeg";
+
 const ContactUs = () => {
 
 
@@ -13,7 +19,7 @@ const ContactUs = () => {
       role: "Director",
       phone: "99503 64747",
       email: "director@example.com",
-      img: "https://via.placeholder.com/300" // replace with real image link
+      img: ""
     }
   ];
 
@@ -27,73 +33,21 @@ const ContactUs = () => {
     }
   ];
 
-  const faculty = [
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Mustaq",
-    role: "Chemistry Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Sandeep Sharma",
-    role: "Physics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-    {name: "Aakash Gupta",
-    role: "Mathematics Faculty",
-    phone: "9999999999",
-    email: "faculty@example.com",
-    img: "https://via.placeholder.com/300"},
-
-
-  ];
-
-  const staff = [
-    {
-    name: "Mahinder",
-    role: "Management",
-    phone: "8888888888",
-    email: "support@example.com",
-    img: "https://via.placeholder.com/300"
-  },
-  {
-    name: "Isha Soni",
-    role: "Management",
-    phone: "8888888888",
-    email: "support@example.com",
-    img: "https://via.placeholder.com/300"
-  },
-
-];
-
   const tech = [
     {
     name: "Hardik Dhoot",
     role: "Webisite Development Head",
     phone: "63789 49658",
-    email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    email: "HardikDhoot121@gmail.com",
+    img: img3
     },
 
     {
     name: "Garvit Mathur",
     role: "Website Development Member",
     phone: "90792 12029",
-    email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    email: "mathurgarvti@gmail.com",
+    img: img4
     },
 
     {
@@ -101,7 +55,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "86962 44108",
     email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    img: img5
     },
 
     {
@@ -109,7 +63,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "98295 91055",
     email: "tech@example.com",
-    img: "https://via.placeholder.com/300"
+    img: img6
     },
 ];
 
@@ -155,14 +109,10 @@ const ContactUs = () => {
       </section>
 
 
-      {/* ===== Faculty Members ===== */}
-      <Section title="Faculty Members" data={faculty} Card={Card} />
 
-      {/* ===== Support Staff ===== */}
-      <Section title="Support Staff" data={staff} Card={Card} />
 
       {/* ===== Tech Team ===== */}
-      <Section title="Tech Team" data={tech} Card={Card} />
+      <Section title="Dev Team" data={tech} Card={Card} />
 
     </div>
     <Footer />

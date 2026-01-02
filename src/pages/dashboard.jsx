@@ -3,13 +3,12 @@ import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token");
+  if (!token) return null;
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -18,15 +17,17 @@ const getAuthHeaders = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const handleLogout=()=>{
-  localStorage.removeItem("token");
-  navigate("/")
-};
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login", { replace: true });
+  };
 
   /* ================= PROFILE ================= */
   const [profile, setProfile] = useState(null);
   const [editProfile, setEditProfile] = useState(false);
   const [profileDraft, setProfileDraft] = useState({});
+  const [loading, setLoading] = useState(true);
 
   /* ================= ANALYTICS ================= */
   const [weeklyStats, setWeeklyStats] = useState({
@@ -40,35 +41,38 @@ const Dashboard = () => {
   const [goalInput, setGoalInput] = useState(15);
   const [showGoalModal, setShowGoalModal] = useState(false);
 
-  /* ================= FETCH DASHBOARD ================= */
+  /* ================= FETCH DASHBOARD (PARALLEL) ================= */
   useEffect(() => {
     const loadDashboard = async () => {
+      const headers = getAuthHeaders();
+      if (!headers) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const profileRes = await fetch(
-          `${API_BASE}/users/profile`,
-          { headers: getAuthHeaders() }
-        );
+        const [profileRes, statsRes, goalRes] = await Promise.all([
+          fetch(`${API_BASE}/users/profile`, { headers }),
+          fetch(`${API_BASE}/analytics/weekly`, { headers }),
+          fetch(`${API_BASE}/analytics/weekly-goal`, { headers }),
+        ]);
+
+        if (!profileRes.ok) throw new Error("Profile fetch failed");
+
         const profileJson = await profileRes.json();
+        const statsJson = await statsRes.json();
+        const goalJson = await goalRes.json();
+
         setProfile(profileJson.user);
         setProfileDraft(profileJson.user);
+        setWeeklyStats(statsJson);
+        setWeeklyGoal(goalJson.target ?? 15);
+        setGoalInput(goalJson.target ?? 15);
 
-        const statsRes = await fetch(
-          `${API_BASE}/analytics/weekly`,
-          { headers: getAuthHeaders() }
-        );
-        const stats = await statsRes.json();
-        setWeeklyStats(stats);
-
-const goalRes = await fetch(
-  `${API_BASE}/analytics/weekly-goal`,
-  { headers: getAuthHeaders() }
-);
-
-        const goal = await goalRes.json();
-        setWeeklyGoal(goal.target ?? 15);
-        setGoalInput(goal.target ?? 15);
       } catch (err) {
         console.error("Dashboard load failed:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -87,6 +91,7 @@ const goalRes = await fetch(
         headers: getAuthHeaders(),
         body: JSON.stringify(profileDraft),
       });
+
       const data = await res.json();
       setProfile(data.user);
       setProfileDraft(data.user);
@@ -95,30 +100,41 @@ const goalRes = await fetch(
       alert("Profile update failed");
     }
   };
-  
+
   /* ================= GOAL SAVE ================= */
   const handleSaveGoal = async () => {
-await fetch(`${API_BASE}/analytics/weekly-goal`, {
-  method: "POST",
-  headers: getAuthHeaders(),
-  body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
-});
+    await fetch(`${API_BASE}/analytics/weekly-goal`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
+    });
 
     setWeeklyGoal(parseInt(goalInput) || 15);
     setShowGoalModal(false);
   };
 
-
-  
-  if (!profile) {
+  /* ================= STATES ================= */
+  if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center text-white">
-        <div>Login to view dashboard...</div>
-        <button className="bg-blue-500 mt-2 p-2 pr-10 pl-10 rounded-2xl hover:cursor-pointer hover:bg-blue-600" onClick={()=>{navigate("/login")}}> LOGIN </button>
+      <div className="min-h-screen flex items-center justify-center text-white">
+        Loading dashboard...
       </div>
     );
   }
-  
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-white">
+        <div>Login to view dashboard</div>
+        <button
+          className="bg-blue-500 mt-3 px-6 py-2 rounded"
+          onClick={() => navigate("/login")}
+        >
+          Login
+        </button>
+      </div>
+    );
+  }
 
   /* ================= CIRCLE CALC ================= */
   const size = 220;
@@ -180,7 +196,6 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                   <p className="text-sm text-gray-400 mb-1">{label}</p>
                   {editProfile ? (
                     <input
-                      name={key}
                       value={profileDraft[key] || ""}
                       onChange={(e) =>
                         setProfileDraft({ ...profileDraft, [key]: e.target.value })
@@ -191,37 +206,21 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     <p>{profile[key] || "Not set"}</p>
                   )}
                 </div>
-              ))}               
+              ))}
             </div>
-            {/* ================= LOGOUT ================= */}
-<div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
-  <button
-    className="
-      gap-2
-      px-5 py-2
-      rounded-lg
-      bg-red-500/10
-      text-red-400
-      hover:bg-red-500/20
-      hover:text-red-300
-      transition-all
-      font-medium
-    "
-    
-    onClick={() => {
-     if (window.confirm("Are you sure you want to logout?")) {
-    handleLogout();
-  }
-}}
-  >
-    🚪 Logout
-  </button>
-</div>
 
+            {/* LOGOUT */}
+            <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+              <button
+                onClick={handleLogout}
+                className="px-5 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all font-medium"
+              >
+                🚪 Logout
+              </button>
+            </div>
           </div>
-          
 
-          {/* ================= WEEKLY GOAL (CIRCULAR) ================= */}
+          {/* WEEKLY GOAL */}
           <div className="rounded-xl bg-[#0e1628] p-6 text-center">
             <div className="flex justify-between mb-3">
               <h3 className="font-semibold">Weekly Goal</h3>
@@ -236,16 +235,6 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
 
             <div className="relative flex justify-center mt-6">
               <svg width={size} height={size}>
-                <defs>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
                 <g transform={`rotate(-90 ${center} ${center})`}>
                   <circle
                     cx={center}
@@ -255,24 +244,14 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                     strokeWidth={stroke}
                     fill="none"
                   />
-
                   <motion.circle
                     cx={center}
                     cy={center}
                     r={radius}
                     stroke="#22C55E"
                     strokeWidth={stroke}
-                    strokeLinecap="round"
                     fill="none"
                     strokeDasharray={`${progress * circumference} ${circumference}`}
-                    filter={glow ? "url(#glow)" : "none"}
-                    animate={{
-                      opacity: glow ? [0.6, 1, 0.6] : 1,
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: glow ? Infinity : 0,
-                    }}
                   />
                 </g>
               </svg>
@@ -282,31 +261,23 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
                   {weeklyStats.correct}
                   <span className="text-white/50"> / {weeklyGoal}</span>
                 </div>
-                <div className="text-xs tracking-widest text-white/50 mt-1">
-                  CORRECT
-                </div>
               </div>
-            </div>
-
-            <div className="flex justify-between mt-6 text-sm">
-              <span className="text-green-400">✔ {weeklyStats.correct}</span>
-              <span className="text-red-400">✖ {incorrect}</span>
             </div>
           </div>
         </div>
 
-        {/* ================= RIGHT ================= */}
+        {/* RIGHT */}
         <div className="rounded-xl bg-[#0e1628] p-6">
-          <h3 className="mb-4 font-semibold">Analytics </h3>
+          <h3 className="mb-4 font-semibold">Analytics</h3>
           <div className="grid grid-cols-2 gap-4 text-center">
             <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
             <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
             <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
-            <div className="stat-card"><span>{weeklyStats.challengesTaken}</span><p>Challenges</p></div>
+            <div className="stat-card"><span>0</span><p>Challenges</p></div>
           </div>
         </div>
       </div>
-                    
+
       {/* GOAL MODAL */}
       {showGoalModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
@@ -314,7 +285,6 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
             <h3 className="mb-3">Edit Weekly Goal</h3>
             <input
               type="number"
-              min="1"
               value={goalInput}
               onChange={(e) => setGoalInput(e.target.value)}
               className="w-full mb-4 px-3 py-2 rounded bg-black"
@@ -325,9 +295,7 @@ await fetch(`${API_BASE}/analytics/weekly-goal`, {
           </div>
         </div>
       )}
-      
     </div>
-    
   );
 };
 
