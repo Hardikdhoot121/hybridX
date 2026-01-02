@@ -14,7 +14,18 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SmallMediaSlider from "./SmallMediaSlider";
 
-const Home = ({ videos = [], instagram = [] }) => {
+
+
+
+
+const Home = ({ images = [], videos = [], instagram = [] }) => {
+
+   const achievementImages = [
+     "../src/images/10th Achievement hybrid.jpeg",
+     "../src/images/NEET.jpeg",
+    "../src/images/JEE.jpeg",
+    "../src/images/RBSE.jpeg"
+   ];
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
   const handleToggle = (index) => {
@@ -88,11 +99,12 @@ const Home = ({ videos = [], instagram = [] }) => {
 </div>
 
       <SmallMediaSlider
-        youtubeLinks={[
-          "https://www.youtube.com/watch?v=HquG9qXIAl0",
-          "https://www.youtube.com/watch?v=CtldIsaycWI"
-        ]}
-      />
+
+      images={achievementImages}
+
+/>
+
+
 
       {/* 📌 Section Title */}
 <div className="mt-20 text-center">

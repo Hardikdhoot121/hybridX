@@ -13,7 +13,7 @@ export default function Navbar() {
     
       {/* 🔔 Announcement Banner */}
       <div className="w-full bg-[#3abbf5] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
-        🌟 Premium Test Series — Sale Ending Soon! Grab Your Access Now 🚀
+        🌟 Quote Of The Day — Success is made in silence. Results will make the noise. 🚀
       </div>
 
       <nav className="bg-[#10141b] text-white px-6 py-3 flex items-center justify-between shadow-md relative">
