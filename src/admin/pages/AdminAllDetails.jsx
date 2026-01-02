@@ -1,11 +1,14 @@
 import React from 'react'
 import Navbar from '../../pages/navbar'
+import students from "../classData/12th";
+import StudentBasicDetails from '../components/StudentBasicDetails';
 
 const AdminAllDetails = () => {
   return (
     <>
         <Navbar/>
-        <div className="font-semibold text-xl p-5">Students Info</div>
+        <br></br>
+        <StudentBasicDetails/>
     </>
   )
 }
