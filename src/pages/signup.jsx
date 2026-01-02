@@ -30,7 +30,7 @@ function Signup() {
 
     const { name, email, password, phone, classLevel } = signupInfo;
 
-    if (!name || !email || !password || !phone || !classLevel) {
+    if (!name || !email || !password || !phone || !classLevel || !batch) {
       return handleError(
         "Fill all the required Field."
       );
@@ -108,16 +108,16 @@ function Signup() {
             <option value="Dropper">Dropper</option>
           </select>
 
-          <label className="text-white">Batch (optional)</label>
+          <label className="text-white">Stream</label>
           <select
             name="batch"
             value={signupInfo.batch}
             onChange={handleChange}
             className="w-full mb-4 px-4 py-3 rounded bg-slate-700 text-white"
           >
-            <option value="">Select Batch</option>
-            <option value="Batch 1">Batch 1</option>
-            <option value="Batch 2">Batch 2</option>
+            <option value="">Select Stream</option>
+            <option value="Batch 1">Engineering</option>
+            <option value="Batch 2">Medical</option>
           </select>
 
           <label className="text-white">Target Year (optional)</label>

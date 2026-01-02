@@ -36,7 +36,7 @@ const ContactUs = () => {
   const tech = [
     {
     name: "Hardik Dhoot",
-    role: "Webisite Development Head",
+    role: "Website Development Head",
     phone: "63789 49658",
     email: "HardikDhoot121@gmail.com",
     img: img3
