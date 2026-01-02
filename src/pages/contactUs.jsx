@@ -4,6 +4,12 @@ import Navbar from "./navbar";
 import { IoMdMail } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
 
+// images 
+import img3 from "../images/Hardik.jpeg";
+import img4 from "../images/Garvit.jpeg";
+import img5 from "../images/Utkarsh.webp";
+import img6 from "../images/paksa.jpeg";
+
 const ContactUs = () => {
 
 
@@ -32,8 +38,8 @@ const ContactUs = () => {
     name: "Hardik Dhoot",
     role: "Webisite Development Head",
     phone: "63789 49658",
-    email: "tech@example.com",
-    img: "../src/images/Hardik.jpeg"
+    email: "HardikDhoot121@gmail.com",
+    img: img3
     },
 
     {
@@ -41,7 +47,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "90792 12029",
     email: "mathurgarvti@gmail.com",
-    img: "../src/images/Garvit.jpeg"
+    img: img4
     },
 
     {
@@ -49,7 +55,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "86962 44108",
     email: "tech@example.com",
-    img: "../src/images/Utkarsh.webp"
+    img: img5
     },
 
     {
@@ -57,7 +63,7 @@ const ContactUs = () => {
     role: "Website Development Member",
     phone: "98295 91055",
     email: "tech@example.com",
-    img: "../src/images/Paksa.jpeg"
+    img: img6
     },
 ];
 
