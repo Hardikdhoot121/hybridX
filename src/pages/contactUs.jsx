@@ -8,7 +8,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import img3 from "../images/Hardik.jpeg";
 import img4 from "../images/Garvit.jpeg";
 import img5 from "../images/Utkarsh.webp";
-import img6 from "../images/paksa.jpeg";
+import img6 from "../images/Paksa.jpeg";
 
 const ContactUs = () => {
 
