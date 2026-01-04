@@ -15,10 +15,20 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",
+<<<<<<< HEAD
+=======
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
     "framer-motion": "^12.23.26",
     "iframe": "^1.0.0",
     "katex": "^0.16.27",
     "lucide-react": "^0.546.0",
+<<<<<<< HEAD
+=======
+    "mongoose": "^9.1.1",
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
     "nodemon": "^3.1.11",
     "pdfjs-dist": "^5.4.530",
     "react": "^18.2.0",
