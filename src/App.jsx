@@ -17,6 +17,7 @@ import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   return (
@@ -27,6 +28,17 @@ function App() {
         <Route path="/pyq" element={<PYQ />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/navbar" element={<Navbar />} />
+
+        <Route path="/hybrid" element={<Hybrid/>} />
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
+        {/* some protected routes */}
+
+        <Route element={<ProtectedRoute/>}>
+
+        <Route path="/ncert+" element={<Ncertplus/>} />
+        <Route path="/notes" element={<Notes />} />
         <Route path="/jeemains" element={<Mains />} />
         <Route path="/jeemains/chemistry" element={<Chemistry />} />
         <Route path="/jeemains/maths" element={<Maths />} />
@@ -34,12 +46,9 @@ function App() {
         <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dpp/:id" element={<DppResult />} />
-        <Route path="/navbar" element={<Navbar />} />
-        <Route path="/hybrid" element={<Hybrid/>} />
-        <Route path="/admin" element={<AdminDashboard/>}/>
-        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
-        <Route path="/ncert+" element={<Ncertplus/>} />
-        <Route path="/notes" element={<Notes />} />
+        
+        </Route>
+
       </Routes>
     </>
   );

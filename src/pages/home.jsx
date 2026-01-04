@@ -13,6 +13,7 @@ import "swiper/css/pagination";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SmallMediaSlider from "./SmallMediaSlider";
+import LoginModal from "./loginModel";
 
 // images 
 import img1 from "../images/10th Achievement hybrid.jpeg";
@@ -30,10 +31,19 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
      img4
    ];
   const navigate = useNavigate();
+  const [showLoginModel, setshowLoginModel] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const handleToggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+  
+  const isLoggedIn=!!localStorage.getItem("token");
+  // writing function for loggedin or not  -> login wale ko he features denai hai 
+  const protection = (path)=>{
+    if(isLoggedIn){navigate(path);}
+    else{setshowLoginModel(true);}
+  }
+
 
   const faqs = [
     {
@@ -121,7 +131,7 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
     {subjects.map((title) => (
       <button
         key={title.name}
-        onClick={() => navigate(`/${title.path}`)}
+        onClick={() => protection(`/${title.path}`)}
         className="
           rounded-md text-lg sm:text-xl font-medium
           h-12 sm:h-14 w-full sm:w-[260px] md:w-[300px] lg:w-[320px]
@@ -147,7 +157,7 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
     {hybrid.map((title) => (
       <button
         key={title.name}
-        onClick={() => navigate(`/${title.path}`)}
+        onClick={() => protection(`/${title.path}`)}
         className="
           rounded-md text-lg sm:text-xl font-medium
           h-12 sm:h-14 w-full sm:w-[260px] md:w-[300px] lg:w-[320px]
@@ -277,6 +287,9 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
     </section>
       
     </div>
+    {showLoginModel && (
+  <LoginModal onClose={() => setshowLoginModel(false)} />
+)}
     <Footer />
     </>
   );
