@@ -54,16 +54,51 @@ export default function Navbar() {
             Contact Us
           </li>
         </ul>
-        {/* Avatar (Desktop Only tab hota jab hidden used hota hidden and md:block works together) */}
-        {isLoggedIn?(
-        <div className="cursor-pointer"> 
-          <FcBusinessman className="h-14 w-14 rounded-full bg-gray-800 "
-          onClick={() => navigate("/dashboard")} />
-        </div>):(//else
-        <div className="cursor-pointer"> 
-          <IoPersonCircle className="h-14 w-14 rounded-full bg-gray-800 "
-          onClick={()=>navigate("/login")}/>
-        </div>)}
+
+{/* Avatar (Desktop Only) */}
+<div className="relative group cursor-pointer">
+  {isLoggedIn ? (
+    <>
+      <FcBusinessman
+        className="h-14 w-14 rounded-full bg-gray-800"
+        onClick={() => navigate("/dashboard")}
+      />
+
+      {/* Tooltip */}
+      <div className="
+        absolute right-0 mt-2
+        whitespace-nowrap
+        scale-0 group-hover:scale-100
+        transition-transform duration-200
+        bg-black text-white text-xs px-3 py-1 rounded-md
+        shadow-lg
+      ">
+        click to access dashboard
+      </div>
+    </>
+  ) : (
+    <>
+      <IoPersonCircle
+        className="h-14 w-14 rounded-full bg-gray-800"
+        onClick={() => navigate("/login")}
+      />
+
+      {/* Tooltip */}
+      <div className="
+        absolute right-0 mt-2
+        whitespace-nowrap
+        scale-0 group-hover:scale-100
+        transition-transform duration-200
+        bg-black text-white text-xs px-3 py-1 rounded-md
+        shadow-lg
+      ">
+        Login to continue
+      </div>
+    </>
+  )}
+</div>
+
+
         {/* Hamburger Menu - Mobile */}
         <button
           className="block md:hidden text-2xl"
