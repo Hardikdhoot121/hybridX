@@ -31,7 +31,7 @@ function Login() {
     }
 
     try {
-      const url = "https://hybridx-uhj9.onrender.com/api/auth/login";
+      const url = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/auth/login`;
 
       const response = await fetch(url, {
         method: "POST",
