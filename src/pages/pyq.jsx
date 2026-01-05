@@ -65,7 +65,7 @@ function PYQ() {
   const currVal = data[currIndex];
 
   try {
-    await fetch("http://localhost:5000/api/practice/attempt", {
+    await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/practice/attempt`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

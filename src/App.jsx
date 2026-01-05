@@ -32,11 +32,12 @@ function App() {
         <Route path="/navbar" element={<Navbar />} />
 
         <Route path="/hybrid" element={<Hybrid/>} />
-        <Route path="/admin" element={<AdminDashboard/>}/>
-        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
         {/* some protected routes */}
 
         <Route element={<ProtectedRoute/>}>
+        <Route path="/admin" element={<AdminDashboard/>}/>
+        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
+        <Route path="/admin/attendance" element={<Attendance/>}/>
 
         <Route path="/ncert+" element={<Ncertplus/>} />
         <Route path="/notes" element={<Notes />} />
@@ -47,7 +48,6 @@ function App() {
         <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dpp/:id" element={<DppResult />} />
-        <Route path="/admin/attendance" element={<Attendance/>}/>
         </Route>
 
       </Routes>
