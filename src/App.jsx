@@ -33,7 +33,8 @@ function App() {
         <Route path="/hybrid" element={<Hybrid/>} />
         <Route path="/admin" element={<AdminDashboard/>}/>
         <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
-        {/* some protected routes */}
+      
+        {/* some protected routes jo bina login kai nhi khulengai */}
 
         <Route element={<ProtectedRoute/>}>
 
