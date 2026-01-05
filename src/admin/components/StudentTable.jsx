@@ -1,9 +1,30 @@
+<<<<<<< HEAD
 import students from "../classData/12th";
 import { useNavigate } from "react-router-dom";
 
   
   const StudentsTable = () => {
     const navigate = useNavigate();
+=======
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+  
+  const StudentsTable = () => {
+    const [students, setStudents] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/admin/students"
+      );
+      setStudents(data);
+    };
+    fetchStudents();
+  }, []);
+  
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
     return (
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <table className="w-full text-sm text-left">
