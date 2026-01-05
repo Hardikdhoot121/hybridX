@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import students from "../classData/12th";
-import { useNavigate } from "react-router-dom";
-
-  
-  const StudentsTable = () => {
-    const navigate = useNavigate();
-=======
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +16,6 @@ import { useNavigate } from "react-router-dom";
     fetchStudents();
   }, []);
   
->>>>>>> bb0f1db (Admin Backend Data to Frontend)
     return (
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <table className="w-full text-sm text-left">

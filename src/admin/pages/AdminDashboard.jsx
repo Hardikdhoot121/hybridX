@@ -3,11 +3,7 @@ import AdminNavbar from './AdminNavbar'
 import StatCard from '../components/StatsCard'
 import StudentsTable from '../components/StudentTable'
 
-<<<<<<< HEAD
-const adminDashboard = () => {
-=======
 const AdminDashboard = () => {
->>>>>>> bb0f1db (Admin Backend Data to Frontend)
   return (
     <>
         <AdminNavbar/>
@@ -31,8 +27,4 @@ const AdminDashboard = () => {
   
 }
 
-<<<<<<< HEAD
-export default adminDashboard
-=======
 export default AdminDashboard;
->>>>>>> bb0f1db (Admin Backend Data to Frontend)
