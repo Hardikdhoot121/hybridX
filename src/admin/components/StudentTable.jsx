@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
             </tr>
           </thead>
   
+      
           {/* Table Body */}
           <tbody className="divide-y">
             {students.map((student) => (
