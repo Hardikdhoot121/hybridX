@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
   useEffect(() => {
     const fetchStudents = async () => {
       const { data } = await axios.get(
-        "http://localhost:5000/api/admin/students"
+        "https://hybridx-uhj9.onrender.com/api/admin/students"
       );
       setStudents(data);
     };
