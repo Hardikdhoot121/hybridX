@@ -3,7 +3,7 @@ import AdminNavbar from './AdminNavbar'
 import StatCard from '../components/StatsCard'
 import StudentsTable from '../components/StudentTable'
 
-const adminDashboard = () => {
+const AdminDashboard = () => {
   return (
     <>
         <AdminNavbar/>
@@ -27,4 +27,4 @@ const adminDashboard = () => {
   
 }
 
-export default adminDashboard
+export default AdminDashboard;

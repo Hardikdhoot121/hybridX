@@ -1,9 +1,21 @@
-import students from "../classData/12th";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
   
   const StudentsTable = () => {
-    const navigate = useNavigate();
+    const [students, setStudents] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      const { data } = await axios.get(
+        "http://localhost:5000/api/admin/students"
+      );
+      setStudents(data);
+    };
+    fetchStudents();
+  }, []);
+  
     return (
       <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
         <table className="w-full text-sm text-left">

@@ -32,7 +32,7 @@ function App() {
         <Route path="/navbar" element={<Navbar />} />
 
         <Route path="/hybrid" element={<Hybrid/>} />
-        {/* some protected routes */}
+        {/* some protected routes jo bina login kai nhi khulengai */}
 
         <Route element={<ProtectedRoute/>}>
         <Route path="/admin" element={<AdminDashboard/>}/>
