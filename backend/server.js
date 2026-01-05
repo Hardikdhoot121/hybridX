@@ -4,6 +4,10 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
+<<<<<<< HEAD
+=======
+import adminStudentRoutes from "./routes/adminStudentRoutes.js";
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
 
 dotenv.config();
 
@@ -16,10 +20,23 @@ app.use(express.json());
 // mount all API routes at /api
 app.use("/api", routes);
 
+<<<<<<< HEAD
+=======
+//student details route
+app.use("/api/admin",adminStudentRoutes);
+
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
 // analytics routes
 app.use("/api/analytics", analyticsRoutes);
 
 // health route
+<<<<<<< HEAD
+=======
+app.get("/ping", (req, res) => {
+  res.send("Backend is alive");
+});
+
+>>>>>>> bb0f1db (Admin Backend Data to Frontend)
 app.get("/", (req, res) => {
   res.send("HybridX backend is running ");
 });
