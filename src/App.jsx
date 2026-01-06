@@ -30,24 +30,24 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/navbar" element={<Navbar />} />
 
-        <Route path="/hybrid" element={<Hybrid/>} />
-        <Route path="/admin" element={<AdminDashboard/>}/>
-        <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
-      
+        <Route path="/hybrid" element={<Hybrid />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
+
         {/* some protected routes jo bina login kai nhi khulengai */}
 
-        <Route element={<ProtectedRoute/>}>
+        <Route element={<ProtectedRoute />}>
 
-        <Route path="/ncert+" element={<Ncertplus/>} />
-        <Route path="/notes" element={<Notes />} />
-        <Route path="/jeemains" element={<Mains />} />
-        <Route path="/jeemains/chemistry" element={<Chemistry />} />
-        <Route path="/jeemains/maths" element={<Maths />} />
-        <Route path="/jeemains/physics" element={<Physics />} />
-        <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dpp/:id" element={<DppResult />} />
-        
+          <Route path="/ncert+" element={<Ncertplus />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/jeemains" element={<Mains />} />
+          <Route path="/jeemains/chemistry" element={<Chemistry />} />
+          <Route path="/jeemains/maths" element={<Maths />} />
+          <Route path="/jeemains/physics" element={<Physics />} />
+          <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dpp/:id" element={<DppResult />} />
+
         </Route>
 
       </Routes>
