@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import AttendanceCalendar from "../components/AttendanceCalendar";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
@@ -267,14 +268,19 @@ const Dashboard = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="rounded-xl bg-[#0e1628] p-6">
-          <h3 className="mb-4 font-semibold">Analytics</h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
-            <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
-            <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
-            <div className="stat-card"><span>0</span><p>Challenges</p></div>
+        <div className="space-y-4">
+          <div className="rounded-xl bg-[#0e1628] p-6">
+            <h3 className="mb-4 font-semibold">Analytics</h3>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
+              <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
+              <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
+              <div className="stat-card"><span>0</span><p>Challenges</p></div>
+            </div>
           </div>
+          
+          {/* ATTENDANCE CALENDAR */}
+          <AttendanceCalendar />
         </div>
       </div>
 

@@ -49,7 +49,7 @@ if (success) {
 
   localStorage.setItem("token", token);
 
-  setTimeout(() => navigate("/"), 1000);
+  setTimeout(() => navigate("/dashboard"), 1000);
 }
  else {
         const details = error?.details?.[0]?.message || message;
