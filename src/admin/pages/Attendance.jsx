@@ -1,10 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AdminNavbar from './AdminNavbar'
-import students from '../classData/12th'
+import students11th from '../classData/11th'
+import students12th from '../classData/12th'
+import attendanceService from '../../data/attendanceService'
 
 const Attendance = () => {
   const [selectedClass, setSelectedClass] = useState('12th')
   const [attendance, setAttendance] = useState({})
+
+  // Get students based on selected class
+  const getCurrentStudents = () => {
+    return selectedClass === '11th' ? students11th : students12th;
+  };
+
+  const currentStudents = getCurrentStudents();
+
+  // Load saved attendance for today when component mounts or class changes
+  useEffect(() => {
+    const today = new Date();
+    const savedAttendance = attendanceService.getAttendance(today, selectedClass);
+    setAttendance(savedAttendance);
+  }, [selectedClass]);
 
   // Handle checkbox change
   const handleAttendanceChange = (studentId) => {
@@ -17,15 +33,22 @@ const Attendance = () => {
   // Handle mark all present/absent
   const handleMarkAll = (present) => {
     const newAttendance = {}
-    students.forEach(student => {
+    currentStudents.forEach(student => {
       newAttendance[student.id] = present
     })
     setAttendance(newAttendance)
   }
 
+  // Save attendance to storage
+  const handleSaveAttendance = () => {
+    const today = new Date();
+    attendanceService.saveAttendance(today, selectedClass, attendance);
+    alert('Attendance saved successfully!');
+  };
+
   // Get attendance statistics
   const presentCount = Object.values(attendance).filter(Boolean).length
-  const totalCount = students.length
+  const totalCount = currentStudents.length
   const attendancePercentage = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0
 
   return (
@@ -128,13 +151,13 @@ const Attendance = () => {
                 <div className="flex items-center">
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-800">Student List</h3>
-                    <p className="text-sm text-gray-600 mt-1">Mark attendance for {students.length} students</p>
+                    <p className="text-sm text-gray-600 mt-1">Mark attendance for {currentStudents.length} students</p>
                   </div>
                 </div>
               </div>
               
               <div className="divide-y">
-                {students.map((student) => (
+                {currentStudents.map((student) => (
                   <div key={student.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
@@ -172,7 +195,7 @@ const Attendance = () => {
 
             {/* Save Button */}
             <div className="mt-6 flex justify-center">
-              <button className="px-8 py-3 bg-[#3BBAF4] text-white rounded-lg hover:bg-blue-500 transition-colors font-medium">
+              <button onClick={handleSaveAttendance} className="px-8 py-3 bg-[#3BBAF4] text-white rounded-lg hover:bg-blue-500 transition-colors font-medium">
                 Save Attendance
               </button>
             </div>

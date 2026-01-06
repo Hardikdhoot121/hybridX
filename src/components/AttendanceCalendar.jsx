@@ -1,7 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import attendanceService from '../data/attendanceService';
 
-const AttendanceCalendar = () => {
+const AttendanceCalendar = ({ studentId, studentClass }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [attendanceData, setAttendanceData] = useState({});
+  
+  // Load attendance data for the student when component mounts or month changes
+  useEffect(() => {
+    if (studentId && studentClass) {
+      const studentAttendance = attendanceService.getStudentAttendance(studentId, studentClass);
+      setAttendanceData(studentAttendance);
+    }
+  }, [studentId, studentClass, currentDate]);
   
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -31,12 +41,25 @@ const AttendanceCalendar = () => {
                    currentDate.getMonth() === new Date().getMonth() && 
                    currentDate.getFullYear() === new Date().getFullYear();
     
+    // Format date key for attendance lookup
+    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const attendanceStatus = attendanceData[dateKey];
+    
+    // Determine background color based on attendance
+    let bgColorClass = 'text-gray-300';
+    if (attendanceStatus === true) {
+      bgColorClass = 'bg-green-500 text-white';
+    } else if (attendanceStatus === false) {
+      bgColorClass = 'bg-red-500 text-white';
+    } else if (isToday) {
+      bgColorClass = 'bg-blue-500 text-white';
+    }
+    
     days.push(
       <div 
         key={day} 
-        className={`h-8 flex items-center justify-center text-sm rounded cursor-pointer hover:bg-white/10 ${
-          isToday ? 'bg-blue-500 text-white' : 'text-gray-300'
-        }`}
+        className={`h-8 flex items-center justify-center text-sm rounded cursor-pointer hover:bg-white/10 ${bgColorClass}`}
+        title={attendanceStatus === true ? 'Present' : attendanceStatus === false ? 'Absent' : 'No data'}
       >
         {day}
       </div>
@@ -92,6 +115,10 @@ const AttendanceCalendar = () => {
         <div className="flex items-center gap-1">
           <div className="w-3 h-3 bg-blue-500 rounded"></div>
           <span className="text-gray-400">Today</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-gray-600 rounded"></div>
+          <span className="text-gray-400">No data</span>
         </div>
       </div>
     </div>
