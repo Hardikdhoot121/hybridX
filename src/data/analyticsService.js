@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-=======
-const API_BASE = "https://hybridx-uhj9.onrender.com/api";
->>>>>>> 70bdd6067a8fd36f34a881c6cfb5c1d2ad2a6229
 
 /**
  * ===============================
