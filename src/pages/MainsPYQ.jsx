@@ -66,19 +66,35 @@ function MainsPYQ() {
   /* ---------------- DATA LOAD ---------------- */
 
   useEffect(() => {
+    let isMounted = true;
+    
     const filtered = Data.filter(
       (q) =>
         q.subject?.toLowerCase() === subject.toLowerCase() &&
         q.chapter?.toLowerCase() === chapter.toLowerCase()
     );
 
-    setData(filtered);
-    setCurrIndex(0);
+    if (isMounted) {
+      setData(filtered);
+      setCurrIndex(0);
+    }
+    
+    return () => {
+      isMounted = false;
+    };
   }, [subject, chapter]);
 
   useEffect(() => {
-    setSelectedOption(null);
-    setShowResult(false);
+    let isMounted = true;
+    
+    if (isMounted) {
+      setSelectedOption(null);
+      setShowResult(false);
+    }
+    
+    return () => {
+      isMounted = false;
+    };
   }, [currIndex]);
 
   if (data.length === 0) {

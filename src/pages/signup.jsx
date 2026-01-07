@@ -28,7 +28,7 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    const { name, email, password, phone, classLevel } = signupInfo;
+    const { name, email, password, phone, classLevel, batch } = signupInfo;
 
     if (!name || !email || !password || !phone || !classLevel || !batch) {
       return handleError(
