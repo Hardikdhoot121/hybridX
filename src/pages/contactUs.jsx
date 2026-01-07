@@ -12,6 +12,26 @@ import img6 from "../images/Paksa.jpeg";
 
 const ContactUs = () => {
 
+  const Card = ({ name, role, phone, email, img }) => (
+    <div className="bg-[#2A2F36] rounded-xl p-6 w-full sm:w-[260px] shadow-md hover:shadow-blue-500/20 border border-gray-700 hover:-translate-y-2 transition-all duration-300">
+      <img
+        src={img}
+        alt={name}
+        className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-[#3BBAF4]"
+      />
+      <h3 className="text-center text-xl font-semibold mt-5">{name}</h3>
+      <p className="text-center text-gray-300 text-sm">{role}</p>
+
+      <div className="mt-4 space-y-1 text-sm">
+        <p className="text-[#3abbf5] flex items-center gap-2 hover:underline cursor-pointer">
+          <FaPhoneAlt size={18} />{phone}
+        </p>
+        <p className="text-[#42BA96] flex items-center gap-2 hover:underline cursor-pointer">
+          <IoMdMail size={18}/> {email}
+        </p>
+      </div>
+    </div>
+  );
 
   const director = [
     { 
@@ -67,28 +87,6 @@ const ContactUs = () => {
     },
 ];
 
-  
-  const Card = ({ name, role, phone, email, img }) => (
-    <div className="bg-[#2A2F36] rounded-xl p-6 w-full sm:w-[260px] shadow-md hover:shadow-blue-500/20 border border-gray-700 hover:-translate-y-2 transition-all duration-300">
-      <img
-        src={img}
-        alt={name}
-        className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-[#3BBAF4]"
-      />
-      <h3 className="text-center text-xl font-semibold mt-5">{name}</h3>
-      <p className="text-center text-gray-300 text-sm">{role}</p>
-
-      <div className="mt-4 space-y-1 text-sm">
-        <p className="text-[#3abbf5] flex items-center gap-2 hover:underline cursor-pointer">
-          <FaPhoneAlt size={18} />{phone}
-        </p>
-        <p className="text-[#42BA96] flex items-center gap-2 hover:underline cursor-pointer">
-          <IoMdMail size={18}/> {email}
-        </p>
-      </div>
-    </div>
-  );
-
   return (
     <>
     <Navbar />
@@ -112,7 +110,7 @@ const ContactUs = () => {
 
 
       {/* ===== Tech Team ===== */}
-      <Section title="Dev Team" data={tech} Card={Card} />
+      <Section title="Dev Team" data={tech} />
 
     </div>
     <Footer />
@@ -120,22 +118,42 @@ const ContactUs = () => {
   );
 };
 
-
 // Reusable Section Component
-const Section = ({ title, data, Card }) => (
-  <section className="mb-16 text-center">
-    <h2 className="text-3xl font-semibold mb-10 border-l-4 pl-3 border-blue-500 inline-block text-left">
-      {title}
-    </h2>
+const Section = ({ title, data }) => {
+  const Card = ({ name, role, phone, email, img }) => (
+    <div className="bg-[#2A2F36] rounded-xl p-6 w-full sm:w-[260px] shadow-md hover:shadow-blue-500/20 border border-gray-700 hover:-translate-y-2 transition-all duration-300">
+      <img
+        src={img}
+        alt={name}
+        className="w-28 h-28 rounded-full mx-auto object-cover border-4 border-[#3BBAF4]"
+      />
+      <h3 className="text-center text-xl font-semibold mt-5">{name}</h3>
+      <p className="text-center text-gray-300 text-sm">{role}</p>
 
-    <div className="flex flex-wrap gap-6 justify-center">   {/* CENTERED */}
-      {data.map((person, index) => (
-        <Card key={index} {...person} />
-      ))}
+      <div className="mt-4 space-y-1 text-sm">
+        <p className="text-[#3abbf5] flex items-center gap-2 hover:underline cursor-pointer">
+          <FaPhoneAlt size={18} />{phone}
+        </p>
+        <p className="text-[#42BA96] flex items-center gap-2 hover:underline cursor-pointer">
+          <IoMdMail size={18}/> {email}
+        </p>
+      </div>
     </div>
-  </section>
   );
 
+  return (
+    <section className="mb-16 text-center">
+      <h2 className="text-3xl font-semibold mb-10 border-l-4 pl-3 border-blue-500 inline-block text-left">
+        {title}
+      </h2>
 
+      <div className="flex flex-wrap gap-6 justify-center">
+        {data.map((person, index) => (
+          <Card key={index} {...person} />
+        ))}
+      </div>
+    </section>
+  );
+};
 
 export default ContactUs;

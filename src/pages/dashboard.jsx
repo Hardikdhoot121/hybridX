@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
