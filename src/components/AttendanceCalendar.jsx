@@ -41,12 +41,16 @@ const AttendanceCalendar = () => {
   useEffect(() => {
     let isMounted = true;
     
-    if (currentStudent) {
-      const studentAttendance = attendanceService.getStudentAttendance(currentStudent.id, currentStudent.class);
-      if (isMounted) {
-        setAttendanceData(studentAttendance);
+    const loadAttendance = async () => {
+      if (currentStudent) {
+        const studentAttendance = await attendanceService.getStudentAttendance(currentStudent.id, currentStudent.class);
+        if (isMounted) {
+          setAttendanceData(studentAttendance);
+        }
       }
-    }
+    };
+    
+    loadAttendance();
     
     return () => {
       isMounted = false;
@@ -105,8 +109,6 @@ const AttendanceCalendar = () => {
     // Format date key for attendance lookup
     const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const attendanceStatus = attendanceData[dateKey];
-    
-    console.log(`Day ${day} (${dateKey}): attendance status =`, attendanceStatus);
     
     // Determine background color based on attendance
     let bgColorClass = 'text-gray-300';
