@@ -1,13 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import students11th from '../classData/11th';
-import students12th from '../classData/12th';
+import students11th from '../classData/11th_real';
+import students12th from '../classData/12th_real';
 import Section from "./Section";
 import Detail from "./Detail";
 
 const StudentBasicDetails = () => {
   const { _id } = useParams();
-  const navigate = useNavigate();
+  const Navigate = useNavigate();
 
   const [student, setStudent] = useState(null);
 

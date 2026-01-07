@@ -5,7 +5,6 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import banner from "../images/banner.jpeg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -22,7 +21,7 @@ import img3 from "../images/JEE.jpeg";
 import img4 from "../images/RBSE.jpeg";
 
 
-const Home = ({ images = [], videos = [], instagram = [] }) => {
+const Home = () => {
 
    const achievementImages = [
      img1,

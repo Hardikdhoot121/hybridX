@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import AttendanceCalendar from "../components/AttendanceCalendar";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
@@ -46,8 +45,18 @@ const Dashboard = () => {
   useEffect(() => {
     const loadDashboard = async () => {
       const headers = getAuthHeaders();
-      if (!headers) {
+      
+      // Try to get student data from localStorage first
+      const localStudent = localStorage.getItem("currentStudent");
+      if (localStudent) {
+        const student = JSON.parse(localStudent);
+        console.log('Using local student data:', student);
+        setProfile(student);
+        setProfileDraft(student);
         setLoading(false);
+      }
+      
+      if (!headers) {
         return;
       }
 
@@ -71,7 +80,8 @@ const Dashboard = () => {
         setGoalInput(goalJson.target ?? 15);
 
       } catch (err) {
-        console.error("Dashboard load failed:", err);
+        console.log('Dashboard load failed (using local data only):', err);
+        // Don't show error to user since we have local data fallback
       } finally {
         setLoading(false);
       }
@@ -81,8 +91,8 @@ const Dashboard = () => {
   }, []);
 
   /* ================= DERIVED ================= */
-  const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
-  const glow = weeklyStats.correct >= weeklyGoal;
+  const INCORRECT = weeklyStats.totalSolved - weeklyStats.correct;
+  const GLOW = weeklyStats.correct >= weeklyGoal;
 
   /* ================= PROFILE SAVE ================= */
   const handleProfileSave = async () => {
@@ -152,12 +162,21 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-[#0b1020] text-white px-4 md:px-6 py-4">
 
-      <button
-        onClick={() => navigate("/")}
-        className="mb-4 flex items-center gap-2 text-gray-300 hover:text-white"
-      >
-        <ArrowLeft size={18} /> Back
-      </button>
+      <div className="flex justify-between mb-4">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-gray-300 hover:text-white"
+        >
+          <ArrowLeft size={18} /> Back
+        </button>
+        
+        <button
+          onClick={() => navigate("/attendance-calendar")}
+          className="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all font-medium"
+        >
+          📅 Attendance
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
@@ -279,8 +298,19 @@ const Dashboard = () => {
             </div>
           </div>
           
-          {/* ATTENDANCE CALENDAR */}
-          <AttendanceCalendar />
+          {/* ATTENDANCE CALENDAR LINK */}
+          <div className="bg-[#0e1628] rounded-xl p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold">Attendance Calendar</h3>
+              <button 
+                onClick={() => window.location.href = '/attendance-calendar'}
+                className="px-4 py-2 bg-[#42BA96] hover:bg-green-600 text-white rounded-lg text-sm font-medium transition"
+              >
+                View Full Calendar
+              </button>
+            </div>
+            <p className="text-gray-400 text-sm">Click to view your detailed attendance calendar</p>
+          </div>
         </div>
       </div>
 

@@ -87,12 +87,32 @@ function PYQ() {
 
 
     useEffect(() => {
-        getData();
+        let isMounted = true;
+        
+        const loadData = async () => {
+            await getData();
+        };
+        
+        if (isMounted) {
+            loadData();
+        }
+        
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     useEffect(() => {
-        setSelectedOption(null);
-        setShowResult(false);
+        let isMounted = true;
+        
+        if (isMounted) {
+            setSelectedOption(null);
+            setShowResult(false);
+        }
+        
+        return () => {
+            isMounted = false;
+        };
     }, [currIndex]);
 
     return (

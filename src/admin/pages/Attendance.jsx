@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import AdminNavbar from './AdminNavbar'
-import students11th from '../classData/11th'
-import students12th from '../classData/12th'
+import students11th from '../classData/11th_real'
+import students12th from '../classData/12th_real'
 import attendanceService from '../../data/attendanceService'
 
 const Attendance = () => {
   const [selectedClass, setSelectedClass] = useState('12th')
   const [attendance, setAttendance] = useState({})
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
   // Get students based on selected class
   const getCurrentStudents = () => {
@@ -15,12 +16,24 @@ const Attendance = () => {
 
   const currentStudents = getCurrentStudents();
 
-  // Load saved attendance for today when component mounts or class changes
+  // Load saved attendance when component mounts, class changes, or date changes
   useEffect(() => {
-    const today = new Date();
-    const savedAttendance = attendanceService.getAttendance(today, selectedClass);
-    setAttendance(savedAttendance);
-  }, [selectedClass]);
+    let isMounted = true;
+    
+    const loadAttendance = async () => {
+      const savedAttendance = await attendanceService.getAttendance(selectedDate, selectedClass);
+      
+      if (isMounted) {
+        setAttendance(savedAttendance);
+      }
+    };
+    
+    loadAttendance();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedClass, selectedDate]);
 
   // Handle checkbox change
   const handleAttendanceChange = (studentId) => {
@@ -40,10 +53,28 @@ const Attendance = () => {
   }
 
   // Save attendance to storage
-  const handleSaveAttendance = () => {
-    const today = new Date();
-    attendanceService.saveAttendance(today, selectedClass, attendance);
-    alert('Attendance saved successfully!');
+  const handleSaveAttendance = async () => {
+    const currentDate = selectedDate;
+    const dateKey = attendanceService.formatDateKey(currentDate);
+    
+    console.log('Saving attendance for date:', dateKey);
+    
+    try {
+      const success = await attendanceService.saveAttendance(currentDate, selectedClass, attendance);
+      
+      if (success) {
+        // Dispatch event to notify student dashboards
+        window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+          detail: { date: currentDate, class: selectedClass, attendance, dateKey }
+        }));
+        
+        console.log('✅ Attendance saved successfully for:', dateKey);
+        alert(`Attendance saved for ${dateKey}!`);
+      }
+    } catch (error) {
+      console.error('❌ Error saving attendance:', error);
+      alert('Error saving attendance. Please try again.');
+    }
   };
 
   // Get attendance statistics
@@ -61,41 +92,30 @@ const Attendance = () => {
         <div className="w-64 bg-[#15191e] shadow-lg p-6">
           <h2 className="text-xl font-bold mb-6 text-white">Select Class</h2>
           <div className="space-y-2">
-            <button
-              onClick={() => setSelectedClass('12th')}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                selectedClass === '12th' 
-                  ? 'bg-[#42BA96] text-white' 
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
+            <select 
+              value={selectedClass}
+              onChange={(e) => setSelectedClass(e.target.value)}
+              className="w-full px-4 py-3 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
             >
-              Class 12th
-            </button>
-            <button
-              onClick={() => setSelectedClass('11th')}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                selectedClass === '11th' 
-                  ? 'bg-[#42BA96] text-white' 
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
-            >
-              Class 11th
-            </button>
-            <button
-              onClick={() => setSelectedClass('10th')}
-              className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                selectedClass === '10th' 
-                  ? 'bg-[#42BA96] text-white' 
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              }`}
-            >
-              Class 10th
-            </button>
+              <option value="12th">Class 12th (40 students)</option>
+              <option value="11th">Class 11th (31 students)</option>
+            </select>
+          </div>
+
+          {/* Date Selector */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold mb-3 text-white">Select Date</h3>
+            <input
+              type="date"
+              value={selectedDate.toISOString().split('T')[0]}
+              onChange={(e) => setSelectedDate(new Date(e.target.value))}
+              className="w-full px-4 py-3 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
+            />
           </div>
 
           {/* Attendance Statistics */}
           <div className="mt-8 p-4 bg-gray-800 rounded-lg">
-            <h3 className="font-semibold text-white mb-3">Today's Stats</h3>
+            <h3 className="font-semibold text-white mb-3">Stats for {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</h3>
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-300">Present:</span>
@@ -126,7 +146,7 @@ const Attendance = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <h1 className="text-2xl font-bold text-gray-800">Attendance Management</h1>
-                  <p className="text-gray-600 mt-1">Class {selectedClass} - {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                  <p className="text-gray-600 mt-1">Class {selectedClass} - {selectedDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 </div>
                 <div className="flex gap-3">
                   <button
