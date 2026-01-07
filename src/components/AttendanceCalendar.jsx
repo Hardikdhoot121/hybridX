@@ -1,17 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import attendanceService from '../data/attendanceService';
 
-const AttendanceCalendar = ({ studentId, studentClass }) => {
+const AttendanceCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [attendanceData, setAttendanceData] = useState({});
+  const [currentStudent, setCurrentStudent] = useState(null);
   
-  // Load attendance data for the student when component mounts or month changes
+  // Get current logged-in student
   useEffect(() => {
-    if (studentId && studentClass) {
-      const studentAttendance = attendanceService.getStudentAttendance(studentId, studentClass);
-      setAttendanceData(studentAttendance);
+    let isMounted = true;
+    
+    const loadStudentData = async () => {
+      try {
+        const studentData = localStorage.getItem('currentStudent');
+        if (studentData) {
+          const student = JSON.parse(studentData);
+          if (isMounted) {
+            setCurrentStudent(student);
+            
+            // Load attendance for this student
+            const studentAttendance = await attendanceService.getStudentAttendance(student.id, student.class);
+            if (isMounted) {
+              setAttendanceData(studentAttendance);
+            }
+          }
+        }
+      } catch (error) {
+        console.warn('Error reading student data:', error);
+      }
+    };
+    
+    loadStudentData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [currentDate]);
+
+  // Load attendance data when student or date changes
+  useEffect(() => {
+    let isMounted = true;
+    
+    if (currentStudent) {
+      const studentAttendance = attendanceService.getStudentAttendance(currentStudent.id, currentStudent.class);
+      if (isMounted) {
+        setAttendanceData(studentAttendance);
+      }
     }
-  }, [studentId, studentClass, currentDate]);
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [currentStudent, currentDate]);
+  
+  // Listen for storage changes (when admin marks attendance)
+  useEffect(() => {
+    const handleStorageChange = async () => {
+      if (currentStudent) {
+        console.log('Attendance updated, refreshing calendar for student:', currentStudent.id, currentStudent.class);
+        const studentAttendance = await attendanceService.getStudentAttendance(currentStudent.id, currentStudent.class);
+        console.log('Student attendance data:', studentAttendance);
+        setAttendanceData(studentAttendance);
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('attendanceUpdated', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('attendanceUpdated', handleStorageChange);
+    };
+  }, [currentStudent]);
   
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -37,22 +97,23 @@ const AttendanceCalendar = ({ studentId, studentClass }) => {
   
   // Add days of the month
   for (let day = 1; day <= daysInMonth; day++) {
-    const isToday = day === new Date().getDate() && 
-                   currentDate.getMonth() === new Date().getMonth() && 
-                   currentDate.getFullYear() === new Date().getFullYear();
+    const today = new Date();
+    const IS_TODAY = day === today.getDate() && 
+                   currentDate.getMonth() === today.getMonth() && 
+                   currentDate.getFullYear() === today.getFullYear();
     
     // Format date key for attendance lookup
     const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const attendanceStatus = attendanceData[dateKey];
     
+    console.log(`Day ${day} (${dateKey}): attendance status =`, attendanceStatus);
+    
     // Determine background color based on attendance
     let bgColorClass = 'text-gray-300';
     if (attendanceStatus === true) {
-      bgColorClass = 'bg-green-500 text-white';
+      bgColorClass = 'bg-green-500 text-white'; // Present = Green
     } else if (attendanceStatus === false) {
-      bgColorClass = 'bg-red-500 text-white';
-    } else if (isToday) {
-      bgColorClass = 'bg-blue-500 text-white';
+      bgColorClass = 'bg-red-500 text-white'; // Absent = Red
     }
     
     days.push(
@@ -66,10 +127,25 @@ const AttendanceCalendar = ({ studentId, studentClass }) => {
     );
   }
   
+  // If no student is logged in, show login prompt
+  if (!currentStudent) {
+    return (
+      <div className="rounded-xl bg-[#0e1628] p-6">
+        <div className="text-center text-white">
+          <h3 className="font-semibold mb-4">Please login to view your attendance</h3>
+          <p className="text-gray-400 text-sm">Your attendance calendar will appear here after login</p>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <div className="rounded-xl bg-[#0e1628] p-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold">Attendance</h3>
+        <div>
+          <h3 className="font-semibold">Your Attendance</h3>
+          <p className="text-sm text-gray-400">{currentStudent.name} • Class {currentStudent.class}</p>
+        </div>
         <div className="flex gap-2">
           <button 
             onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
@@ -111,10 +187,6 @@ const AttendanceCalendar = ({ studentId, studentClass }) => {
         <div className="flex items-center gap-1">
           <div className="w-3 h-3 bg-red-500 rounded"></div>
           <span className="text-gray-400">Absent</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-3 h-3 bg-blue-500 rounded"></div>
-          <span className="text-gray-400">Today</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="w-3 h-3 bg-gray-600 rounded"></div>

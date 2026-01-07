@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import students11th from '../classData/11th';
-import students12th from '../classData/12th';
+import students11th from '../classData/11th_real';
+import students12th from '../classData/12th_real';
 
 const StudentsTable = () => {
   const [students, setStudents] = useState([]);
@@ -23,15 +23,15 @@ const StudentsTable = () => {
       {/* Class Filter */}
       <div className="px-6 py-4 bg-gray-50 border-b">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-800">Student List</h3>
+          <h3 className="font-semibold text-gray-800">Student List ({getFilteredStudents().length} students)</h3>
           <select 
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
           >
             <option value="all">All Classes</option>
-            <option value="12th">Class 12th</option>
-            <option value="11th">Class 11th</option>
+            <option value="12th">Class 12th (40 students)</option>
+            <option value="11th">Class 11th (31 students)</option>
           </select>
         </div>
       </div>
@@ -69,7 +69,9 @@ const StudentsTable = () => {
                   className={`px-3 py-1 rounded-full text-xs font-semibold
                       ${student.stream === "JEE"
                       ? "bg-blue-100 text-blue-600"
-                      : "bg-green-100 text-green-600"
+                      : student.stream === "NEET"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-600"
                     }
                     `}
                 >

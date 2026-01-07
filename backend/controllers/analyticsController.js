@@ -24,7 +24,7 @@ export const setWeeklyGoal = async (req, res) => {
       target: goal.target,
       weekStart,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: "Failed to save weekly goal" });
   }
 };
@@ -47,7 +47,7 @@ export const getWeeklyGoal = async (req, res) => {
       target: goal.target,
       weekStart,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: "Failed to fetch weekly goal" });
   }
 };
@@ -74,7 +74,7 @@ export const getWeeklyAnalytics = async (req, res) => {
       accuracy,
       challengesTaken: totalSolved,
     });
-  } catch (err) {
+  } catch {
     res.status(500).json({ message: "Weekly analytics failed" });
   }
 };
