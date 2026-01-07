@@ -1,29 +1,48 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import students11th from '../classData/11th_real';
+import students12th from '../classData/12th_real';
 
 const StudentsTable = () => {
   const [students, setStudents] = useState([]);
+  const [selectedClass, setSelectedClass] = useState('12th');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      const { data } = await axios.get(
-        "https://hybridx-uhj9.onrender.com/api/admin/students"
-      );
-      setStudents(data);
-    };
-    fetchStudents();
+    // Combine students from both classes
+    const allStudents = [...students12th, ...students11th];
+    setStudents(allStudents);
   }, []);
+
+  const getFilteredStudents = () => {
+    return selectedClass === 'all' ? students : students.filter(student => student.class === selectedClass);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+      {/* Class Filter */}
+      <div className="px-6 py-4 bg-gray-50 border-b">
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold text-gray-800">Student List ({getFilteredStudents().length} students)</h3>
+          <select 
+            value={selectedClass}
+            onChange={(e) => setSelectedClass(e.target.value)}
+            className="px-4 py-2 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
+          >
+            <option value="all">All Classes</option>
+            <option value="12th">Class 12th (40 students)</option>
+            <option value="11th">Class 11th (31 students)</option>
+          </select>
+        </div>
+      </div>
+
       <table className="w-full text-sm text-left">
 
         {/* Table Head */}
         <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
           <tr>
             <th className="px-6 py-4">Name</th>
+            <th className="px-6 py-4">Class</th>
             <th className="px-6 py-4">Stream</th>
             <th className="px-6 py-4">Phone Number</th>
             <th className="px-6 py-4 text-right">Action</th>
@@ -33,10 +52,16 @@ const StudentsTable = () => {
 
         {/* Table Body */}
         <tbody className="divide-y">
-          {students.map((student) => (
-            <tr key={student._id} className="hover:bg-gray-50">
+          {getFilteredStudents().map((student) => (
+            <tr key={student.id} className="hover:bg-gray-50">
               <td className="px-6 py-4 font-medium text-gray-800">
                 {student.name}
+              </td>
+
+              <td className="px-6 py-4">
+                <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
+                  {student.class}
+                </span>
               </td>
 
               <td className="px-6 py-4">
@@ -44,7 +69,9 @@ const StudentsTable = () => {
                   className={`px-3 py-1 rounded-full text-xs font-semibold
                       ${student.stream === "JEE"
                       ? "bg-blue-100 text-blue-600"
-                      : "bg-green-100 text-green-600"
+                      : student.stream === "NEET"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-gray-100 text-gray-600"
                     }
                     `}
                 >
@@ -57,7 +84,7 @@ const StudentsTable = () => {
               </td>
 
               <td className="px-6 py-4 text-right">
-                <button onClick={() => navigate(`/admin/student/${student._id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
+                <button onClick={() => navigate(`/admin/student/${student.id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
                   View Details
                 </button>
               </td>
