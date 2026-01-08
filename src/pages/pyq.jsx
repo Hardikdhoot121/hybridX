@@ -65,7 +65,7 @@ function PYQ() {
   const currVal = data[currIndex];
 
   try {
-    await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/practice/attempt`, {
+    await fetch("http://localhost:5000/api/practice/attempt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -87,32 +87,12 @@ function PYQ() {
 
 
     useEffect(() => {
-        let isMounted = true;
-        
-        const loadData = async () => {
-            await getData();
-        };
-        
-        if (isMounted) {
-            loadData();
-        }
-        
-        return () => {
-            isMounted = false;
-        };
+        getData();
     }, []);
 
     useEffect(() => {
-        let isMounted = true;
-        
-        if (isMounted) {
-            setSelectedOption(null);
-            setShowResult(false);
-        }
-        
-        return () => {
-            isMounted = false;
-        };
+        setSelectedOption(null);
+        setShowResult(false);
     }, [currIndex]);
 
     return (
