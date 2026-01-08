@@ -66,35 +66,19 @@ function MainsPYQ() {
   /* ---------------- DATA LOAD ---------------- */
 
   useEffect(() => {
-    let isMounted = true;
-    
     const filtered = Data.filter(
       (q) =>
         q.subject?.toLowerCase() === subject.toLowerCase() &&
         q.chapter?.toLowerCase() === chapter.toLowerCase()
     );
 
-    if (isMounted) {
-      setData(filtered);
-      setCurrIndex(0);
-    }
-    
-    return () => {
-      isMounted = false;
-    };
+    setData(filtered);
+    setCurrIndex(0);
   }, [subject, chapter]);
 
   useEffect(() => {
-    let isMounted = true;
-    
-    if (isMounted) {
-      setSelectedOption(null);
-      setShowResult(false);
-    }
-    
-    return () => {
-      isMounted = false;
-    };
+    setSelectedOption(null);
+    setShowResult(false);
   }, [currIndex]);
 
   if (data.length === 0) {
