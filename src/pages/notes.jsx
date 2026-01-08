@@ -12,31 +12,11 @@ export default function Notes() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-    
-    const loadData = async () => {
-      if (isMounted) {
-        setLoading(true);
-      }
-      
-      try {
-        const list = await loadFromDrive(currentFolder);
-        if (isMounted) {
-          setFiles(list);
-          setLoading(false);
-        }
-      } catch {
-        if (isMounted) {
-          setLoading(false);
-        }
-      }
-    };
-
-    loadData();
-    
-    return () => {
-      isMounted = false;
-    };
+    setLoading(true);
+    loadFromDrive(currentFolder).then(list => {
+      setFiles(list);
+      setLoading(false);
+    });
   }, [currentFolder]);
 
   return (

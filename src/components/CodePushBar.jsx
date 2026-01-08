@@ -4,21 +4,11 @@ const CodePushBar = ({ status = 'idle', message = '', onDismiss }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    let isMounted = true;
-    
     if (status !== 'idle') {
-      if (isMounted) {
-        setIsVisible(true);
-      }
+      setIsVisible(true);
     } else {
-      if (isMounted) {
-        setIsVisible(false);
-      }
+      setIsVisible(false);
     }
-    
-    return () => {
-      isMounted = false;
-    };
   }, [status]);
 
   if (!isVisible) return null;
