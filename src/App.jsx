@@ -15,9 +15,11 @@ import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
+import Attendance from "./admin/pages/Attendance";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
+import AttendanceCalendar from "./components/AttendanceCalendar";
 
 function App() {
   return (
@@ -29,30 +31,37 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/navbar" element={<Navbar />} />
-
         <Route path="/hybrid" element={<Hybrid />} />
+        
+        {/* Admin routes - directly accessible */}
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
-
+        <Route path="/admin/details/:id" element={<AdminAllDetails />} />
+        <Route path="/admin/attendance" element={<Attendance />} />
+        
         {/* some protected routes jo bina login kai nhi khulengai */}
-
         <Route element={<ProtectedRoute />}>
-
-          <Route path="/ncert+" element={<Ncertplus />} />
-          <Route path="/notes" element={<Notes />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
+          <Route path="/dpp" element={<DppResult />} />
+          <Route path="/dpp/:id" element={<DppResult />} />
+          
+          {/* JEE/NEET Mains routes */}
           <Route path="/jeemains" element={<Mains />} />
           <Route path="/jeemains/chemistry" element={<Chemistry />} />
-          <Route path="/jeemains/maths" element={<Maths />} />
+          <Route path="/jeemains/chemistry/:chapter" element={<Chemistry />} />
           <Route path="/jeemains/physics" element={<Physics />} />
-          <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dpp/:id" element={<DppResult />} />
-
+          <Route path="/jeemains/physics/:chapter" element={<Physics />} />
+          <Route path="/jeemains/maths" element={<Maths />} />
+          <Route path="/jeemains/maths/:chapter" element={<Maths />} />
+          <Route path="/jeemains/pyq" element={<MainsPYQ />} />
+          
+          {/* Study material routes */}
+          <Route path="/ncert-plus" element={<Ncertplus />} />
+          <Route path="/notes" element={<Notes />} />
         </Route>
-
       </Routes>
     </>
   );
 }
-export default App;
 
+export default App;

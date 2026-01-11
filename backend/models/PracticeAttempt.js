@@ -30,6 +30,22 @@ const practiceAttemptSchema = new mongoose.Schema(
       default: "Medium",
     },
 
+    questionType: {
+      type: String,
+      enum: ["mcq", "integer"],
+      default: "mcq",
+    },
+
+    userAnswer: {
+      type: String, // Store the user's answer (option identifier or numerical value)
+      required: true,
+    },
+
+    correctAnswer: {
+      type: String, // Store the correct answer for reference
+      required: true,
+    },
+
     isCorrect: {
       type: Boolean,
       required: true,

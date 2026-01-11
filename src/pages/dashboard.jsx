@@ -1,14 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
-  if (!token) return null;
+  console.log('🔑 Getting auth headers, token exists:', !!token);
+  console.log('🔑 Token value:', token ? token.substring(0, 50) + '...' : 'null');
+  
+  if (!token) {
+    console.log('❌ No token found, user might need to login again');
+    return null;
+  }
+  
+  // Check if token is expired (simple check for JWT format)
+  try {
+    const tokenParts = token.split('.');
+    if (tokenParts.length === 3) {
+      const payload = JSON.parse(atob(tokenParts[1]));
+      const currentTime = Date.now() / 1000;
+      if (payload.exp && payload.exp < currentTime) {
+        console.log('❌ Token expired, clearing and redirecting to login');
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("currentStudent");
+        window.location.href = '/login';
+        return null;
+      }
+    }
+  } catch (error) {
+    console.log('❌ Token validation error:', error);
+  }
+  
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -42,26 +68,72 @@ const Dashboard = () => {
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   /* ================= FETCH DASHBOARD (PARALLEL) ================= */
+  const fetchWeeklyStats = async () => {
+    console.log('🔄 Fetching weekly stats...');
+    const headers = getAuthHeaders();
+    if (!headers) return;
+
+    try {
+      const statsRes = await fetch(`${API_BASE}/analytics/weekly`, { headers });
+      console.log('📡 Weekly stats API response status:', statsRes.status);
+      
+      if (statsRes.ok) {
+        const statsJson = await statsRes.json();
+        console.log('✅ Weekly stats updated:', statsJson);
+        console.log('📊 Previous weeklyStats:', weeklyStats);
+        setWeeklyStats(statsJson);
+        console.log('📊 New weeklyStats set:', statsJson);
+      } else {
+        console.error('❌ Failed to fetch weekly stats:', statsRes.status);
+      }
+    } catch (err) {
+      console.log('❌ Failed to fetch weekly stats:', err);
+    }
+  };
+
   useEffect(() => {
     const loadDashboard = async () => {
+      console.log('🚀 Starting dashboard load...');
       const headers = getAuthHeaders();
-      if (!headers) {
+      console.log('📋 Headers for API calls:', headers);
+      
+      // Try to get student data from localStorage first
+      const localStudent = localStorage.getItem("currentStudent");
+      console.log('👤 Local student data exists:', !!localStudent);
+      if (localStudent) {
+        const student = JSON.parse(localStudent);
+        console.log('👤 Using local student data:', student);
+        setProfile(student);
+        setProfileDraft(student);
         setLoading(false);
+      }
+      
+      if (!headers) {
+        console.log('❌ No headers available, skipping API calls');
         return;
       }
 
       try {
+        console.log('📡 Making parallel API calls...');
         const [profileRes, statsRes, goalRes] = await Promise.all([
           fetch(`${API_BASE}/users/profile`, { headers }),
           fetch(`${API_BASE}/analytics/weekly`, { headers }),
           fetch(`${API_BASE}/analytics/weekly-goal`, { headers }),
         ]);
 
+        console.log('📊 API Response Statuses:', {
+          profile: profileRes.status,
+          stats: statsRes.status,
+          goal: goalRes.status
+        });
+
         if (!profileRes.ok) throw new Error("Profile fetch failed");
 
         const profileJson = await profileRes.json();
         const statsJson = await statsRes.json();
         const goalJson = await goalRes.json();
+
+        console.log('✅ API Responses received:', { profileJson, statsJson, goalJson });
 
         setProfile(profileJson.user);
         setProfileDraft(profileJson.user);
@@ -70,7 +142,8 @@ const Dashboard = () => {
         setGoalInput(goalJson.target ?? 15);
 
       } catch (err) {
-        console.error("Dashboard load failed:", err);
+        console.log('❌ Dashboard load failed (using local data only):', err);
+        // Don't show error to user since we have local data fallback
       } finally {
         setLoading(false);
       }
@@ -79,9 +152,81 @@ const Dashboard = () => {
     loadDashboard();
   }, []);
 
+  /* ================= WEEKLY STATS DEBUG ================= */
+  useEffect(() => {
+    console.log('📊 weeklyStats state changed:', weeklyStats);
+    console.log('🎯 weeklyGoal state changed:', weeklyGoal);
+  }, [weeklyStats, weeklyGoal]);
+
+  /* ================= STORAGE EVENT LISTENER ================= */
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      console.log('📡 Storage event detected:', e.key, e.newValue);
+      
+      if (e.key === 'dashboard-refresh-trigger') {
+        console.log('📡 Dashboard refresh trigger received:', e.newValue);
+        try {
+          const data = JSON.parse(e.newValue);
+          console.log('🔍 Parsed refresh trigger data:', data);
+          
+          if (data.type === 'correct-answer') {
+            console.log('🎯 Correct answer detected, refreshing weekly stats...');
+            console.log('📊 Stats from trigger:', data.weeklyStats);
+            
+            // Option 1: Use the stats from the trigger (immediate)
+            if (data.weeklyStats) {
+              console.log('⚡ Using immediate stats from trigger');
+              console.log('🔄 Previous stats:', weeklyStats);
+              console.log('📈 New stats:', data.weeklyStats);
+              setWeeklyStats(data.weeklyStats);
+              
+              // Force a re-render by updating the state
+              setTimeout(() => {
+                console.log('🔄 Forced re-render with new stats');
+              }, 100);
+            }
+            
+            // Option 2: Fetch fresh stats from API (fallback/confirmation)
+            setTimeout(() => {
+              console.log('🔄 Fetching fresh stats from API as confirmation...');
+              fetchWeeklyStats();
+            }, 500);
+          }
+        } catch (err) {
+          console.log('❌ Failed to parse refresh trigger:', err);
+        }
+      }
+    };
+
+    // Listen for storage events (cross-tab)
+    window.addEventListener('storage', handleStorageChange);
+    console.log('👂 Storage event listener attached');
+    
+    // Also check for direct localStorage changes (same tab)
+    const checkLocalStorage = () => {
+      const trigger = localStorage.getItem('dashboard-refresh-trigger');
+      if (trigger) {
+        console.log('🔍 Found trigger in localStorage:', trigger);
+        handleStorageChange({ key: 'dashboard-refresh-trigger', newValue: trigger });
+        // Clear the trigger after processing
+        localStorage.removeItem('dashboard-refresh-trigger');
+        console.log('🗑️ Trigger cleared from localStorage');
+      }
+    };
+
+    const interval = setInterval(checkLocalStorage, 1000);
+    console.log('⏰ Started localStorage polling interval');
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+      console.log('🔇 Storage event listener removed');
+    };
+  }, []);
+
   /* ================= DERIVED ================= */
-  const incorrect = weeklyStats.totalSolved - weeklyStats.correct;
-  const glow = weeklyStats.correct >= weeklyGoal;
+  const INCORRECT = weeklyStats.totalSolved - weeklyStats.correct;
+  const GLOW = weeklyStats.correct >= weeklyGoal;
 
   /* ================= PROFILE SAVE ================= */
   const handleProfileSave = async () => {
@@ -147,16 +292,38 @@ const Dashboard = () => {
       ? Math.min(weeklyStats.correct / weeklyGoal, 1)
       : 0;
 
+  // Debug logging for wheel calculation
+  console.log('🎯 Weekly Goal Wheel Debug:', {
+    weeklyStats,
+    weeklyGoal,
+    correct: weeklyStats.correct,
+    totalSolved: weeklyStats.totalSolved,
+    accuracy: weeklyStats.accuracy,
+    progress,
+    progressPercentage: Math.round(progress * 100),
+    circumference,
+    strokeDasharray: `${progress * circumference} ${circumference}`
+  });
+
   /* ================= UI ================= */
   return (
     <div className="min-h-screen bg-[#0b1020] text-white px-4 md:px-6 py-4">
 
-      <button
-        onClick={() => navigate("/")}
-        className="mb-4 flex items-center gap-2 text-gray-300 hover:text-white"
-      >
-        <ArrowLeft size={18} /> Back
-      </button>
+      <div className="flex justify-between mb-4">
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-gray-300 hover:text-white"
+        >
+          <ArrowLeft size={18} /> Back
+        </button>
+        
+        <button
+          onClick={() => navigate("/attendance-calendar")}
+          className="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all font-medium"
+        >
+          📅 Attendance
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 
@@ -267,13 +434,29 @@ const Dashboard = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="rounded-xl bg-[#0e1628] p-6">
-          <h3 className="mb-4 font-semibold">Analytics</h3>
-          <div className="grid grid-cols-2 gap-4 text-center">
-            <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
-            <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
-            <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
-            <div className="stat-card"><span>0</span><p>Challenges</p></div>
+        <div className="space-y-4">
+          <div className="rounded-xl bg-[#0e1628] p-6">
+            <h3 className="mb-4 font-semibold">Analytics</h3>
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div className="stat-card"><span>{weeklyStats.totalSolved}</span><p>Questions</p></div>
+              <div className="stat-card"><span>{weeklyStats.correct}</span><p>Correct</p></div>
+              <div className="stat-card"><span>{weeklyStats.accuracy}%</span><p>Accuracy</p></div>
+              <div className="stat-card"><span>0</span><p>Challenges</p></div>
+            </div>
+          </div>
+          
+          {/* ATTENDANCE CALENDAR LINK */}
+          <div className="bg-[#0e1628] rounded-xl p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold">Attendance Calendar</h3>
+              <button 
+                onClick={() => window.location.href = '/attendance-calendar'}
+                className="px-4 py-2 bg-[#42BA96] hover:bg-green-600 text-white rounded-lg text-sm font-medium transition"
+              >
+                View Full Calendar
+              </button>
+            </div>
+            <p className="text-gray-400 text-sm">Click to view your detailed attendance calendar</p>
           </div>
         </div>
       </div>
