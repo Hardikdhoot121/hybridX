@@ -28,7 +28,7 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    const { name, email, password, phone, classLevel } = signupInfo;
+    const { name, email, password, phone, classLevel, batch } = signupInfo;
 
     if (!name || !email || !password || !phone || !classLevel || !batch) {
       return handleError(
@@ -37,8 +37,10 @@ function Signup() {
     }
 
     try {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      
       const response = await fetch(
-        "https://hybridx-uhj9.onrender.com/api/auth/signup",
+        `${API_BASE}/auth/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

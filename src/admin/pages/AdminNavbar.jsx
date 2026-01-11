@@ -41,7 +41,7 @@ export default function AdminNavbar() {
           </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/admin/attendance")}
           >
             Attendance
           </li>
@@ -80,7 +80,7 @@ export default function AdminNavbar() {
         <div className="md:hidden bg-[#0d1117] text-white px-6 py-4 space-y-3 font-medium border-t border-gray-700">
           <p onClick={() => { navigate("/"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Home</p>
           <p onClick={() => { navigate("/dashboard"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Students Info</p>
-          <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Attendance</p>
+          <p onClick={() => { navigate("/admin/attendance"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Attendance</p>
           <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Analytics</p>
           <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Content Management</p>
         </div>
