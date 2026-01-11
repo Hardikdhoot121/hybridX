@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utils";
-import students11th from '../admin/classData/11th_real';
-import students12th from '../admin/classData/12th_real';
 
 function Login() {
   const [loginInfo, setLoginInfo] = useState({
@@ -33,29 +31,40 @@ function Login() {
     }
 
     try {
-      // Authenticate with real student data
-      const allStudents = [...students12th, ...students11th];
-      const student = allStudents.find(s => s.email === email);
+      // Use backend API for authentication
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
       
-      if (student) {
-        // For demo: accept password "password" or student's phone number
-        if (password === 'password' || password === student.phone) {
-          // Store student info in localStorage
-          localStorage.setItem("currentStudent", JSON.stringify(student));
-          localStorage.setItem("token", "student-token-" + student.id);
-          
-          console.log('Login successful:', { student, token: "student-token-" + student.id });
-          
-          handleSuccess(`Welcome back, ${student.name}!`);
-          setTimeout(() => navigate("/dashboard"), 1000);
-        } else {
-          handleError("Invalid password. Try 'password' or your phone number.");
-        }
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Store JWT token and user info in localStorage
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("user", JSON.stringify(result.user));
+        localStorage.setItem("currentStudent", JSON.stringify(result.user)); // Add this for dashboard compatibility
+        
+        console.log('Login successful:', { user: result.user, token: result.token });
+        
+        // Dispatch student login event to notify attendance components
+        window.dispatchEvent(new CustomEvent('studentLoggedIn', {
+          detail: { student: result.user }
+        }));
+        
+        handleSuccess(`Welcome back, ${result.user.name}!`);
+        setTimeout(() => navigate("/dashboard"), 1000);
       } else {
-        handleError("Student not found. Please check your email.");
+        handleError(result.message || "Login failed");
       }
     } catch (err) {
-      handleError(err.message || "Something went wrong");
+      console.error("Login error:", err);
+      handleError("Login failed. Please try again.");
     }
   };
 
@@ -96,7 +105,7 @@ function Login() {
           </button>
 
           <p className="text-slate-400 mt-4 text-sm">
-            Don’t have an account?{" "}
+            Don't have an account?{" "}
             <Link to="/signup" className="text-blue-400 hover:underline">
               Signup
             </Link>

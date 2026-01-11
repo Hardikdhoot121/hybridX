@@ -37,8 +37,10 @@ function Signup() {
     }
 
     try {
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      
       const response = await fetch(
-        "https://hybridx-uhj9.onrender.com/api/auth/signup",
+        `${API_BASE}/auth/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -21,20 +21,9 @@ import AttendanceCalendarPage from "./pages/attendance-calendar";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminProtectedRoute from "./AdminProtectedRoute";
 
 function App() {
-  // Clear any auto-login on app load
-  React.useEffect(() => {
-    // Remove any auto-login data to ensure login page is first
-    const autoLoginKeys = ['currentStudent', 'token'];
-    autoLoginKeys.forEach(key => {
-      if (localStorage.getItem(key)) {
-        console.log(`Clearing auto-login data: ${key}`);
-        localStorage.removeItem(key);
-      }
-    });
-  }, []);
-
   return (
     <>
       <Routes>
@@ -46,6 +35,7 @@ function App() {
         <Route path="/navbar" element={<Navbar />} />
 
         <Route path="/hybrid" element={<Hybrid/>} />
+        
         {/* Admin routes - directly accessible */}
         <Route path="/admin" element={<AdminDashboard/>}/>
         <Route path="/admin/details/:id" element={<AdminAllDetails/>} />
@@ -55,7 +45,22 @@ function App() {
         <Route element={<ProtectedRoute/>}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/attendance-calendar" element={<AttendanceCalendarPage />} />
+        <Route path="/dpp" element={<DppResult />} />
         <Route path="/dpp/:id" element={<DppResult />} />
+        
+        {/* JEE/NEET Mains routes */}
+        <Route path="/jeemains" element={<Mains />} />
+        <Route path="/jeemains/chemistry" element={<Chemistry />} />
+        <Route path="/jeemains/chemistry/:chapter" element={<Chemistry />} />
+        <Route path="/jeemains/physics" element={<Physics />} />
+        <Route path="/jeemains/physics/:chapter" element={<Physics />} />
+        <Route path="/jeemains/maths" element={<Maths />} />
+        <Route path="/jeemains/maths/:chapter" element={<Maths />} />
+        <Route path="/jeemains/pyq" element={<MainsPYQ />} />
+        
+        {/* Study material routes */}
+        <Route path="/ncert-plus" element={<Ncertplus />} />
+        <Route path="/notes" element={<Notes />} />
         </Route>
 
       </Routes>

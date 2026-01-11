@@ -130,13 +130,16 @@ const submitPracticeAttempt = async () => {
     subject: currVal.subject.toLowerCase(),
     topic: currVal.topic || currVal.chapter,
     difficulty: "Medium",
-    isCorrect: selectedOption === currVal.correct_option_index
+    isCorrect: selectedOption === currVal.correct_option_index,
+    questionType: currVal.question_type || "mcq",
+    userAnswer: selectedOption,
+    correctAnswer: currVal.correct_option_index,
   };
 
   console.log("✅ Sending payload:", payload);
 
   try {
-    await fetch(`${API_BASE}/practice/attempt`, {
+    const response = await fetch(`${API_BASE}/analytics/practice-attempt`, {
 
       method: "POST",
       headers: {
@@ -145,6 +148,33 @@ const submitPracticeAttempt = async () => {
       },
       body: JSON.stringify(payload)
     });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log("✅ Practice attempt recorded:", data);
+      
+      // Show success feedback and trigger dashboard refresh
+      if (payload.isCorrect) {
+        console.log("🎉 Correct answer! Weekly goal updated.");
+        // Trigger dashboard refresh event
+        localStorage.setItem('dashboard-refresh-trigger', JSON.stringify({
+          type: 'correct-answer',
+          timestamp: Date.now(),
+          subject: currVal.subject.toLowerCase(),
+          questionId: currVal.question_id
+        }));
+        // Dispatch storage event for cross-tab communication
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'dashboard-refresh-trigger',
+          newValue: JSON.stringify({
+            type: 'correct-answer',
+            timestamp: Date.now(),
+            subject: currVal.subject.toLowerCase(),
+            questionId: currVal.question_id
+          })
+        }));
+      }
+    }
   } catch (err) {
     console.error("❌ Failed to submit attempt", err);
   }
