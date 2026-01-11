@@ -70,7 +70,7 @@ const Home = () => {
   ];
 
   const hybrid = [
-    { name: "NCERT+", path: "ncert+" },
+    { name: "NCERT+", path: "ncert-plus" },
     { name: "DPPs", path: "dpp" },
     { name: "Notes", path: "notes" },
 

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import AdminNavbar from './AdminNavbar'
-import students11th from '../classData/11th_real'
-import students12th from '../classData/12th_real'
+import { use11thStudents } from '../classData/11th_real'
+import { use12thStudents } from '../classData/12th_real'
 import attendanceService from '../../data/attendanceService'
 
 const Attendance = () => {
   const [selectedClass, setSelectedClass] = useState('12th')
   const [attendance, setAttendance] = useState({})
   const [selectedDate, setSelectedDate] = useState(new Date())
+  
+  // Fetch dynamic student data from backend
+  const { students: students11th, loading: loading11th, error: error11th } = use11thStudents();
+  const { students: students12th, loading: loading12th, error: error12th } = use12thStudents();
 
   // Get students based on selected class
   const getCurrentStudents = () => {
@@ -15,15 +19,23 @@ const Attendance = () => {
   };
 
   const currentStudents = getCurrentStudents();
+  const loading = loading11th || loading12th;
+  const error = error11th || error12th;
 
   // Load saved attendance when component mounts, class changes, or date changes
   useEffect(() => {
     let isMounted = true;
     
     const loadAttendance = async () => {
+      console.log('📅 Loading attendance for:', { 
+        date: selectedDate.toLocaleDateString(), 
+        class: selectedClass 
+      });
+      
       const savedAttendance = await attendanceService.getAttendance(selectedDate, selectedClass);
       
       if (isMounted) {
+        console.log('📊 Loaded attendance:', savedAttendance);
         setAttendance(savedAttendance);
       }
     };
@@ -37,9 +49,21 @@ const Attendance = () => {
 
   // Handle checkbox change
   const handleAttendanceChange = (studentId) => {
+    console.log('🔄 Attendance toggle for student:', { 
+      studentId, 
+      studentIdType: typeof studentId, 
+      studentName: currentStudents.find(s => s.id === studentId)?.name || 'Unknown',
+      currentClass: selectedClass,
+      selectedDate: selectedDate.toDateString(),
+      currentValue: attendance[studentId],
+      newValue: !attendance[studentId]
+    });
+    
+    // Explicitly set the boolean value to ensure false is preserved
+    const newValue = !attendance[studentId];
     setAttendance(prev => ({
       ...prev,
-      [studentId]: !prev[studentId]
+      [studentId]: newValue
     }))
   }
 
@@ -47,6 +71,12 @@ const Attendance = () => {
   const handleMarkAll = (present) => {
     const newAttendance = {}
     currentStudents.forEach(student => {
+      console.log('📝 Marking attendance for student:', { 
+        studentId: student.id, 
+        studentIdType: typeof student.id, 
+        studentName: student.name, 
+        present 
+      });
       newAttendance[student.id] = present
     })
     setAttendance(newAttendance)
@@ -57,19 +87,36 @@ const Attendance = () => {
     const currentDate = selectedDate;
     const dateKey = attendanceService.formatDateKey(currentDate);
     
-    console.log('Saving attendance for date:', dateKey);
+    console.log('💾 Saving attendance for date:', dateKey);
+    console.log('📝 Attendance record to save:', attendance);
+    console.log('👥 Students being marked:', Object.keys(attendance));
+    console.log('📊 Selected class:', selectedClass);
+    
+    // Show which students are present/absent
+    const presentStudents = Object.keys(attendance).filter(id => attendance[id]);
+    const absentStudents = Object.keys(attendance).filter(id => !attendance[id]);
+    console.log('✅ Present students:', presentStudents.length, presentStudents);
+    console.log('❌ Absent students:', absentStudents.length, absentStudents);
     
     try {
       const success = await attendanceService.saveAttendance(currentDate, selectedClass, attendance);
       
       if (success) {
-        // Dispatch event to notify student dashboards
-        window.dispatchEvent(new CustomEvent('attendanceUpdated', {
-          detail: { date: currentDate, class: selectedClass, attendance, dateKey }
-        }));
-        
         console.log('✅ Attendance saved successfully for:', dateKey);
-        alert(`Attendance saved for ${dateKey}!`);
+        alert(`Attendance saved for ${dateKey}!\n${Object.values(attendance).filter(Boolean).length} students marked present`);
+        
+        // The attendance service already dispatches the event, but we can add additional notification
+        window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+          detail: { 
+            date: currentDate, 
+            class: selectedClass, 
+            attendance, 
+            dateKey,
+            timestamp: new Date().toISOString()
+          }
+        }));
+      } else {
+        alert('Error saving attendance. Please try again.');
       }
     } catch (error) {
       console.error('❌ Error saving attendance:', error);
@@ -81,6 +128,42 @@ const Attendance = () => {
   const presentCount = Object.values(attendance).filter(Boolean).length
   const totalCount = currentStudents.length
   const attendancePercentage = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <>
+        <AdminNavbar/>
+        <div className="flex min-h-screen bg-[#15191e] items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#42BA96]"></div>
+            <p className="mt-2 text-white">Loading student data...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <>
+        <AdminNavbar/>
+        <div className="flex min-h-screen bg-[#15191e] items-center justify-center">
+          <div className="text-center">
+            <div className="text-red-500 mb-2">⚠️ Error</div>
+            <p className="text-white">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 px-4 py-2 bg-[#42BA96] text-white rounded-lg hover:bg-[#369877] transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -97,8 +180,8 @@ const Attendance = () => {
               onChange={(e) => setSelectedClass(e.target.value)}
               className="w-full px-4 py-3 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
             >
-              <option value="12th">Class 12th (40 students)</option>
-              <option value="11th">Class 11th (31 students)</option>
+              <option value="12th">Class 12th ({students12th.length} students)</option>
+              <option value="11th">Class 11th ({students11th.length} students)</option>
             </select>
           </div>
 
@@ -110,7 +193,16 @@ const Attendance = () => {
               value={selectedDate.toISOString().split('T')[0]}
               onChange={(e) => setSelectedDate(new Date(e.target.value))}
               className="w-full px-4 py-3 border border-[#42BA96] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#42BA96] bg-white text-gray-700 font-medium"
+              max={new Date().toISOString().split('T')[0]} // Prevent future dates
             />
+            <p className="text-xs text-gray-400 mt-2">
+              {selectedDate > new Date() ? 
+                "⚠️ Future date selected" : 
+                selectedDate.toDateString() === new Date().toDateString() ? 
+                "📅 Today" : 
+                "📅 Past date"
+              }
+            </p>
           </div>
 
           {/* Attendance Statistics */}
@@ -184,7 +276,7 @@ const Attendance = () => {
                         <input
                           type="checkbox"
                           id={`student-${student.id}`}
-                          checked={attendance[student.id] || false}
+                          checked={attendance[student.id] === true}
                           onChange={() => handleAttendanceChange(student.id)}
                           className="w-5 h-5 text-[#3BBAF4] border-gray-300 rounded focus:ring-[#3BBAF4]"
                         />
@@ -200,11 +292,13 @@ const Attendance = () => {
                       </div>
                       <div className="flex items-center space-x-3">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          attendance[student.id] 
+                          attendance[student.id] === true
                             ? 'bg-[#42BA96] text-white' 
-                            : 'bg-red-100 text-red-700'
+                            : attendance[student.id] === false
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-gray-100 text-gray-700'
                         }`}>
-                          {attendance[student.id] ? 'Present' : 'Absent'}
+                          {attendance[student.id] === true ? 'Present' : attendance[student.id] === false ? 'Absent' : 'Not Marked'}
                         </span>
                       </div>
                     </div>

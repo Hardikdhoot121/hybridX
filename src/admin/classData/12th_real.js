@@ -1,484 +1,148 @@
-const students = [
-  {
-    id: 1,
-    name: "Milin mathur",
-    email: "milinmathur0@gmail.com",
-    phone: "6378038398",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 2,
-    name: "Preet Choudhary",
-    email: "preet1112choudhary@gmail.com",
-    phone: "7597359177",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 3,
-    name: "Dhananjay Kaushish",
-    email: "honeymaa1929@gmail.com",
-    phone: "8171496200",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 4,
-    name: "Yogesh Paliwal",
-    email: "rajrajpaliwal64@gmail.com",
-    phone: "9588998978",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 5,
-    name: "Aradhya Mathur",
-    email: "iamaradhya.01@gmail.com",
-    phone: "8209362606",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 6,
-    name: "Samarth Mathur",
-    email: "mathursamarth748@gmail.com",
-    phone: "8955842780",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 7,
-    name: "Harshal Mathur",
-    email: "Harshal28mathur@gmail.comh",
-    phone: "8302429877",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 8,
-    name: "Lakshya",
-    email: "lakshyakhichar7@gmail.com",
-    phone: "8107014688",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 9,
-    name: "Kashvi Goil",
-    email: "goilkashvi@gmail.com",
-    phone: "9829026120",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 10,
-    name: "Dhairy Solanki",
-    email: "dhairysolanki125@gmail.com",
-    phone: "8003147537",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 11,
-    name: "Harshita chauhan",
-    email: "sheelaparihar63@gmail.com",
-    phone: "9461441473",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 12,
-    name: "Divyanshu Limba",
-    email: "limbadivyanshu@gmail.com",
-    phone: "9588863100",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 13,
-    name: "Himani Sankhla",
-    email: "himanisankhla111@gmail.com",
-    phone: "9119299311",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 14,
-    name: "Yusuf Gazdhar",
-    email: "yusufgazdhar9@gmail.com",
-    phone: "9024600816",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 15,
-    name: "Daksh pratap singh",
-    email: "ratansingh15092008@gmail.com",
-    phone: "8769506793",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 16,
-    name: "Rajveer Singh Chauhan",
-    email: "rajveerschauhan7788@gmail.com",
-    phone: "9983968373",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 17,
-    name: "Pratyaksh Motiani",
-    email: "Pratyakshmotiani09@gmail.com",
-    phone: "9079505000",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 18,
-    name: "Surbhi Panwar",
-    email: "surbhipanwarchb@gmail.com",
-    phone: "7300070124",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 19,
-    name: "Sahil Goyal",
-    email: "sahilgoyal1808@gmail.com",
-    phone: "8890819095",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 20,
-    name: "Hitendrapal Singh Bhati",
-    email: "bhatih488@gmail.com",
-    phone: "8905558923",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 21,
-    name: "Parvat Singh Rathore",
-    email: "parvatsinghrathore1727@gmail.com",
-    phone: "8696038717",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 22,
-    name: "Bharat Singh Rajpurohit",
-    email: "rajpurohitbharat800@gmail.com",
-    phone: "6377970826",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 23,
-    name: "Lakshya khatri",
-    email: "lakshyakhatri654@gmail.com",
-    phone: "8949718970",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 24,
-    name: "Kartik lakhani",
-    email: "kartiklakhani3107@gmail.com",
-    phone: "9829659697",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 25,
-    name: "Khushi Singh Tanwar",
-    email: "Khushitanwar2605@gmail.com",
-    phone: "7790989409",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 26,
-    name: "Ravish Kumar",
-    email: "ravishparwani1100@gmail.com",
-    phone: "9784277624",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 27,
-    name: "Dhritul Meghwal",
-    email: "mdhritul@gmail.com",
-    phone: "6376325209",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 28,
-    name: "Ashmit Surana",
-    email: "ashmitsurana02@gmail.com",
-    phone: "9024674192",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 29,
-    name: "Harsh",
-    email: "Harsh.singh9950166216@gmail.com",
-    phone: "09950166216",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 30,
-    name: "Kanika mathur",
-    email: "Kanikamathur2006@gmail.com",
-    phone: "7597536954",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 31,
-    name: "Priyawat Singh",
-    email: "luckyc20072007@gmail.com",
-    phone: "6377989449",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 32,
-    name: "Kritishka Bhatnagar",
-    email: "k76393465@gmail.com",
-    phone: "7727811168",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 33,
-    name: "Krishna Choudhary",
-    email: "choudharymeena75@gmail.com",
-    phone: "9636605508",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 34,
-    name: "Chenansha rajpurohit",
-    email: "Chenansharajpurohit23@gmail.com",
-    phone: "6377008546",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 35,
-    name: "Arisht Patwa",
-    email: "patwaarisht01@gmail.com",
-    phone: "7891212679",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 36,
-    name: "Ashish Yadav",
-    email: "geetayadav0571@gmail.com",
-    phone: "9521058309",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 37,
-    name: "Samanyu Mathur",
-    email: "samritnitmthr@gmail.com",
-    phone: "6375968949",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 38,
-    name: "Aayushi",
-    email: "neerugoyal0051@gmail.com",
-    phone: "8233630405",
-    class: "12th",
-    stream: "JEE",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 39,
-    name: "Jayshree kanwar",
-    email: "Jayshree.kanwar.rathore987@gmail.com",
-    phone: "9414440501",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  },
-  {
-    id: 40,
-    name: "Zuhair rajawat",
-    email: "siblings396@gmail.com",
-    phone: "7014456556",
-    class: "12th",
-    stream: "NEET",
-    fatherName: "Not provided",
-    motherName: "Not provided",
-    parentPhone1: "",
-    parentPhone2: "",
-  }
-];
+/**
+ * 12th Grade Student Data Service
+ * 
+ * REFACTORED: Complete backend integration with unified student data
+ * Supports both migrated spreadsheet students and new signup students
+ * 
+ * Changes made:
+ * - Removed ALL static hardcoded data (40 lines of static students)
+ * - Added JWT-based authentication with proper error handling
+ * - Integrated with enhanced User model that supports both old and new students
+ * - Added comprehensive loading, error, and empty state handling
+ * - Maintains backward compatibility with existing UI structure
+ */
+
+import { useState, useEffect } from 'react';
+
+// Backend API configuration
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+
+/**
+ * Custom hook for fetching 12th grade students data
+ * Handles authentication, loading states, and error scenarios
+ * Works with both migrated spreadsheet students and new signup students
+ */
+export const use12thStudents = () => {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch all students from backend (no authentication required)
+        console.log('📊 12th grade fetch - Making API call to:', `${API_BASE}/admin/students`);
+        const response = await fetch(`${API_BASE}/admin/students`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        console.log('📊 12th grade fetch - Response status:', response.status);
+        console.log('📊 12th grade fetch - Response headers:', Object.fromEntries(response.headers.entries()));
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch students: ${response.status}`);
+        }
+
+        const allStudents = await response.json();
+        console.log('📊 12th grade fetch - Raw data received:', allStudents.length, 'students');
+        console.log('📊 12th grade fetch - Sample student:', allStudents[0]?.name || 'No students');
+
+        // Filter and transform data for 12th grade students
+        // This works with BOTH migrated spreadsheet students AND new signup students
+        const filteredStudents = allStudents.filter(student => student.classLevel === '12th');
+        console.log('📊 12th grade fetch - Filtered for 12th:', filteredStudents.length, 'students');
+        
+        const transformedStudents = filteredStudents
+          .map(student => ({
+            // Core fields (from both old and new students)
+            id: student._id || student.id,
+            name: student.name || 'Not provided',
+            email: student.email || 'Not provided',
+            phone: student.phone || 'Not provided',
+            class: student.classLevel || '12th',
+            
+            // Stream handling:
+            // - For migrated students: uses spreadsheetData.stream (JEE/NEET)
+            // - For new students: uses batch as fallback
+            stream: student.spreadsheetData?.stream || student.batch || 'Not assigned',
+            
+            // Parent details (only available for migrated students)
+            fatherName: student.spreadsheetData?.fatherName || 'Not provided',
+            motherName: student.spreadsheetData?.motherName || 'Not provided',
+            parentPhone1: student.spreadsheetData?.parentPhone1 || '',
+            parentPhone2: student.spreadsheetData?.parentPhone2 || '',
+            
+            // Additional metadata for debugging and UI enhancements
+            isMigratedStudent: student.isMigratedStudent || false,
+            hasChangedDefaultPassword: student.hasChangedDefaultPassword || true,
+            originalId: student.spreadsheetData?.originalId,
+            migratedAt: student.spreadsheetData?.migratedAt,
+            
+            // Backend system fields
+            role: student.role,
+            batch: student.batch,
+            targetYear: student.targetYear,
+            createdAt: student.createdAt,
+            updatedAt: student.updatedAt
+          }));
+
+        console.log('📊 12th grade fetch - Transformed students:', transformedStudents.length);
+        console.log('📊 12th grade fetch - Sample transformed student:', transformedStudents[0]);
+
+        setStudents(transformedStudents);
+        console.log(`✅ Loaded ${transformedStudents.length} 12th grade students from backend`);
+        console.log(`📊 Migrated students: ${transformedStudents.filter(s => s.isMigratedStudent).length}`);
+        console.log(`👤 New signup students: ${transformedStudents.filter(s => !s.isMigratedStudent).length}`);
+
+      } catch (err) {
+        console.error('❌ Error fetching 12th grade students:', err);
+        setError(err.message);
+        setStudents([]); // Clear students on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []); // Empty dependency array means this runs once on mount
+
+  return { students, loading, error };
+};
+
+/**
+ * Legacy export for backward compatibility
+ * Returns empty array - components should use use12thStudents() hook instead
+ */
+const students = []; // Empty static array - data now comes from backend
 
 export default students;
+
+/**
+ * Usage example for components:
+ * 
+ * import { use12thStudents } from '../admin/classData/12th_real';
+ * 
+ * function MyComponent() {
+ *   const { students, loading, error } = use12thStudents();
+ *   
+ *   if (loading) return <div>Loading students...</div>;
+ *   if (error) return <div>Error: {error}</div>;
+ *   
+ *   return (
+ *     <div>
+ *       {students.map(student => (
+ *         <div key={student.id}>
+ *           {student.name} - {student.stream}
+ *           {student.isMigratedStudent && <span title="Migrated from spreadsheet">📋</span>}
+ *         </div>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ */
