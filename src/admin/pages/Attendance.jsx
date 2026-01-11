@@ -52,7 +52,7 @@ const Attendance = () => {
     console.log('🔄 Attendance toggle for student:', { 
       studentId, 
       studentIdType: typeof studentId, 
-      studentName: currentStudents.find(s => s.id === studentId)?.name || 'Unknown',
+      studentName: currentStudents.find(s => s._id === studentId)?.name || 'Unknown',
       currentClass: selectedClass,
       selectedDate: selectedDate.toDateString(),
       currentValue: attendance[studentId],
@@ -72,12 +72,12 @@ const Attendance = () => {
     const newAttendance = {}
     currentStudents.forEach(student => {
       console.log('📝 Marking attendance for student:', { 
-        studentId: student.id, 
-        studentIdType: typeof student.id, 
+        studentId: student._id, 
+        studentIdType: typeof student._id, 
         studentName: student.name, 
         present 
       });
-      newAttendance[student.id] = present
+      newAttendance[student._id] = present
     })
     setAttendance(newAttendance)
   }
@@ -270,35 +270,35 @@ const Attendance = () => {
               
               <div className="divide-y">
                 {currentStudents.map((student) => (
-                  <div key={student.id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
+                  <div key={student._id} className="px-6 py-4 hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <input
                           type="checkbox"
-                          id={`student-${student.id}`}
-                          checked={attendance[student.id] === true}
-                          onChange={() => handleAttendanceChange(student.id)}
+                          id={`student-${student._id}`}
+                          checked={attendance[student._id] === true}
+                          onChange={() => handleAttendanceChange(student._id)}
                           className="w-5 h-5 text-[#3BBAF4] border-gray-300 rounded focus:ring-[#3BBAF4]"
                         />
                         <label 
-                          htmlFor={`student-${student.id}`}
+                          htmlFor={`student-${student._id}`}
                           className="cursor-pointer flex-1"
                         >
                           <div className="font-medium text-gray-800">{student.name}</div>
                           <div className="text-sm text-gray-600">
-                            {student.stream} • {student.phone}
+                            {student.batch === "Batch 1" ? "JEE" : student.batch === "Batch 2" ? "NEET" : "Not assigned"} • {student.phone}
                           </div>
                         </label>
                       </div>
                       <div className="flex items-center space-x-3">
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          attendance[student.id] === true
+                          attendance[student._id] === true
                             ? 'bg-[#42BA96] text-white' 
-                            : attendance[student.id] === false
+                            : attendance[student._id] === false
                             ? 'bg-red-100 text-red-700'
                             : 'bg-gray-100 text-gray-700'
                         }`}>
-                          {attendance[student.id] === true ? 'Present' : attendance[student.id] === false ? 'Absent' : 'Not Marked'}
+                          {attendance[student._id] === true ? 'Present' : attendance[student._id] === false ? 'Absent' : 'Not Marked'}
                         </span>
                       </div>
                     </div>

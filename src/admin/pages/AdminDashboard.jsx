@@ -6,9 +6,49 @@ import { use11thStudents } from '../classData/11th_real'
 import { use12thStudents } from '../classData/12th_real'
 
 const AdminDashboard = () => {
-  const { students: students11th } = use11thStudents();
-  const { students: students12th } = use12thStudents();
+  const { students: students11th, loading: loading11th, error: error11th } = use11thStudents();
+  const { students: students12th, loading: loading12th, error: error12th } = use12thStudents();
   const totalStudents = students11th.length + students12th.length;
+  const loading = loading11th || loading12th;
+  const error = error11th || error12th;
+
+  // Handle loading state
+  if (loading) {
+    return (
+      <>
+        <AdminNavbar/>
+        <div className="items-center mx-auto flex justify-center mt-4 mb-4 font-semibold text-2xl">Admin Portal</div>
+        <div className="bg-white rounded-xl shadow-sm border p-8">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#42BA96]"></div>
+            <p className="mt-2 text-gray-600">Loading student data...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <>
+        <AdminNavbar/>
+        <div className="items-center mx-auto flex justify-center mt-4 mb-4 font-semibold text-2xl">Admin Portal</div>
+        <div className="bg-white rounded-xl shadow-sm border p-8">
+          <div className="text-center">
+            <div className="text-red-500 mb-2">⚠️ Error</div>
+            <p className="text-gray-600">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 px-4 py-2 bg-[#42BA96] text-white rounded-lg hover:bg-[#369877] transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

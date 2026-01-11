@@ -13,8 +13,8 @@ const StudentsTable = () => {
 
   // Combine and sort students by class (11th first, then 12th)
   const allStudents = [...students11th, ...students12th].sort((a, b) => {
-    if (a.class === '11th' && b.class === '12th') return -1;
-    if (a.class === '12th' && b.class === '11th') return 1;
+    if (a.classLevel === '11th' && b.classLevel === '12th') return -1;
+    if (a.classLevel === '12th' && b.classLevel === '11th') return 1;
     return 0;
   });
   const loading = loading11th || loading12th;
@@ -30,7 +30,7 @@ const StudentsTable = () => {
   console.log('  selectedClass:', selectedClass);
 
   const getFilteredStudents = () => {
-    return selectedClass === 'all' ? allStudents : allStudents.filter(student => student.class === selectedClass);
+    return selectedClass === 'all' ? allStudents : allStudents.filter(student => student.classLevel === selectedClass);
   };
 
   // Handle loading state
@@ -111,29 +111,29 @@ const StudentsTable = () => {
         {/* Table Body */}
         <tbody className="divide-y">
           {getFilteredStudents().map((student) => (
-            <tr key={student.id} className="hover:bg-gray-50">
+            <tr key={student._id} className="hover:bg-gray-50">
               <td className="px-6 py-4 font-medium text-gray-800">
                 {student.name}
               </td>
 
               <td className="px-6 py-4">
                 <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
-                  {student.class}
+                  {student.classLevel}
                 </span>
               </td>
 
               <td className="px-6 py-4">
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-semibold
-                      ${student.stream === "JEE"
+                      ${student.batch === "Batch 1"
                       ? "bg-blue-100 text-blue-600"
-                      : student.stream === "NEET"
+                      : student.batch === "Batch 2"
                       ? "bg-green-100 text-green-600"
                       : "bg-gray-100 text-gray-600"
                     }
                     `}
                 >
-                  {student.stream}
+                  {student.batch === "Batch 1" ? "JEE" : student.batch === "Batch 2" ? "NEET" : "Not assigned"}
                 </span>
               </td>
 
@@ -150,7 +150,7 @@ const StudentsTable = () => {
               </td>
 
               <td className="px-6 py-4 text-right">
-                <button onClick={() => navigate(`/admin/student/${student.id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
+                <button onClick={() => navigate(`/admin/student/${student._id}`)} className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition" >
                   View Details
                 </button>
               </td>
