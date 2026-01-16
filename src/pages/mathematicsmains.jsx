@@ -13,7 +13,7 @@ export default function Maths() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [attemptRecorded, setAttemptRecorded] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
 
   const recordAttempt = async (isCorrect) => {
     if (attemptRecorded) {
@@ -112,6 +112,9 @@ export default function Maths() {
   const mathsQuestions = Data.filter(
     (q) => q.subject?.toLowerCase() === "maths"
   );
+  const chapterQuestions = chapter
+  ? mathsQuestions.filter((q) => q.chapter === chapter)
+  : [];
 
   // If chapter parameter exists, show chapter content
   if (chapter) {

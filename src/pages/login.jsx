@@ -32,7 +32,7 @@ function Login() {
 
     try {
       // Use backend API for authentication
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+      const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"; 
       
       const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",

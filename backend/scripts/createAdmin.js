@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 const createAdmin = async () => {
   try {
     // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/hybridX");
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
 
     // Check if admin already exists

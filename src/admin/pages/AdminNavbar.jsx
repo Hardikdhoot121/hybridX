@@ -29,7 +29,7 @@ export default function AdminNavbar() {
         <ul className="hidden md:flex items-center space-x-6 font-medium">
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/admin")}
           >
             Home
           </li> 
@@ -45,7 +45,7 @@ export default function AdminNavbar() {
           >
             Attendance
           </li>
-          <li
+          {/* <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
             onClick={() => navigate("/contact_us")}
           >
@@ -56,7 +56,7 @@ export default function AdminNavbar() {
             onClick={() => navigate("/contact_us")}
           >
             Content Management
-          </li>
+          </li> */}
         </ul>
 
         {/* Avatar (Desktop Only) */}
