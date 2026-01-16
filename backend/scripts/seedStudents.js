@@ -1,9 +1,3 @@
-/**
- * Database Seeding Script for Existing Students
- * 
- * This script migrates existing spreadsheet students to MongoDB
- * Both old spreadsheet students and new signup students will coexist
- */
 
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
@@ -11,16 +5,16 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-// Load environment variables
+
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Import User model
+
 import User from '../models/User.js';
 
-// Existing spreadsheet students data (migrated from static files)
+
 const spreadsheetStudents = {
   '11th': [
     {
