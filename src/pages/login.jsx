@@ -31,40 +31,39 @@ function Login() {
     }
 
     try {
+<<<<<<< HEAD
       // Use backend API for authentication
       const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"; 
       
       const response = await fetch(`${API_BASE}/auth/login`, {
+=======
+      const url = "https://hybridx-uhj9.onrender.com/api/auth/login";
+
+      const response = await fetch(url, {
+>>>>>>> dedec8d5ef9aa51c952304fe6e2ca621daff864d
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(loginInfo),
       });
 
       const result = await response.json();
+      const { success, message, token, error } = result;
 
-      if (result.success) {
-        // Store JWT token and user info in localStorage
-        localStorage.setItem("token", result.token);
-        localStorage.setItem("user", JSON.stringify(result.user));
-        localStorage.setItem("currentStudent", JSON.stringify(result.user)); // Add this for dashboard compatibility
-        
-        console.log('Login successful:', { user: result.user, token: result.token });
-        
-        // Dispatch student login event to notify attendance components
-        window.dispatchEvent(new CustomEvent('studentLoggedIn', {
-          detail: { student: result.user }
-        }));
-        
-        handleSuccess(`Welcome back, ${result.user.name}!`);
-        setTimeout(() => navigate("/dashboard"), 1000);
-      } else {
-        handleError(result.message || "Login failed");
+if (success) {
+  handleSuccess(message);
+
+  localStorage.setItem("token", token);
+
+  setTimeout(() => navigate("/"), 1000);
+}
+ else {
+        const details = error?.details?.[0]?.message || message;
+        handleError(details);
       }
     } catch (err) {
-      console.error("Login error:", err);
-      handleError("Login failed. Please try again.");
+      handleError(err.message || "Something went wrong");
     }
   };
 
@@ -105,7 +104,7 @@ function Login() {
           </button>
 
           <p className="text-slate-400 mt-4 text-sm">
-            Don't have an account?{" "}
+            Don’t have an account?{" "}
             <Link to="/signup" className="text-blue-400 hover:underline">
               Signup
             </Link>
