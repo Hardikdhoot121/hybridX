@@ -1,18 +1,12 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import rawData from "../jee_mains_clean.json";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
 export default function Maths() {
   const navigate = useNavigate();
-  const { chapter } = useParams();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [numericalAnswer, setNumericalAnswer] = useState("");
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [attemptRecorded, setAttemptRecorded] = useState(false);
 
+<<<<<<< HEAD
   const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
 
   const recordAttempt = async (isCorrect) => {
@@ -106,6 +100,8 @@ export default function Maths() {
       console.error("❌ Failed to record attempt:", error);
     }
   };
+=======
+>>>>>>> dedec8d5ef9aa51c952304fe6e2ca621daff864d
 
   const Data = Array.isArray(rawData) ? rawData : rawData.default;
 
@@ -116,186 +112,6 @@ export default function Maths() {
   ? mathsQuestions.filter((q) => q.chapter === chapter)
   : [];
 
-  // If chapter parameter exists, show chapter content
-  if (chapter) {
-    const chapterQuestions = mathsQuestions.filter(
-      (q) => q.chapter === chapter
-    );
-
-    if (chapterQuestions.length === 0) {
-      return (
-        <div className="bg-[#15191E] min-h-screen text-white p-6">
-          <Navbar />
-          <div className="max-w-4xl mx-auto mt-16">
-            <button
-              onClick={() => navigate("/jeemains/maths")}
-              className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-            >
-              ← Back to Maths Chapters
-            </button>
-            <h1 className="text-3xl font-bold text-center">
-              No questions found for chapter: {chapter?.replaceAll("-", " ")}
-            </h1>
-          </div>
-          <Footer />
-        </div>
-      );
-    }
-
-    return (
-      <>
-        <div className="bg-[#15191E] min-h-screen text-white p-6">
-          <Navbar />
-          <div className="max-w-4xl mx-auto mt-16">
-            <button
-              onClick={() => navigate("/jeemains/maths")}
-              className="mb-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded"
-            >
-              ← Back to Maths Chapters
-            </button>
-            
-            <h1 className="text-4xl font-bold text-center mb-8">
-              {chapter?.replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase())}
-            </h1>
-
-            <div className="mb-4 text-center">
-              <p className="text-xl">Question {currentQuestion + 1} of {chapterQuestions.length}</p>
-            </div>
-
-            {/* Single Question Display */}
-            <div className="bg-slate-800 p-6 rounded-lg mb-6">
-              <div className="mb-4">
-                <span className="text-blue-400 font-semibold">Question {currentQuestion + 1}</span>
-                <div 
-                  className="mt-2 text-lg"
-                  dangerouslySetInnerHTML={{ __html: chapterQuestions[currentQuestion].question }}
-                />
-              </div>
-
-              {chapterQuestions[currentQuestion].options && chapterQuestions[currentQuestion].options.length > 0 ? (
-                <div className="space-y-2 mb-4">
-                  {chapterQuestions[currentQuestion].options.map((option, optIndex) => (
-                    <div 
-                      key={optIndex}
-                      onClick={() => setSelectedAnswer(option.identifier)}
-                      className={`p-3 rounded cursor-pointer transition ${
-                        showAnswer
-                          ? option.identifier === chapterQuestions[currentQuestion].correct_option
-                            ? 'bg-green-600 text-white' 
-                            : 'bg-slate-700 text-gray-300'
-                          : selectedAnswer === option.identifier
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
-                      }`}
-                    >
-                      <span className="font-semibold">{option.identifier}.</span> {option.content}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                // Numerical answer input
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Your Answer (Numerical):
-                  </label>
-                  <input
-                    type="number"
-                    value={numericalAnswer}
-                    onChange={(e) => setNumericalAnswer(e.target.value)}
-                    placeholder="Enter your answer"
-                    className={`w-full px-4 py-3 rounded-lg bg-slate-700 text-white border-2 transition ${
-                      showAnswer
-                        ? numericalAnswer === chapterQuestions[currentQuestion].answer?.toString()
-                          ? 'border-green-500 bg-green-900/30'
-                          : 'border-red-500 bg-red-900/30'
-                        : 'border-gray-600 focus:border-blue-500 focus:outline-none'
-                    }`}
-                    disabled={showAnswer}
-                  />
-                </div>
-              )}
-
-              {showAnswer && (
-                <div className="text-sm text-gray-400 mt-4">
-                  <p>Correct Answer: {
-                    chapterQuestions[currentQuestion].question_type === 'integer' 
-                      ? chapterQuestions[currentQuestion].answer 
-                      : chapterQuestions[currentQuestion].correct_option
-                  }</p>
-                  {chapterQuestions[currentQuestion].explanation && (
-                    <div className="mt-2">
-                      <strong>Explanation:</strong>
-                      <div dangerouslySetInnerHTML={{ __html: chapterQuestions[currentQuestion].explanation }} />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between items-center mt-8">
-              <button
-                onClick={() => {
-                  setCurrentQuestion(Math.max(0, currentQuestion - 1));
-                  setSelectedAnswer(null);
-                  setNumericalAnswer("");
-                  setShowAnswer(false);
-                  setAttemptRecorded(false); // Reset for new question
-                }}
-                disabled={currentQuestion === 0}
-                className="px-6 py-2 bg-gray-600 hover:bg-gray-700 disabled:bg-gray-800 disabled:opacity-50 rounded"
-              >
-                PREVIOUS
-              </button>
-
-              <button
-                onClick={() => {
-                  if (!showAnswer) {
-                    // Check if answer is provided
-                    const isNumerical = chapterQuestions[currentQuestion].question_type === 'integer';
-                    const hasAnswer = isNumerical ? numericalAnswer.trim() !== '' : selectedAnswer;
-                    
-                    if (hasAnswer) {
-                      // Record attempt when showing answer for the first time
-                      const isCorrect = isNumerical 
-                        ? numericalAnswer === chapterQuestions[currentQuestion].answer?.toString()
-                        : selectedAnswer === chapterQuestions[currentQuestion].correct_option;
-                      recordAttempt(isCorrect);
-                    } else {
-                      // Show alert if no answer is provided
-                      alert(isNumerical ? 'Please enter a numerical answer' : 'Please select an option');
-                      return;
-                    }
-                  }
-                  setShowAnswer(!showAnswer);
-                }}
-                className="px-8 py-2 bg-green-600 hover:bg-green-700 rounded"
-              >
-                {showAnswer ? 'HIDE' : 'SUBMIT'}
-              </button>
-
-              <button
-                onClick={() => {
-                  setCurrentQuestion(Math.min(chapterQuestions.length - 1, currentQuestion + 1));
-                  setSelectedAnswer(null);
-                  setNumericalAnswer("");
-                  setShowAnswer(false);
-                  setAttemptRecorded(false); // Reset for new question
-                }}
-                disabled={currentQuestion === chapterQuestions.length - 1}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-800 disabled:opacity-50 rounded"
-              >
-                NEXT
-              </button>
-            </div>
-          </div>
-          <Footer />
-        </div>
-      </>
-    );
-  }
-
-  // Show chapters list (no chapter parameter)
   const chapters = [
     ...new Set(mathsQuestions.map((q) => q.chapter))
   ];
@@ -313,33 +129,35 @@ export default function Maths() {
   }
 
   return (
-    <>
-      <div className="bg-[#15191E] min-h-screen text-white p-6">
-        <Navbar />
-        <h1 className="text-4xl font-bold text-center mt-16">
-          Maths Chapters
-        </h1>
 
-        <div className="max-w-xl mx-auto mt-10 space-y-4">
-          {chapters.map((chapter) => (
-            <button
-              key={chapter}
-              onClick={() =>
-                navigate(`/jeemains/maths/${chapter}`)
-              }
-              className="
+    <>
+    
+    <div className="bg-[#15191E] min-h-screen text-white p-6">
+        <Navbar />
+      <h1 className="text-4xl font-bold text-center mt-16">
+        Maths Chapters
+      </h1>
+
+      <div className="max-w-xl mx-auto mt-10 space-y-4">
+        {chapters.map((chapter) => (
+          <button
+            key={chapter}
+            onClick={() =>
+              navigate(`/jeemains/maths/${chapter}`)
+            }
+            className="
 rounded-md text-lg sm:text-xl font-medium
 h-12 sm:h-14 w-full max-w-4xl
 bg-[#3BBAF4] hover:bg-blue-500 text-white
 flex items-center justify-center transition p-3 mx-auto
 "
-            >
-              {chapter.replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase())}
-            </button>
-          ))}
-        </div>
+          >
+            {chapter.replaceAll("-", " ").replace(/\b\w/g, (char) => char.toUpperCase())}
+          </button>
+        ))}
       </div>
-      <Footer />
+    </div>
+    <Footer />
     </>
   );
 }
