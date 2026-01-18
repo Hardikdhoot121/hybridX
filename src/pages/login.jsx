@@ -31,16 +31,9 @@ function Login() {
     }
 
     try {
-<<<<<<< HEAD
-      // Use backend API for authentication
-      const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"; 
-      
-      const response = await fetch(`${API_BASE}/auth/login`, {
-=======
       const url = "https://hybridx-uhj9.onrender.com/api/auth/login";
 
       const response = await fetch(url, {
->>>>>>> dedec8d5ef9aa51c952304fe6e2ca621daff864d
         method: "POST",
         headers: {
           "Content-Type": "application/json",
