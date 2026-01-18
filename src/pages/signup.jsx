@@ -37,11 +37,6 @@ function Signup() {
     }
 
     try {
-<<<<<<< HEAD
-      const API_BASE = import.meta.env.VITE_API_BASE_URL ||"https://hybridx-uhj9.onrender.com/api";
-      
-=======
->>>>>>> dedec8d5ef9aa51c952304fe6e2ca621daff864d
       const response = await fetch(
         "https://hybridx-uhj9.onrender.com/api/auth/signup",
         {

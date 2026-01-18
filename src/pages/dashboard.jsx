@@ -3,12 +3,7 @@ import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-<<<<<<< HEAD
 const API_BASE = import.meta.env.VITE_API_BASE_URL ||"https://hybridx-uhj9.onrender.com/api";
-=======
-const API_BASE = import.meta.env.VITE_API_BASE;
->>>>>>> dedec8d5ef9aa51c952304fe6e2ca621daff864d
-
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
