@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import adminStudentRoutes from "./routes/adminStudentRoutes.js";
+import debugRoutes from "./routes/debugRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,9 @@ app.use("/api/admin",adminStudentRoutes);
 
 // analytics routes
 app.use("/api/analytics", analyticsRoutes);
+
+// debug routes
+app.use("/api/debug", debugRoutes);
 
 // health route
 app.get("/ping", (req, res) => {
