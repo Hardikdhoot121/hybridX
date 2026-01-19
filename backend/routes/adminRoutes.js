@@ -2,6 +2,7 @@ import express from "express";
 import {protect} from "../middlewares/authMiddleware.js";
 import { authorize } from "../middlewares/roleMiddleware.js";
 import User from "../models/User.js";
+import bcrypt from "bcrypt";
 
 const router = express.Router();
 
@@ -31,5 +32,37 @@ router.get(
     }
   }
 );
+
+// Create fresh admin endpoint (no auth required for setup)
+router.post("/create-fresh-admin", async (req, res) => {
+  try {
+    // Delete existing admins
+    await User.deleteMany({ role: 'admin' });
+    
+    // Create new admin with known password
+    const hashedPassword = await bcrypt.hash("admin456", 10);
+    
+    const admin = await User.create({
+      name: "Admin User",
+      email: "admin2@hybridx.com",
+      password: hashedPassword,
+      role: "admin",
+      phone: "0000000000",
+      classLevel: "12th",
+      batch: "Batch 1"
+    });
+
+    res.json({
+      success: true,
+      message: "Fresh admin created on Render",
+      admin: {
+        email: admin.email,
+        password: "admin456"
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 export default router;
