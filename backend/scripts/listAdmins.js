@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const listAdmins = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/hybridX");
+    await mongoose.connect("mongodb+srv://hybridxUser:AD9vOytvvTEucKma@hybridonline.9j4osxl.mongodb.net/?appName=hybridOnline");
     console.log("Connected to MongoDB");
 
     const admins = await User.find({ role: "admin" });

@@ -124,27 +124,78 @@ class AttendanceService {
         console.log('🆕 No existing attendance found, creating new record for:', { dateKey, classData });
       }
       
-      // Save to localStorage (permanent storage) with verification
-      const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+      // Save to database first
+      const dbSuccess = await this.saveToDatabase(dateKey, classData, attendanceRecord);
       
-      if (!saveSuccess) {
-        console.error('❌ Failed to save attendance to localStorage');
+      if (dbSuccess) {
+        console.log('✅ Attendance saved to database successfully');
+        
+        // Also save to localStorage as backup
+        const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+        
+        if (!saveSuccess) {
+          console.error('❌ Failed to save attendance to localStorage backup');
+        }
+        
+        // Dispatch event to notify all components (including student calendars)
+        window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+          detail: { date: dateKey, class: classData, attendance: attendanceRecord }
+        }));
+        
+        console.log('✅ Attendance saved to database:', { dateKey, classData, recordCount: Object.keys(attendanceRecord).length });
+        return true;
+      } else {
+        console.error('❌ Failed to save attendance to database, falling back to localStorage only');
+        
+        // Fallback to localStorage only
+        const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+        
+        if (saveSuccess) {
+          console.log('✅ Attendance saved to localStorage fallback');
+          return true;
+        }
+        
         return false;
       }
-      
-      // Dispatch event to notify all components (including student calendars)
-      window.dispatchEvent(new CustomEvent('attendanceUpdated', {
-        detail: { date: dateKey, class: classData, attendance: attendanceRecord }
-      }));
-      
-      console.log('✅ Attendance saved permanently:', { dateKey, classData, recordCount: Object.keys(attendanceRecord).length });
-      return true;
     } catch (error) {
       console.error('❌ Error saving attendance:', error);
       return false;
     }
   }
   
+  // Save to database
+  async saveToDatabase(dateKey, classData, attendanceRecord) {
+    try {
+      const headers = this.getAuthHeaders();
+      if (!headers) {
+        console.error('❌ No auth headers available for database save');
+        return false;
+      }
+
+      const response = await fetch(`${this.API_BASE}/attendance/save`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+        date: dateKey,
+          classLevel: classData,
+          attendanceData: attendanceRecord
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Database save successful:', result);
+        return true;
+      } else {
+        console.error('❌ Database save failed:', response.status, response.statusText);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Error saving to database:', error);
+      return false;
+    }
+  }
+
   // Save to localStorage helper
   saveToLocalStorage(dateKey, classData, attendanceRecord) {
     try {
@@ -200,7 +251,20 @@ class AttendanceService {
     const dateKey = this.formatDateKey(date);
     
     try {
-      // Get from localStorage (permanent storage)
+      // Try to get from database first
+      const dbAttendance = await this.getAttendanceFromDatabase(dateKey, classData);
+      
+      if (dbAttendance && Object.keys(dbAttendance).length > 0) {
+        console.log('✅ Attendance loaded from database:', { dateKey, classData, recordCount: Object.keys(dbAttendance).length });
+        
+        // Cache in localStorage for offline use
+        this.saveToLocalStorage(dateKey, classData, dbAttendance);
+        
+        return dbAttendance;
+      }
+      
+      // Fallback to localStorage if database fails or has no data
+      console.log('⚠️ Database empty/failed, using localStorage fallback');
       const attendanceData = this.getAllAttendance();
       const classAttendance = attendanceData[dateKey]?.[classData];
       
@@ -212,7 +276,7 @@ class AttendanceService {
       const today = new Date();
       const isHistorical = inputDate < today.setHours(0, 0, 0, -1); // Before today
       
-      console.log('📅 Loading attendance:', { 
+      console.log('📅 Loading attendance from localStorage:', { 
         dateKey, 
         classData, 
         recordCount: Object.keys(result).length,
@@ -229,6 +293,37 @@ class AttendanceService {
     } catch (error) {
       console.error('❌ Error loading attendance:', error);
       return {};
+    }
+  }
+
+  // Get attendance from database
+  async getAttendanceFromDatabase(dateKey, classData) {
+    try {
+      const headers = this.getAuthHeaders();
+      if (!headers) {
+        console.error('❌ No auth headers available for database fetch');
+        return null;
+      }
+
+      const response = await fetch(`${this.API_BASE}/attendance/get?date=${dateKey}&classLevel=${classData}`, {
+        method: 'GET',
+        headers: headers
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Database fetch successful:', result);
+        return result.attendanceData || {};
+      } else if (response.status === 404) {
+        console.log('ℹ️ No attendance data found in database for:', { dateKey, classData });
+        return null;
+      } else {
+        console.error('❌ Database fetch failed:', response.status, response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error('❌ Error fetching from database:', error);
+      return null;
     }
   }
 
