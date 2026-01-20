@@ -31,7 +31,7 @@ function Login() {
     }
 
     try {
-      const url = "https://hybridx-uhj9.onrender.com/api/auth/login";
+      const url = "https://hybridx-backend.onrender.com/api/auth/login";
 
       const response = await fetch(url, {
         method: "POST",
