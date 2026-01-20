@@ -59,6 +59,8 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     console.log('🔐 Login attempt for email:', email);
+    console.log('🔍 Request body:', req.body);
+    console.log('🔍 Environment check - JWT_SECRET exists:', !!process.env.JWT_SECRET);
 
     // validation
     if (!email || !password) {
@@ -80,11 +82,14 @@ export const login = async (req, res) => {
     }
 
     console.log('👤 User found:', user.email);
+    console.log('🔑 User ID:', user._id);
     console.log('🔑 Is migrated student:', user.isMigratedStudent);
     console.log('🔑 Has changed default password:', user.hasChangedDefaultPassword);
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     console.log('🔐 Password comparison result:', isPasswordCorrect);
+    console.log('🔐 Provided password:', password);
+    console.log('🔐 Stored password hash:', user.password.substring(0, 20) + '...');
     
     if (!isPasswordCorrect) {
       console.log('❌ Password mismatch for:', email);
@@ -102,6 +107,8 @@ export const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
+
+    console.log('🎫 JWT token generated successfully');
 
     return res.status(200).json({
       success: true,
