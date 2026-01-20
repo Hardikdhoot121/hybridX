@@ -45,16 +45,6 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: new Date().getFullYear() + 1,
     },
-
-    isMigratedStudent: {
-      type: Boolean,
-      default: false,
-    },
-
-    hasChangedDefaultPassword: {
-      type: Boolean,
-      default: true,
-    },
   },
   { timestamps: true }
 );
