@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hybridx-backend
+    name: hybridx-uhj9
     env: node
     repo: https://github.com/Prakshit8/hybridX.git
     rootDir: backend
