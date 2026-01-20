@@ -9,7 +9,7 @@ const StudentsTable = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       const { data } = await axios.get(
-        "https://hybridx-uhj9.onrender.com/api/admin/students"
+        `${import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"}/admin/students`
       );
       setStudents(data);
     };
