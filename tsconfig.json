@@ -27,5 +27,5 @@
     "noUncheckedSideEffectImports": true
   },
   "include": ["src/**/*", "CodePushBar.jsx"],
-  "exclude": ["node_modules", "dist", "backend/**/*"]
+  "exclude": ["node_modules", "dist"]
 }
