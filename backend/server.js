@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://hybridx-uhj9.onrender.com'],
+  credentials: true
+}));
 app.use(express.json());
 
 // mount all API routes at /api
