@@ -1,4 +1,4 @@
-const API_BASE = "https://hybridx-uhj9.onrender.com/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
 
 /**
  * ===============================

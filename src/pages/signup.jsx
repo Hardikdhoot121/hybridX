@@ -38,7 +38,7 @@ function Signup() {
 
     try {
       const response = await fetch(
-        "https://hybridx-uhj9.onrender.com/api/auth/signup",
+        `${import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"}/auth/signup`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
