@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/node": "^25.0.9",
     "@vitejs/plugin-react": "^5.1.2",
     "baseline-browser-mapping": "^2.9.11",
     "vite": "^7.2.4"
