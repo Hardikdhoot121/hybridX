@@ -13,7 +13,7 @@ const StudentBasicDetails = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api"}/admin/student/${_id}`
+        `https://hybridx-uhj9.onrender.com/api/admin/student/${_id}`
       );
       setStudent(res.data);
     };
