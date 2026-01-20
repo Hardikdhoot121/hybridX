@@ -11,7 +11,10 @@ dotenv.config();
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://hybridx-uhj9.onrender.com'],
+  credentials: true
+}));
 app.use(express.json());
 
 // mount all API routes at /api
@@ -26,6 +29,35 @@ app.use("/api/analytics", analyticsRoutes);
 // health route
 app.get("/ping", (req, res) => {
   res.send("Backend is alive");
+});
+
+// detailed health check
+app.get("/health", async (req, res) => {
+  try {
+    const User = (await import('./models/User.js')).default;
+    const adminCount = await User.countDocuments({ role: 'admin' });
+    const userCount = await User.countDocuments();
+    
+    res.json({
+      status: "healthy",
+      database: {
+        name: mongoose.connection.name,
+        host: mongoose.connection.host,
+        adminCount,
+        userCount
+      },
+      environment: {
+        hasMongoUri: !!process.env.MONGO_URI,
+        hasJwtSecret: !!process.env.JWT_SECRET,
+        dbName: process.env.DB_NAME
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "unhealthy",
+      error: error.message
+    });
+  }
 });
 
 app.get("/", (req, res) => {
