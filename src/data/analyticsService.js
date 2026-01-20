@@ -1,4 +1,4 @@
-const API_BASE = "https://hybridx-uhj9.onrender.com/api";
+const API_BASE = "https://hybridx-backend.onrender.com/api";
 
 /**
  * ===============================
