@@ -1,4 +1,4 @@
-const API_BASE = "https://hybridx-uhj9.onrender.com/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
 
 /**
  * ===============================
@@ -37,14 +37,14 @@ export const fetchWeeklyStats = async () => {
   return res.json();
 };
 
-// Weekly goal (reusing daily-goal endpoint)
+// Weekly goal
 export const fetchDailyGoal = async () => {
-  const res = await fetch(`${API_BASE}/analytics/daily-goal`, {
+  const res = await fetch(`${API_BASE}/analytics/weekly-goal`, {
     headers: getAuthHeaders(),
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch daily / weekly goal");
+    throw new Error("Failed to fetch weekly goal");
   }
 
   return res.json();
@@ -52,7 +52,7 @@ export const fetchDailyGoal = async () => {
 
 // Update weekly goal (used by Edit Goal modal)
 export const updateWeeklyGoal = async (target) => {
-  const res = await fetch(`${API_BASE}/analytics/daily-goal`, {
+  const res = await fetch(`${API_BASE}/analytics/weekly-goal`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify({ target }),
