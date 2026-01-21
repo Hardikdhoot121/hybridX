@@ -15,9 +15,11 @@ import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
+import AdminAttendance from "./admin/pages/Attendance";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
+import AttendanceCalendar from "./components/AttendanceCalendar";
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
         <Route path="/hybrid" element={<Hybrid />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
+        <Route path="/admin/attendance" element={<AdminAttendance />} />
 
         {/* some protected routes jo bina login kai nhi khulengai */}
 
@@ -46,6 +49,7 @@ function App() {
           <Route path="/jeemains/physics" element={<Physics />} />
           <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
           <Route path="/dpp/:id" element={<DppResult />} />
 
         </Route>
