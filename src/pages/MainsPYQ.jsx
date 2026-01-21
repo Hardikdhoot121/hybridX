@@ -123,7 +123,7 @@ const submitPracticeAttempt = async () => {
   console.log("✅ Sending payload:", payload);
 
   try {
-    const response = await fetch(`${API_BASE}/analytics/practice-attempt`, {
+    const response = await fetch(`${API_BASE}/practice/attempt`, {
 
       method: "POST",
       headers: {

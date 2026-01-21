@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
 
 // Get auth headers
 const getAuthHeaders = () => {
