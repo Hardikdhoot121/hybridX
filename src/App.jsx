@@ -18,6 +18,7 @@ import AdminAllDetails from "./admin/pages/AdminAllDetails";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
+import AttendanceCalendar from "./components/AttendanceCalendar";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/jeemains/physics" element={<Physics />} />
           <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
           <Route path="/dpp/:id" element={<DppResult />} />
 
         </Route>
