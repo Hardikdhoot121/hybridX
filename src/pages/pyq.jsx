@@ -65,7 +65,7 @@ function PYQ() {
   const currVal = data[currIndex];
 
   try {
-    await fetch("http://localhost:5000/api/practice/attempt", {
+    const response = await fetch("https://hybridx-uhj9.onrender.com/api/practice/attempt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,10 +76,34 @@ function PYQ() {
         subject: currVal.subject,                 // physics / chemistry / maths
         topic: currVal.topic || currVal.chapter,  // fallback
         difficulty: "Medium",                     // static for now
+        questionType: "mcq",
+        userAnswer: selectedOption !== null ? selectedOption.toString() : "",
+        correctAnswer: currVal.correct_option_index !== undefined ? currVal.correct_option_index.toString() : "",
         isCorrect:
           selectedOption === currVal.correct_option_index,
       }),
     });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('✅ Practice attempt recorded:', result);
+      
+      // Update localStorage with latest weekly stats
+      if (result.weeklyStats) {
+        localStorage.setItem('weeklyStats', JSON.stringify(result.weeklyStats));
+        console.log('📊 Updated weekly stats in localStorage:', result.weeklyStats);
+        
+        // Trigger dashboard refresh event
+        localStorage.setItem('dashboard-refresh-trigger', JSON.stringify({
+          type: 'correct-answer',
+          timestamp: Date.now(),
+          weeklyStats: result.weeklyStats
+        }));
+        console.log('📡 Triggered dashboard refresh event');
+      }
+    } else {
+      console.error('❌ Failed to record practice attempt:', response.status);
+    }
   } catch (err) {
     console.error("Practice attempt failed", err);
   }
