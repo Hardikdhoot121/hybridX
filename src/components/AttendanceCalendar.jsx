@@ -1,20 +1,186 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Users } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import attendanceService from '../data/attendanceService.js';
+import attendanceService from '../data/attendanceService';
 
 const AttendanceCalendar = () => {
-  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(null);
   const [attendanceData, setAttendanceData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [selectedClass, setSelectedClass] = useState('12th');
+  const [currentStudent, setCurrentStudent] = useState(null);
+  const [loadingDates, setLoadingDates] = useState(new Set());
+  
+  // Get current logged-in student
+  useEffect(() => {
+    let isMounted = true;
+    
+    const loadStudentData = async () => {
+      try {
+        const studentData = localStorage.getItem('currentStudent');
+        if (studentData) {
+          const student = JSON.parse(studentData);
+          console.log('👤 Raw student data from localStorage:', student);
+          
+          // Use _id if available, otherwise fall back to id
+          const studentId = student._id || student.id;
+          console.log('🆔 Using student ID:', { studentId, studentIdType: typeof studentId, _id: student._id, id: student.id });
+          
+          if (isMounted) {
+            setCurrentStudent({
+              ...student,
+              id: studentId // Ensure we use the correct ID
+            });
+            
+            // Load attendance for this student with enhanced error handling
+            try {
+              const studentAttendance = await attendanceService.getStudentAttendance(studentId, student.classLevel || student.class);
+              if (isMounted) {
+                setAttendanceData(studentAttendance);
+                console.log('✅ Student attendance loaded successfully:', Object.keys(studentAttendance).length, 'days');
+                console.log('📅 Available attendance dates:', Object.keys(studentAttendance));
+              }
+            } catch (attendanceError) {
+              console.error('❌ Error loading student attendance:', attendanceError);
+              // Try to load from backup service
+              if (isMounted) {
+                setAttendanceData({});
+              }
+            }
+          }
+        } else {
+          console.log('⚠️ No student data found in localStorage');
+          if (isMounted) {
+            setCurrentStudent(null);
+            setAttendanceData({});
+          }
+        }
+      } catch (error) {
+        console.warn('❌ Error reading student data:', error);
+        if (isMounted) {
+          setCurrentStudent(null);
+          setAttendanceData({});
+        }
+      }
+    };
+    
+    loadStudentData();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Remove currentDate dependency to avoid reloading on month change
 
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  // Load attendance data when student or date changes
+  useEffect(() => {
+    let isMounted = true;
+    
+    const loadAttendance = async () => {
+      if (currentStudent) {
+        console.log('📅 Loading ALL attendance for student:', currentStudent.name);
+        console.log('👤 Student details:', { 
+          id: currentStudent.id, 
+          class: currentStudent.classLevel || currentStudent.class 
+        });
+        
+        // Force refresh attendance data
+        console.log('🔄 Forcing attendance data refresh...');
+        const studentAttendance = await attendanceService.getStudentAttendance(currentStudent.id, currentStudent.classLevel || currentStudent.class);
+        
+        if (isMounted) {
+          console.log('📊 Setting attendance data:', studentAttendance);
+          console.log('📈 Attendance found for dates:', Object.keys(studentAttendance));
+          
+          // Check specifically for Jan 9
+          if (studentAttendance['2026-01-09'] !== undefined) {
+            console.log('✅ Jan 9 attendance found:', studentAttendance['2026-01-09']);
+          } else {
+            console.log('❌ Jan 9 attendance NOT found in student data');
+            console.log('🔍 Available dates in student data:', Object.keys(studentAttendance));
+          }
+          
+          setAttendanceData(studentAttendance);
+        }
+      }
+    };
+    
+    loadAttendance();
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [currentStudent]); // Remove currentDate from dependencies so it loads all data once
+  
+  // Listen for storage changes (when admin marks attendance)
+  useEffect(() => {
+    const handleAttendanceUpdate = async () => {
+      if (currentStudent) {
+        console.log('🔄 Attendance updated event received, refreshing calendar for student:', { 
+          studentId: currentStudent.id, 
+          studentIdType: typeof currentStudent.id, 
+          studentName: currentStudent.name, 
+          class: currentStudent.classLevel || currentStudent.class 
+        });
+        
+        try {
+          // Force refresh attendance data with enhanced error handling
+          const studentAttendance = await attendanceService.getStudentAttendance(currentStudent.id, currentStudent.classLevel || currentStudent.class);
+          console.log('📊 Updated student attendance data:', studentAttendance);
+          
+          setAttendanceData(studentAttendance);
+          
+          // Show notification to student
+          const updatedDates = Object.keys(studentAttendance).length;
+          console.log(`✅ Calendar updated with ${updatedDates} attendance records`);
+        } catch (error) {
+          console.error('❌ Error refreshing attendance data:', error);
+          // Try to reload existing data
+          try {
+            const existingData = attendanceService.getStudentAttendanceFromLocal(currentStudent.id, currentStudent.classLevel || currentStudent.class);
+            setAttendanceData(existingData);
+          } catch (fallbackError) {
+            console.error('❌ Fallback data load failed:', fallbackError);
+          }
+        }
+      }
+    };
+    
+    // Listen for custom events from admin portal
+    window.addEventListener('attendanceUpdated', handleAttendanceUpdate);
+    
+    // Also listen for storage changes (for cross-tab updates)
+    const handleStorageChange = (e) => {
+      console.log('📡 Storage change detected:', e.key, e.newValue ? 'has new value' : 'cleared');
+      if (e.key === 'attendanceData' || e.key === 'attendanceDataBackup' || !e.key) {
+        handleAttendanceUpdate();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check for student login events
+    const handleStudentLogin = () => {
+      console.log('👤 Student login detected, refreshing attendance data');
+      handleAttendanceUpdate();
+    };
+    window.addEventListener('studentLoggedIn', handleStudentLogin);
+    
+    return () => {
+      window.removeEventListener('attendanceUpdated', handleAttendanceUpdate);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('studentLoggedIn', handleStudentLogin);
+    };
+  }, [currentStudent]);
+  
+  // Get months that have attendance data
+  const getMonthsWithAttendance = () => {
+    const months = new Set();
+    Object.keys(attendanceData).forEach(dateKey => {
+      const date = new Date(dateKey);
+      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+      months.add(monthKey);
+    });
+    return Array.from(months).sort();
+  };
+
+  const monthsWithAttendance = getMonthsWithAttendance();
+  const currentMonthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+  const hasAttendanceThisMonth = monthsWithAttendance.includes(currentMonthKey);
 
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -24,277 +190,200 @@ const AttendanceCalendar = () => {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
-  const formatDateKey = (year, month, day) => {
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Navigate to month with attendance data
+  const navigateToMonthWithAttendance = (monthKey) => {
+    const [year, month] = monthKey.split('-').map(Number);
+    setCurrentDate(new Date(year, month - 1, 1));
   };
 
-  const loadAttendanceData = async () => {
-    try {
-      setLoading(true);
-      const data = attendanceService.getAllAttendance();
-      setAttendanceData(data);
-    } catch (error) {
-      console.error('Error loading attendance data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadAttendanceData();
-  }, []);
-
-  const handlePrevMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
-  };
-
-  const handleNextMonth = () => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
-  };
-
-  const handleDateClick = (day) => {
-    const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), day);
-    setSelectedDate(dateKey);
-  };
-
-  const getAttendanceStatus = (day) => {
-    const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), day);
-    const classAttendance = attendanceData[dateKey]?.[selectedClass];
+  const daysInMonth = getDaysInMonth(currentDate);
+  const firstDay = getFirstDayOfMonth(currentDate);
+  const days = [];
+  
+  // Add empty cells for days before month starts
+  for (let i = 0; i < firstDay; i++) {
+    days.push(<div key={`empty-${i}`} className="h-8"></div>);
+  }
+  
+  // Add days of the month
+  for (let day = 1; day <= daysInMonth; day++) {
+    const today = new Date();
+    const IS_TODAY = day === today.getDate() && 
+                   currentDate.getMonth() === today.getMonth() && 
+                   currentDate.getFullYear() === today.getFullYear();
     
-    if (!classAttendance) return 'none';
+    // Format date key for attendance lookup
+    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const attendanceStatus = attendanceData[dateKey];
     
-    // Check if any student is marked present
-    const hasPresent = Object.values(classAttendance).some(status => status === true);
-    const hasAbsent = Object.values(classAttendance).some(status => status === false);
+    // Debug logging for specific dates (especially Jan 9)
+    if (dateKey === '2026-01-09' || IS_TODAY) {
+      console.log('🔍 Calendar Debug:', {
+        dateKey,
+        attendanceStatus,
+        status: attendanceStatus === true ? 'Present' : attendanceStatus === false ? 'Absent' : 'No data',
+        studentId: currentStudent?.id,
+        studentName: currentStudent?.name,
+        availableDates: Object.keys(attendanceData)
+      });
+    }
     
-    if (hasPresent && !hasAbsent) return 'present';
-    if (hasAbsent && !hasPresent) return 'absent';
-    if (hasPresent && hasAbsent) return 'mixed';
-    return 'none';
-  };
-
-  const renderCalendarDays = () => {
-    const daysInMonth = getDaysInMonth(currentDate);
-    const firstDay = getFirstDayOfMonth(currentDate);
-    const days = [];
-
-    // Empty cells for days before month starts
-    for (let i = 0; i < firstDay; i++) {
-      days.push(<div key={`empty-${i}`} className="h-10"></div>);
+    // Determine background color based on attendance
+    let bgColorClass = 'text-gray-300';
+    
+    // Enhanced logging for debugging
+    if (dateKey === '2026-01-03' || dateKey === '2026-01-04' || dateKey === '2026-01-05') {
+      console.log(`🔍 Debug for ${dateKey}:`, {
+        attendanceStatus,
+        attendanceType: typeof attendanceStatus,
+        isTrue: attendanceStatus === true,
+        isFalse: attendanceStatus === false,
+        isNull: attendanceStatus === null,
+        isUndefined: attendanceStatus === undefined,
+        hasValue: attendanceStatus !== undefined && attendanceStatus !== null
+      });
     }
-
-    // Days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      const status = getAttendanceStatus(day);
-      const dateKey = formatDateKey(currentDate.getFullYear(), currentDate.getMonth(), day);
-      const isSelected = selectedDate === dateKey;
-      
-      let bgColor = 'bg-gray-800 hover:bg-gray-700';
-      let textColor = 'text-gray-300';
-      
-      if (status === 'present') {
-        bgColor = 'bg-green-900 hover:bg-green-800';
-        textColor = 'text-green-300';
-      } else if (status === 'absent') {
-        bgColor = 'bg-red-900 hover:bg-red-800';
-        textColor = 'text-red-300';
-      } else if (status === 'mixed') {
-        bgColor = 'bg-yellow-900 hover:bg-yellow-800';
-        textColor = 'text-yellow-300';
-      }
-      
-      if (isSelected) {
-        bgColor += ' ring-2 ring-blue-500';
-      }
-
-      days.push(
-        <button
-          key={day}
-          onClick={() => handleDateClick(day)}
-          className={`h-10 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${bgColor} ${textColor}`}
-        >
-          {day}
-        </button>
-      );
+    
+    if (attendanceStatus === true) {
+      bgColorClass = 'bg-green-500 text-white'; // Present = Green
+    } else if (attendanceStatus === false) {
+      bgColorClass = 'bg-red-500 text-white'; // Absent = Red
+    } else if (attendanceStatus === null || attendanceStatus === undefined) {
+      bgColorClass = 'bg-gray-600 text-white'; // No data = Gray
     }
-
-    return days;
-  };
-
-  const getAttendanceStats = () => {
-    const daysInMonth = getDaysInMonth(currentDate);
-    let present = 0, absent = 0, total = 0;
-
-    for (let day = 1; day <= daysInMonth; day++) {
-      const status = getAttendanceStatus(day);
-      if (status === 'present') {
-        present++;
-        total++;
-      } else if (status === 'absent') {
-        absent++;
-        total++;
-      } else if (status === 'mixed') {
-        present++;
-        absent++;
-        total += 2;
-      }
-    }
-
-    return { present, absent, total, percentage: total > 0 ? Math.round((present / total) * 100) : 0 };
-  };
-
-  const stats = getAttendanceStats();
-
-  if (loading) {
+    
+    days.push(
+      <div 
+        key={day} 
+        className={`h-8 flex items-center justify-center text-sm rounded cursor-pointer hover:bg-white/10 ${bgColorClass}`}
+        title={attendanceStatus === true ? 'Present' : attendanceStatus === false ? 'Absent' : 'No data'}
+      >
+        {day}
+      </div>
+    );
+  }
+  
+  // If no student is logged in, show login prompt
+  if (!currentStudent) {
     return (
-      <div className="min-h-screen bg-[#0b1020] text-white flex items-center justify-center">
-        <div className="text-center">
-          <CalendarIcon className="w-12 h-12 mx-auto mb-4 animate-pulse" />
-          <p>Loading attendance calendar...</p>
+      <div className="rounded-xl bg-[#0e1628] p-6">
+        <div className="text-center text-white">
+          <h3 className="font-semibold mb-4">Please login to view your attendance</h3>
+          <p className="text-gray-400 text-sm">Your attendance calendar will appear here after login</p>
         </div>
       </div>
     );
   }
-
+  
   return (
-    <div className="min-h-screen bg-[#0b1020] text-white p-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors"
+    <div className="rounded-xl bg-[#0e1628] p-6">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h3 className="font-semibold">Your Attendance</h3>
+          <p className="text-sm text-gray-400">{currentStudent.name} • Class {currentStudent.classLevel || currentStudent.class}</p>
+          <p className="text-xs text-gray-500 mt-1">
+            {Object.keys(attendanceData).length} days recorded • {hasAttendanceThisMonth ? 'This month has data' : 'No data this month'}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
+            className="text-gray-400 hover:text-white"
           >
-            <ChevronLeft size={20} />
-            Back to Dashboard
+            ‹
           </button>
-          
-          <h1 className="text-2xl font-bold">Attendance Calendar</h1>
-          
-          <div className="flex items-center gap-4">
-            <select
-              value={selectedClass}
-              onChange={(e) => setSelectedClass(e.target.value)}
-              className="bg-[#0e1628] border border-white/10 rounded-lg px-3 py-2 text-white"
-            >
-              <option value="11th">11th Class</option>
-              <option value="12th">12th Class</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-[#0e1628] rounded-xl p-4 border border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <CalendarIcon className="w-6 h-6 text-green-400" />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Total Days</p>
-                <p className="text-xl font-bold">{stats.total}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-[#0e1628] rounded-xl p-4 border border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-green-400" />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Present</p>
-                <p className="text-xl font-bold text-green-400">{stats.present}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-[#0e1628] rounded-xl p-4 border border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-red-400" />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Absent</p>
-                <p className="text-xl font-bold text-red-400">{stats.absent}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-[#0e1628] rounded-xl p-4 border border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                <CalendarIcon className="w-6 h-6 text-blue-400" />
-              </div>
-              <div>
-                <p className="text-gray-400 text-sm">Attendance %</p>
-                <p className="text-xl font-bold text-blue-400">{stats.percentage}%</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Calendar */}
-        <div className="bg-[#0e1628] rounded-xl p-6 border border-white/5">
-          {/* Month Navigation */}
-          <div className="flex justify-between items-center mb-6">
-            <button
-              onClick={handlePrevMonth}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            
-            <h2 className="text-xl font-semibold">
-              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-            </h2>
-            
-            <button
-              onClick={handleNextMonth}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
-
-          {/* Day Headers */}
-          <div className="grid grid-cols-7 gap-2 mb-4">
-            {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="h-10 flex items-center justify-center text-sm font-medium text-gray-400">
-                {day}
-              </div>
-            ))}
-          </div>
-
-          {/* Calendar Days */}
-          <div className="grid grid-cols-7 gap-2">
-            {renderCalendarDays()}
-          </div>
-        </div>
-
-        {/* Legend */}
-        <div className="mt-6 bg-[#0e1628] rounded-xl p-4 border border-white/5">
-          <h3 className="font-semibold mb-3">Legend</h3>
-          <div className="flex flex-wrap gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-green-900 rounded"></div>
-              <span className="text-sm text-gray-300">All Present</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-red-900 rounded"></div>
-              <span className="text-sm text-gray-300">All Absent</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-900 rounded"></div>
-              <span className="text-sm text-gray-300">Mixed</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-gray-800 rounded"></div>
-              <span className="text-sm text-gray-300">No Data</span>
-            </div>
-          </div>
+          <span className="text-sm text-gray-300">
+            {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+          </span>
+          <button 
+            onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))}
+            className="text-gray-400 hover:text-white"
+          >
+            ›
+          </button>
         </div>
       </div>
+      
+      {/* Quick Navigation to Months with Attendance */}
+      {monthsWithAttendance.length > 0 && (
+        <div className="mb-4 p-3 bg-black/20 rounded-lg">
+          <p className="text-xs text-gray-400 mb-2">Quick navigation to months with attendance:</p>
+          <div className="flex flex-wrap gap-2">
+            {monthsWithAttendance.map(monthKey => {
+              const [year, month] = monthKey.split('-').map(Number);
+              const monthName = monthNames[month - 1];
+              const isCurrentMonth = monthKey === currentMonthKey;
+              
+              return (
+                <button
+                  key={monthKey}
+                  onClick={() => navigateToMonthWithAttendance(monthKey)}
+                  className={`px-3 py-1 text-xs rounded transition-all ${
+                    isCurrentMonth 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {monthName} {year}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+      
+      {/* Calendar Grid */}
+      <div className="grid grid-cols-7 gap-1 text-xs">
+        {/* Weekday headers */}
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
+          <div key={index} className="h-6 flex items-center justify-center text-gray-500 font-medium">
+            {day}
+          </div>
+        ))}
+        
+        {/* Calendar days */}
+        {days}
+      </div>
+      
+      {/* Enhanced Legend */}
+      <div className="mt-4 flex justify-center gap-4 text-xs">
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-green-500 rounded"></div>
+          <span className="text-gray-400">Present</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-red-500 rounded"></div>
+          <span className="text-gray-400">Absent</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-gray-600 rounded"></div>
+          <span className="text-gray-400">No data</span>
+        </div>
+      </div>
+      
+      {/* Attendance Summary */}
+      {Object.keys(attendanceData).length > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-700">
+          <div className="text-center text-xs text-gray-400">
+            <p>Attendance Summary: 
+              <span className="text-green-400 ml-2">
+                {Object.values(attendanceData).filter(status => status === true).length} Present
+              </span>
+              <span className="text-red-400 ml-2">
+                {Object.values(attendanceData).filter(status => status === false).length} Absent
+              </span>
+              <span className="text-gray-400 ml-2">
+                {Object.values(attendanceData).filter(status => status !== true && status !== false).length} No data
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
