@@ -112,6 +112,14 @@ class AttendanceService {
     const dateKey = this.formatDateKey(date);
     
     try {
+      console.log('💾 saveAttendance called with:', { 
+        date: dateKey, 
+        classData, 
+        attendanceRecord,
+        recordKeys: Object.keys(attendanceRecord),
+        recordValues: Object.values(attendanceRecord)
+      });
+      
       // Check if attendance already exists for this date and class
       const existingData = this.getAllAttendance();
       const existingAttendance = existingData[dateKey]?.[classData];
@@ -133,6 +141,13 @@ class AttendanceService {
       }
       
       // Dispatch event to notify all components (including student calendars)
+      console.log('📡 Dispatching attendanceUpdated event with:', { 
+        date: dateKey, 
+        class: classData, 
+        attendance: attendanceRecord,
+        studentIds: Object.keys(attendanceRecord)
+      });
+      
       window.dispatchEvent(new CustomEvent('attendanceUpdated', {
         detail: { date: dateKey, class: classData, attendance: attendanceRecord }
       }));
@@ -309,68 +324,6 @@ class AttendanceService {
     
     console.log('📊 Final student attendance:', studentAttendance);
     return studentAttendance;
-  }
-
-  // Get attendance for a student across all dates
-  async getStudentAttendance(studentId, classData) {
-    try {
-      console.log('🔍 getStudentAttendance called:', { studentId, classData, studentIdType: typeof studentId });
-      
-      // Get from localStorage (permanent storage)
-      const attendanceData = this.getAllAttendance();
-      const studentAttendance = {};
-      
-      console.log('📚 Available attendance data dates:', Object.keys(attendanceData));
-      console.log('📊 Raw attendance data:', attendanceData);
-      
-      Object.keys(attendanceData).forEach(dateKey => {
-        if (attendanceData[dateKey][classData]) {
-          const classAttendance = attendanceData[dateKey][classData];
-          console.log(`📅 Checking date ${dateKey}:`, Object.keys(classAttendance));
-          console.log(`📋 Class attendance data for ${dateKey}:`, classAttendance);
-          
-          // Try both string and number ID matching
-          const studentIdStr = String(studentId);
-          const studentIdNum = parseInt(studentId);
-          
-          // Enhanced debugging for specific dates
-          if (dateKey === '2026-01-03' || dateKey === '2026-01-04' || dateKey === '2026-01-05') {
-            console.log(`🔍 Enhanced debug for ${dateKey}:`, {
-              studentIdStr,
-              studentIdNum,
-              hasStringId: classAttendance.hasOwnProperty(studentIdStr),
-              hasNumberId: classAttendance.hasOwnProperty(studentIdNum),
-              stringValue: classAttendance[studentIdStr],
-              numberValue: classAttendance[studentIdNum],
-              stringType: typeof classAttendance[studentIdStr],
-              numberType: typeof classAttendance[studentIdNum]
-            });
-          }
-          
-          if (classAttendance.hasOwnProperty(studentIdStr)) {
-            const value = classAttendance[studentIdStr];
-            studentAttendance[dateKey] = value;
-            console.log(`✅ Found attendance for ${studentIdStr} on ${dateKey}:`, value, `(type: ${typeof value})`);
-          } else if (classAttendance.hasOwnProperty(studentIdNum)) {
-            const value = classAttendance[studentIdNum];
-            studentAttendance[dateKey] = value;
-            console.log(`✅ Found attendance for ${studentIdNum} on ${dateKey}:`, value, `(type: ${typeof value})`);
-          } else {
-            console.log(`❌ No attendance found for student ${studentId} on ${dateKey}`);
-            console.log(`🔍 Available student IDs on ${dateKey}:`, Object.keys(classAttendance));
-          }
-        } else {
-          console.log(`❌ No class data found for ${dateKey} and class ${classData}`);
-        }
-      });
-      
-      console.log('📊 Final student attendance data:', studentAttendance);
-      console.log('✅ Student attendance loaded:', { studentId, classData, attendanceDays: Object.keys(studentAttendance).length });
-      return studentAttendance;
-    } catch (error) {
-      console.error('❌ Error loading student attendance:', error);
-      return {};
-    }
   }
   
   // Cache student attendance in localStorage
