@@ -7,8 +7,7 @@ import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
-const API_BASE = import.meta.env.VITE_API_BASE;
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://hybridx-uhj9.onrender.com/api';
 
 function MainsPYQ() {
   const { subject, chapter } = useParams();
