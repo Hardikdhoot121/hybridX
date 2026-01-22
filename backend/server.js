@@ -11,7 +11,9 @@ const app = express();
 
 // middlewares
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? true : ['http://localhost:5173'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://hybridx.vercel.app', 'https://hybridx-uhj9.onrender.com'] 
+    : ['http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
