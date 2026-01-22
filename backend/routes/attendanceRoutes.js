@@ -1,20 +1,19 @@
-import express from 'express';
-import { saveAttendance, getAttendance, getStudentAttendance, getAttendanceStats } from '../controllers/attendanceController.js';
-import { protect } from '../middlewares/authMiddleware.js';
-import { isAdmin } from '../middlewares/isAdmin.js';
+import express from "express";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Save attendance (admin only)
-router.post('/save', protect, isAdmin, saveAttendance);
+/**
+ * ATTENDANCE ROUTES (Protected)
+ * /api/attendance/...
+ */
 
-// Get attendance for a specific date and class
-router.get('/', protect, getAttendance);
-
-// Get attendance for a specific student
-router.get('/student', protect, getStudentAttendance);
-
-// Get attendance statistics for a class
-router.get('/stats', protect, getAttendanceStats);
+// Get attendance data
+router.get("/", protect, (req, res) => {
+  res.json({
+    message: "Attendance routes working",
+    user: req.user
+  });
+});
 
 export default router;
