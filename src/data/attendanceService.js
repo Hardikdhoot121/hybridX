@@ -120,46 +120,109 @@ class AttendanceService {
         recordValues: Object.values(attendanceRecord)
       });
       
-      // Check if attendance already exists for this date and class
-      const existingData = this.getAllAttendance();
-      const existingAttendance = existingData[dateKey]?.[classData];
+      // Try to save to backend first
+      const backendSuccess = await this.saveToBackend(date, classData, attendanceRecord);
       
-      if (existingAttendance) {
-        console.log('🔄 Found existing attendance for:', { dateKey, classData });
-        console.log('📝 Old attendance:', existingAttendance);
-        console.log('📝 New attendance:', attendanceRecord);
+      if (backendSuccess) {
+        console.log('✅ Attendance saved to backend successfully');
+        
+        // Also save to localStorage as backup
+        const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+        
+        if (!saveSuccess) {
+          console.warn('⚠️ Backend save succeeded but localStorage backup failed');
+        }
+        
+        // Dispatch event to notify all components (including student calendars)
+        console.log('📡 Dispatching attendanceUpdated event with:', { 
+          date: dateKey, 
+          class: classData, 
+          attendance: attendanceRecord,
+          studentIds: Object.keys(attendanceRecord)
+        });
+        
+        window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+          detail: { date: dateKey, class: classData, attendance: attendanceRecord }
+        }));
+        
+        console.log('✅ Attendance saved permanently:', { dateKey, classData, recordCount: Object.keys(attendanceRecord).length });
+        return true;
       } else {
-        console.log('🆕 No existing attendance found, creating new record for:', { dateKey, classData });
+        console.warn('⚠️ Backend save failed, falling back to localStorage only');
+        
+        // Fallback to localStorage only
+        const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+        
+        if (saveSuccess) {
+          // Dispatch event for local updates
+          window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+            detail: { date: dateKey, class: classData, attendance: attendanceRecord }
+          }));
+          
+          console.log('✅ Attendance saved to localStorage fallback:', { dateKey, classData });
+          return true;
+        } else {
+          console.error('❌ Both backend and localStorage save failed');
+          return false;
+        }
       }
-      
-      // Save to localStorage (permanent storage) with verification
-      const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
-      
-      if (!saveSuccess) {
-        console.error('❌ Failed to save attendance to localStorage');
-        return false;
-      }
-      
-      // Dispatch event to notify all components (including student calendars)
-      console.log('📡 Dispatching attendanceUpdated event with:', { 
-        date: dateKey, 
-        class: classData, 
-        attendance: attendanceRecord,
-        studentIds: Object.keys(attendanceRecord)
-      });
-      
-      window.dispatchEvent(new CustomEvent('attendanceUpdated', {
-        detail: { date: dateKey, class: classData, attendance: attendanceRecord }
-      }));
-      
-      console.log('✅ Attendance saved permanently:', { dateKey, classData, recordCount: Object.keys(attendanceRecord).length });
-      return true;
     } catch (error) {
       console.error('❌ Error saving attendance:', error);
+      
+      // Try localStorage as final fallback
+      try {
+        const dateKey = this.formatDateKey(date);
+        const saveSuccess = this.saveToLocalStorage(dateKey, classData, attendanceRecord);
+        
+        if (saveSuccess) {
+          window.dispatchEvent(new CustomEvent('attendanceUpdated', {
+            detail: { date: dateKey, class: classData, attendance: attendanceRecord }
+          }));
+          console.log('✅ Attendance saved to localStorage after error:', { dateKey, classData });
+          return true;
+        }
+      } catch (fallbackError) {
+        console.error('❌ Fallback save also failed:', fallbackError);
+      }
+      
       return false;
     }
   }
   
+  // Save to backend API
+  async saveToBackend(date, classData, attendanceRecord) {
+    try {
+      const headers = this.getAuthHeaders();
+      if (!headers) {
+        console.warn('⚠️ No auth token available, cannot save to backend');
+        return false;
+      }
+
+      const response = await fetch(`${this.API_BASE}/attendance/save`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          date: this.formatDateKey(date),
+          classLevel: classData,
+          attendanceRecord
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Backend save successful:', result);
+        return true;
+      } else {
+        const error = await response.json();
+        console.error('❌ Backend save failed:', error);
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Error saving to backend:', error);
+      return false;
+    }
+  }
+
   // Save to localStorage helper
   saveToLocalStorage(dateKey, classData, attendanceRecord) {
     try {
@@ -215,35 +278,53 @@ class AttendanceService {
     const dateKey = this.formatDateKey(date);
     
     try {
-      // Get from localStorage (permanent storage)
-      const attendanceData = this.getAllAttendance();
-      const classAttendance = attendanceData[dateKey]?.[classData];
+      // Try to get from backend first
+      const backendData = await this.getFromBackend(date, classData);
       
-      // Return the exact object, preserving false values
-      const result = classAttendance || {};
-      
-      // Check if this is historical data
-      const inputDate = new Date(date);
-      const today = new Date();
-      const isHistorical = inputDate < today.setHours(0, 0, 0, -1); // Before today
-      
-      console.log('📅 Loading attendance:', { 
-        dateKey, 
-        classData, 
-        recordCount: Object.keys(result).length,
-        isHistorical: isHistorical ? 'Yes' : 'No',
-        dateType: inputDate.toDateString() === today.toDateString() ? 'Today' : isHistorical ? 'Past' : 'Future',
-        hasClassData: !!classAttendance,
-        sampleData: Object.keys(result).slice(0, 3).reduce((acc, key) => {
-          acc[key] = result[key];
-          return acc;
-        }, {})
-      });
-      
-      return result;
+      if (backendData) {
+        console.log('✅ Retrieved attendance from backend:', { dateKey, classData, recordCount: Object.keys(backendData).length });
+        
+        // Also cache in localStorage for offline access
+        this.cacheInLocalStorage(dateKey, classData, backendData);
+        
+        return backendData;
+      } else {
+        console.log('⚠️ Backend returned no data, checking localStorage cache');
+        
+        // Fallback to localStorage
+        const attendanceData = this.getAllAttendance();
+        const classAttendance = attendanceData[dateKey]?.[classData];
+        const result = classAttendance || {};
+        
+        console.log('📅 Using localStorage attendance:', { 
+          dateKey, 
+          classData, 
+          recordCount: Object.keys(result).length,
+          hasData: Object.keys(result).length > 0
+        });
+        
+        return result;
+      }
     } catch (error) {
       console.error('❌ Error loading attendance:', error);
-      return {};
+      
+      // Final fallback to localStorage
+      try {
+        const attendanceData = this.getAllAttendance();
+        const classAttendance = attendanceData[dateKey]?.[classData];
+        const result = classAttendance || {};
+        
+        console.log('📅 Using localStorage fallback after error:', { 
+          dateKey, 
+          classData, 
+          recordCount: Object.keys(result).length
+        });
+        
+        return result;
+      } catch (fallbackError) {
+        console.error('❌ Even localStorage fallback failed:', fallbackError);
+        return {};
+      }
     }
   }
 
@@ -296,6 +377,86 @@ class AttendanceService {
     }
   }
 
+  // Get attendance from backend API
+  async getFromBackend(date, classData) {
+    try {
+      const headers = this.getAuthHeaders();
+      if (!headers) {
+        console.warn('⚠️ No auth token available, cannot fetch from backend');
+        return null;
+      }
+
+      const response = await fetch(`${this.API_BASE}/attendance?date=${this.formatDateKey(date)}&classLevel=${classData}`, {
+        method: 'GET',
+        headers
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('✅ Backend fetch successful:', result);
+        return result.data || {};
+      } else {
+        const error = await response.json();
+        console.error('❌ Backend fetch failed:', error);
+        return null;
+      }
+    } catch (error) {
+      console.error('❌ Error fetching from backend:', error);
+      return null;
+    }
+  }
+
+  // Cache data in localStorage
+  cacheInLocalStorage(dateKey, classData, attendanceData) {
+    try {
+      const allData = this.getAllAttendance();
+      
+      if (!allData[dateKey]) {
+        allData[dateKey] = {};
+      }
+      
+      allData[dateKey][classData] = { ...attendanceData };
+      
+      localStorage.setItem('attendanceData', JSON.stringify(allData));
+      this.createBackup();
+      
+      console.log('💾 Cached backend data in localStorage:', { dateKey, classData });
+    } catch (error) {
+      console.error('❌ Error caching in localStorage:', error);
+    }
+  }
+
+  // Get student attendance from backend or localStorage
+  async getStudentAttendance(studentId, classData) {
+    try {
+      // Try backend first
+      const headers = this.getAuthHeaders();
+      if (headers) {
+        const response = await fetch(`${this.API_BASE}/attendance/student?studentId=${studentId}&classLevel=${classData}`, {
+          method: 'GET',
+          headers
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('✅ Student attendance from backend:', result.data);
+          
+          // Cache in localStorage for offline access
+          this.cacheStudentAttendance(studentId, classData, result.data);
+          
+          return result.data || {};
+        } else {
+          console.warn('⚠️ Backend student attendance fetch failed, using localStorage');
+        }
+      }
+    } catch (error) {
+      console.error('❌ Error fetching student attendance from backend:', error);
+    }
+    
+    // Fallback to localStorage
+    return this.getStudentAttendanceFromLocal(studentId, classData);
+  }
+  
   // Get student attendance from localStorage (helper method)
   getStudentAttendanceFromLocal(studentId, classData) {
     const attendanceData = this.getAllAttendance();
