@@ -4,10 +4,22 @@ services:
     env: node
     plan: free
     buildCommand: "npm install"
-    startCommand: "npm start"
+    startCommand: "node server.js"
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        fromDatabase:
+          name: hybridx-db
+          property: connectionString
     autoDeploy: true
+
+databases:
+  - name: hybridx-db
+    plan: free
+    databaseName: hybridx
+    user: hybridx_user
