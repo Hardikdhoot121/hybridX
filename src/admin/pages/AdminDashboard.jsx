@@ -2,6 +2,7 @@ import React from 'react'
 import AdminNavbar from './AdminNavbar'
 import StatCard from '../components/StatsCard'
 import StudentsTable from '../components/StudentTable'
+import AttendanceCalendar from '../../components/AttendanceCalendar'
 import { use11thStudents } from '../classData/11th_real'
 import { use12thStudents } from '../classData/12th_real'
 
@@ -63,6 +64,10 @@ const AdminDashboard = () => {
 
         <div className="w-[80%] my-8 mx-auto ">
         <StudentsTable/>
+        </div>
+
+        <div className="w-[80%] my-8 mx-auto">
+          <AttendanceCalendar />
         </div>
 
     </>

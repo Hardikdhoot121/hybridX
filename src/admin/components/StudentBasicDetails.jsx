@@ -13,7 +13,7 @@ const StudentBasicDetails = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       const res = await axios.get(
-        `https://hybridx-uhj9.onrender.com/api/admin/student/${_id}`
+        `http://localhost:5000/api/admin/student/${_id}`
       );
       setStudent(res.data);
     };
