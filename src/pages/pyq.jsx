@@ -65,13 +65,14 @@ function PYQ() {
   const currVal = data[currIndex];
 
   try {
-    const response = await fetch("https://hybridx-uhj9.onrender.com/api/practice/attempt", {
+    const response = await fetch("http://localhost:5000/api/practice/attempt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        questionId: currVal.question_id,          // from JSON
         questionId: currVal.question_id,          // ✅ from JSON
         subject: currVal.subject,                 // physics / chemistry / maths
         topic: currVal.topic || currVal.chapter,  // fallback

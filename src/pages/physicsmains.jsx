@@ -13,7 +13,7 @@ export default function Physics() {
   const [showAnswer, setShowAnswer] = useState(false);
   const [attemptRecorded, setAttemptRecorded] = useState(false);
 
-  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://hybridx-uhj9.onrender.com/api";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
   const Data = Array.isArray(rawData) ? rawData : rawData.default;
 
