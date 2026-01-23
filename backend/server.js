@@ -11,14 +11,11 @@ const app = express();
 
 // middlewares
 app.use(cors({
-  origin: true,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://hybridx.vercel.app', 'https://hybridx-uhj9.onrender.com'] 
+    : ['http://localhost:5173'],
+  credentials: true
 }));
-
-app.options("*", cors());
-
 app.use(express.json());
 
 // mount all API routes at /api
