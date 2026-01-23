@@ -15,7 +15,7 @@ import DppResult from "./pages/dppResult";
 import Hybrid from "./pages/hybrid";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
-import AdminAttendance from "./admin/pages/Attendance";
+import AdminAttendance from "./admin/pages/AdminAttendance";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
@@ -34,6 +34,7 @@ function App() {
 
         <Route path="/hybrid" element={<Hybrid />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/attendance" element={<AdminAttendance />} />
         <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
         <Route path="/admin/attendance" element={<AdminAttendance />} />
 
@@ -51,6 +52,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
           <Route path="/dpp/:id" element={<DppResult />} />
+          <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
 
         </Route>
 
