@@ -3,47 +3,47 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
-import adminStudentRoutes from "./routes/adminStudentRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// middlewares
+/* 🔥 CORS FIX (PRODUCTION SAFE) */
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://hybrideducationhub.in",
-    "https://hybridx-uhj9.onrender.com"
-  ],
-  credentials: true
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://hybrideducationhub.in",
+      "https://www.hybrideducationhub.in"
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked: " + origin));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.use(express.json());
+/* 🔥 IMPORTANT: handle preflight */
+app.options("*", cors());
 
-// mount all API routes at /api
+app.use(express.json());
 app.use("/api", routes);
 
-//student details route
-app.use("/api/admin",adminStudentRoutes);
-
-// health route
 app.get("/ping", (req, res) => {
   res.send("Backend is alive");
-});
-
-app.get("/", (req, res) => {
-  res.send("HybridX backend is running ");
 });
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-
   app.listen(PORT, () => {
     console.log(`🚀 Server started on port ${PORT}`);
-    console.log(`👉 http://localhost:${PORT}`);
   });
 };
 
