@@ -65,11 +65,6 @@ const AdminDashboard = () => {
         <div className="w-[80%] my-8 mx-auto ">
         <StudentsTable/>
         </div>
-
-        <div className="w-[80%] my-8 mx-auto">
-          <AttendanceCalendar />
-        </div>
-
     </>
   )
 }
