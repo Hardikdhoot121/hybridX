@@ -11,11 +11,14 @@ const app = express();
 
 // middlewares
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://hybridx.vercel.app', 'https://hybridx-uhj9.onrender.com'] 
-    : ['http://localhost:5173'],
+  origin: [
+    "http://localhost:5173",
+    "https://hybrideducationhub.in",
+    "https://hybridx-uhj9.onrender.com"
+  ],
   credentials: true
 }));
+
 app.use(express.json());
 
 // mount all API routes at /api
