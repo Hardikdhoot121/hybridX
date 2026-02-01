@@ -94,7 +94,7 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
     {/* Text */}
     <div className="text-2xl sm:text-4xl font-bold flex flex-wrap justify-center gap-2 leading-tight">
       <span className="text-[#3abbf5]">Unlock</span>
-      <span className="text-[#15191e]">Your True Potential</span>
+      <span className="text-[#15191e]">Your Path to Excellence</span>
     </div>
 
   </div>

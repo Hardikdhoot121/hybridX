@@ -41,7 +41,7 @@ export default function Chemistry() {
       const userAns = isNumerical ? numericalAnswer : selectedAnswer;
       const correctAns = isNumerical ? question.answer : question.correct_option;
       
-      console.log('📋 Question data:', {
+      console.log(' Question data:', {
         questionId: question.question_id || `chemistry-${currentQuestion}`,
         subject: "chemistry",
         topic: question.topic || chapter,
@@ -68,12 +68,12 @@ export default function Chemistry() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("✅ Practice attempt recorded:", data);
+        console.log(" Practice attempt recorded:", data);
         setAttemptRecorded(true);
         
         // Show success feedback
         if (isCorrect) {
-          console.log("🎉 Correct answer! Weekly goal updated.");
+          console.log(" Correct answer! Weekly goal updated.");
           // Trigger dashboard refresh event
           localStorage.setItem('dashboard-refresh-trigger', JSON.stringify({
             type: 'correct-answer',
@@ -94,7 +94,7 @@ export default function Chemistry() {
         }
       }
     } catch (error) {
-      console.error("❌ Failed to record attempt:", error);
+      console.error(" Failed to record attempt:", error);
     }
   };
 
