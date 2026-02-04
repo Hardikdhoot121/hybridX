@@ -11,8 +11,8 @@ export default function Navbar() {
   return (
     <>
     
-      {/* 🔔 Announcement Banner */}
-      <div className="w-full bg-[#3abbf5] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
+      {/*  Announcement Banner */}
+      <div className="w-full bg-[#42BA96] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
         🌟 Quote Of The Day — Success is made in silence. Results will make the noise. 🚀
       </div>
 
