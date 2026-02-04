@@ -8,7 +8,7 @@ import Signup from "./pages/signup";
 import Mains from "./pages/Mains";
 import Chemistry from "./pages/chemistrymains";
 import Physics from "./pages/physicsmains";
-import MainsPYQ from "./pages/MainsPYQ";
+import SingleQuestion from "./pages/MainsPYQ";
 import Maths from "./pages/mathematicsmains";
 import Dashboard from "./pages/dashboard";
 import DppResult from "./pages/dppResult";
@@ -20,6 +20,8 @@ import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
 import AttendanceCalendar from "./components/AttendanceCalendar";
+import MainsPYQ from "./pages/MainsQuestions";
+
 
 function App() {
   return (
@@ -37,22 +39,23 @@ function App() {
         <Route path="/admin/attendance" element={<AdminAttendance />} />
         <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
         <Route path="/admin/attendance" element={<AdminAttendance />} />
+        
 
         {/* some protected routes jo bina login kai nhi khulengai */}
 
         <Route element={<ProtectedRoute />}>
-
           <Route path="/ncert+" element={<Ncertplus />} />
           <Route path="/notes" element={<Notes />} />
           <Route path="/jeemains" element={<Mains />} />
           <Route path="/jeemains/chemistry" element={<Chemistry />} />
           <Route path="/jeemains/maths" element={<Maths />} />
           <Route path="/jeemains/physics" element={<Physics />} />
-          <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
+          <Route path="/jeemains/:subject/:chapter/:questionId" element={<SingleQuestion />} />    
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
           <Route path="/dpp/:id" element={<DppResult />} />
           <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
+          <Route path = "/jeemains/:subject/:chapter" element={<MainsPYQ />} />
 
         </Route>
 
