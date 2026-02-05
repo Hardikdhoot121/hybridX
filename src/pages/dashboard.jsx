@@ -10,12 +10,12 @@ const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
   console.log('🔑 Getting auth headers, token exists:', !!token);
   console.log('🔑 Token value:', token ? token.substring(0, 50) + '...' : 'null');
-  
+
   if (!token) {
     console.log('❌ No token found, user might need to login again');
     return null;
   }
-  
+
   // Check if token is expired (simple check for JWT format)
   try {
     const tokenParts = token.split('.');
@@ -34,7 +34,7 @@ const getAuthHeaders = () => {
   } catch (error) {
     console.log('❌ Token validation error:', error);
   }
-  
+
   return {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ const Dashboard = () => {
     try {
       const statsRes = await fetch(`${API_BASE}/analytics/weekly`, { headers });
       console.log('📡 Weekly stats API response status:', statsRes.status);
-      
+
       if (statsRes.ok) {
         const statsJson = await statsRes.json();
         console.log('✅ Weekly stats updated:', statsJson);
@@ -96,7 +96,7 @@ const Dashboard = () => {
       console.log('🚀 Starting dashboard load...');
       const headers = getAuthHeaders();
       console.log('📋 Headers for API calls:', headers);
-      
+
       // Try to get student data from localStorage first
       const localStudent = localStorage.getItem("currentStudent");
       console.log('👤 Local student data exists:', !!localStudent);
@@ -107,7 +107,7 @@ const Dashboard = () => {
         setProfileDraft(student);
         setLoading(false);
       }
-      
+
       if (!headers) {
         console.log('❌ No headers available, skipping API calls');
         return;
@@ -162,30 +162,30 @@ const Dashboard = () => {
   useEffect(() => {
     const handleStorageChange = (e) => {
       console.log('📡 Storage event detected:', e.key, e.newValue);
-      
+
       if (e.key === 'dashboard-refresh-trigger') {
         console.log('📡 Dashboard refresh trigger received:', e.newValue);
         try {
           const data = JSON.parse(e.newValue);
           console.log('🔍 Parsed refresh trigger data:', data);
-          
+
           if (data.type === 'correct-answer') {
             console.log('🎯 Correct answer detected, refreshing weekly stats...');
             console.log('📊 Stats from trigger:', data.weeklyStats);
-            
+
             // Option 1: Use the stats from the trigger (immediate)
             if (data.weeklyStats) {
               console.log('⚡ Using immediate stats from trigger');
               console.log('🔄 Previous stats:', weeklyStats);
               console.log('📈 New stats:', data.weeklyStats);
               setWeeklyStats(data.weeklyStats);
-              
+
               // Force a re-render by updating the state
               setTimeout(() => {
                 console.log('🔄 Forced re-render with new stats');
               }, 100);
             }
-            
+
             // Option 2: Fetch fresh stats from API (fallback/confirmation)
             setTimeout(() => {
               console.log('🔄 Fetching fresh stats from API as confirmation...');
@@ -201,7 +201,7 @@ const Dashboard = () => {
     // Listen for storage events (cross-tab)
     window.addEventListener('storage', handleStorageChange);
     console.log('👂 Storage event listener attached');
-    
+
     // Also check for direct localStorage changes (same tab)
     const checkLocalStorage = () => {
       const trigger = localStorage.getItem('dashboard-refresh-trigger');
@@ -316,7 +316,7 @@ const Dashboard = () => {
         >
           <ArrowLeft size={18} /> Back
         </button>
-        
+
         <button
           onClick={() => navigate("/attendance-calendar")}
           className="px-4 py-2 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all font-medium"
@@ -444,12 +444,12 @@ const Dashboard = () => {
               <div className="stat-card"><span>0</span><p>Challenges</p></div>
             </div>
           </div>
-          
+
           {/* ATTENDANCE CALENDAR LINK */}
           <div className="bg-[#0e1628] rounded-xl p-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Attendance Calendar</h3>
-              <button 
+              <button
                 onClick={() => window.location.href = '/attendance-calendar'}
                 className="px-4 py-2 bg-[#42BA96] hover:bg-green-600 text-white rounded-lg text-sm font-medium transition"
               >

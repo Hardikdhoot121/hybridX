@@ -32,7 +32,7 @@ function Login() {
 
     try {
       // Use backend API for authentication
-      const API_BASE = import.meta.env.VITE_API_BASE_URL; 
+      const API_BASE = import.meta.env.VITE_API_BASE_URL;
       const response = await fetch(`${API_BASE}/auth/login`, {
         method: "POST",
         headers: {
@@ -48,16 +48,20 @@ function Login() {
         localStorage.setItem("token", result.token);
         localStorage.setItem("user", JSON.stringify(result.user));
         localStorage.setItem("currentStudent", JSON.stringify(result.user)); // Add this for dashboard compatibility
-        
+
         console.log('Login successful:', { user: result.user, token: result.token });
-        
+
         // Dispatch student login event to notify attendance components
         window.dispatchEvent(new CustomEvent('studentLoggedIn', {
           detail: { student: result.user }
         }));
-        
+
         handleSuccess(`Welcome back, ${result.user.name}!`);
-        setTimeout(() => navigate("/dashboard"), 1000);
+
+        // Role-based redirect
+        const redirectPath = result.user.role === "admin" ? "/admin" : "/dashboard";
+        console.log(`Redirecting ${result.user.role} to ${redirectPath}`);
+        setTimeout(() => navigate(redirectPath), 1000);
       } else {
         handleError(result.message || "Login failed");
       }
