@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
+import AdminNavbar from "../admin/pages/AdminNavbar";
 import { IoMdMail } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
 
@@ -14,7 +15,7 @@ const ContactUs = () => {
 
 
   const director = [
-    { 
+    {
       name: "Vineet Hans",
       role: "Director",
       phone: "99503 64747",
@@ -35,39 +36,39 @@ const ContactUs = () => {
 
   const tech = [
     {
-    name: "Hardik Dhoot",
-    role: "Website Development Head",
-    phone: "63789 49658",
-    email: "hardikdhoot121@gmail.com",
-    img: img3
+      name: "Hardik Dhoot",
+      role: "Website Development Head",
+      phone: "63789 49658",
+      email: "hardikdhoot121@gmail.com",
+      img: img3
     },
 
     {
-    name: "Garvit Mathur",
-    role: "Website Development Member",
-    phone: "90792 12029",
-    email: "mathurgarvti@gmail.com",
-    img: img4
+      name: "Garvit Mathur",
+      role: "Website Development Member",
+      phone: "90792 12029",
+      email: "mathurgarvti@gmail.com",
+      img: img4
     },
 
     {
-    name: "Utkarsh Mathur",
-    role: "Website Development Member",
-    phone: "86962 44108",
-    email: "tech@example.com",
-    img: img5
+      name: "Utkarsh Mathur",
+      role: "Website Development Member",
+      phone: "86962 44108",
+      email: "tech@example.com",
+      img: img5
     },
 
     {
-    name: "Prakshit Mathur",
-    role: "Website Development Member",
-    phone: "98295 91055",
-    email: "tech@example.com",
-    img: img6
+      name: "Prakshit Mathur",
+      role: "Website Development Member",
+      phone: "98295 91055",
+      email: "tech@example.com",
+      img: img6
     },
-];
+  ];
 
-  
+
   const Card = ({ name, role, phone, email, img }) => (
     <div className="bg-[#2A2F36] rounded-xl p-6 w-full sm:w-[260px] shadow-md hover:shadow-blue-500/20 border border-gray-700 hover:-translate-y-2 transition-all duration-300">
       <img
@@ -83,40 +84,45 @@ const ContactUs = () => {
           <FaPhoneAlt size={18} />{phone}
         </p>
         <p className="text-[#42BA96] flex items-center gap-2 hover:underline cursor-pointer">
-          <IoMdMail size={18}/> {email}
+          <IoMdMail size={18} /> {email}
         </p>
       </div>
     </div>
   );
 
+  // Check if user is admin
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user.role === "admin";
+
   return (
     <>
-    <Navbar />
-    <div className="min-h-screen  text-white py-16 px-6">
-      
-      <h1 className="text-center text-5xl font-bold mb-25">
-        Contact Us
-      </h1>
+      {/* Conditionally render navbar based on user role */}
+      {isAdmin ? <AdminNavbar /> : <Navbar />}
+      <div className="min-h-screen  text-white py-16 px-6">
 
-      {/* ===== Director + HOD (Same Level) ===== */}
-      <section className="mb-16 text-center">
-        <h2 className="text-3xl font-semibold mb-10 text-center w-full">Leadership Team</h2>
+        <h1 className="text-center text-5xl font-bold mb-25">
+          Contact Us
+        </h1>
 
-        <div className="flex flex-wrap gap-6 justify-center">
-          {director.map((d, i) => <Card key={`director-${i}`} {...d} />)}
-          {hod.map((h, i) => <Card key={`hod-${i}`} {...h} />)}
-        </div>
-      </section>
+        {/* ===== Director + HOD (Same Level) ===== */}
+        <section className="mb-16 text-center">
+          <h2 className="text-3xl font-semibold mb-10 text-center w-full">Leadership Team</h2>
+
+          <div className="flex flex-wrap gap-6 justify-center">
+            {director.map((d, i) => <Card key={`director-${i}`} {...d} />)}
+            {hod.map((h, i) => <Card key={`hod-${i}`} {...h} />)}
+          </div>
+        </section>
 
 
 
 
-      {/* ===== Tech Team ===== */}
-      <Section title="Dev Team" data={tech} Card={Card} />
+        {/* ===== Tech Team ===== */}
+        <Section title="Dev Team" data={tech} Card={Card} />
 
-    </div>
-    <Footer />
-  </>
+      </div>
+      <Footer />
+    </>
   );
 };
 
@@ -134,7 +140,7 @@ const Section = ({ title, data, Card }) => (
       ))}
     </div>
   </section>
-  );
+);
 
 
 

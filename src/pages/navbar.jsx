@@ -8,9 +8,15 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
+
+  // Get user role safely
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user.role === "admin";
+  const dashboardPath = isAdmin ? "/dashboard" : "/dashboard";
+
   return (
     <>
-    
+
       {/*  Announcement Banner */}
       <div className="w-full bg-[#42BA96] text-white text-center h-10 flex items-center justify-center font-medium rounded-b-md px-2 text-sm sm:text-base">
         🌟 Quote Of The Day — Success is made in silence. Results will make the noise. 🚀
@@ -43,7 +49,7 @@ export default function Navbar() {
           </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate(dashboardPath)}
           >
             Dashboard
           </li>
@@ -55,17 +61,17 @@ export default function Navbar() {
           </li>
         </ul>
 
-{/* Avatar (Desktop Only) */}
-<div className="relative group cursor-pointer">
-  {isLoggedIn ? (
-    <>
-      <FcBusinessman
-        className="h-14 w-14 rounded-full bg-gray-800"
-        onClick={() => navigate("/dashboard")}
-      />
+        {/* Avatar (Desktop Only) */}
+        <div className="relative group cursor-pointer">
+          {isLoggedIn ? (
+            <>
+              <FcBusinessman
+                className="h-14 w-14 rounded-full bg-gray-800"
+                onClick={() => navigate(dashboardPath)}
+              />
 
-      {/* Tooltip */}
-      <div className="
+              {/* Tooltip */}
+              <div className="
         absolute right-0 mt-2
         whitespace-nowrap
         scale-0 group-hover:scale-100
@@ -73,18 +79,18 @@ export default function Navbar() {
         bg-black text-white text-xs px-3 py-1 rounded-md
         shadow-lg
       ">
-        click to access dashboard
-      </div>
-    </>
-  ) : (
-    <>
-      <IoPersonCircle
-        className="h-14 w-14 rounded-full bg-gray-800"
-        onClick={() => navigate("/login")}
-      />
+                click to access dashboard
+              </div>
+            </>
+          ) : (
+            <>
+              <IoPersonCircle
+                className="h-14 w-14 rounded-full bg-gray-800"
+                onClick={() => navigate("/login")}
+              />
 
-      {/* Tooltip */}
-      <div className="
+              {/* Tooltip */}
+              <div className="
         absolute right-0 mt-2
         whitespace-nowrap
         scale-0 group-hover:scale-100
@@ -92,11 +98,11 @@ export default function Navbar() {
         bg-black text-white text-xs px-3 py-1 rounded-md
         shadow-lg
       ">
-        Login to continue
-      </div>
-    </>
-  )}
-</div>
+                Login to continue
+              </div>
+            </>
+          )}
+        </div>
 
 
         {/* Hamburger Menu - Mobile */}
@@ -111,10 +117,10 @@ export default function Navbar() {
       {/* Mobile Dropdown Menu */}
       {open && (
         <div className="md:hidden bg-[#0d1117] text-white px-6 py-4 space-y-3 font-medium border-t border-gray-700">
-          
+
           <p onClick={() => { navigate("/"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Home</p>
           <p onClick={() => { window.open("https://hybrideduhub.collegedoors.com"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Tests</p>
-          <p onClick={() => { navigate("/dashboard"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Dashboard</p>
+          <p onClick={() => { navigate(dashboardPath); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Dashboard</p>
           <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Contact Us</p>
         </div>
       )}

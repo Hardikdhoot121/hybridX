@@ -2,6 +2,7 @@ import React from "react";
 import { IoPersonCircle } from "react-icons/io5";
 import { AiFillThunderbolt } from "react-icons/ai";
 import Navbar from "./navbar";
+import AdminNavbar from "../admin/pages/AdminNavbar";
 import Footer from "./footer";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -24,24 +25,27 @@ import img4 from "../images/RBSE.jpeg";
 
 const Home = ({ images = [], videos = [], instagram = [] }) => {
 
-   const achievementImages = [
-     img1,
-     img2,
-     img3,
-     img4
-   ];
+  const achievementImages = [
+    img1,
+    img2,
+    img3,
+    img4
+  ];
   const navigate = useNavigate();
   const [showLoginModel, setshowLoginModel] = useState(false);
   const [openIndex, setOpenIndex] = useState(null);
   const handleToggle = (index) => {
     setOpenIndex(openIndex === index ? null : index);
   };
-  
-  const isLoggedIn=!!localStorage.getItem("token");
+
+  const isLoggedIn = !!localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = user.role === "admin";
+
   // writing function for loggedin or not  -> login wale ko he features denai hai 
-  const protection = (path)=>{
-    if(isLoggedIn){navigate(path);}
-    else{setshowLoginModel(true);}
+  const protection = (path) => {
+    if (isLoggedIn) { navigate(path); }
+    else { setshowLoginModel(true); }
   }
 
 
@@ -79,101 +83,101 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
   return (
     <>
 
-    <div className="bg-[#15191e] p-3 min-h-screen">
-      <Navbar />
-      <div className="
+      <div className="bg-[#15191e] p-3 min-h-screen">
+        {isAdmin ? <AdminNavbar /> : <Navbar />}
+        <div className="
     bg-[#fefeff] mx-auto mt-8 rounded-md 
     flex flex-col sm:flex-row items-center justify-center text-center 
     font-display w-full max-w-[750px]  
     sm:h-[150px] h-[120px] px-4 sm:px-6 py-4
   ">
 
-    {/* Icon */}
-    <AiFillThunderbolt className="w-10 h-10 text-yellow-500 mb-2 sm:mb-0 sm:mr-4" />
+          {/* Icon */}
+          <AiFillThunderbolt className="w-10 h-10 text-yellow-500 mb-2 sm:mb-0 sm:mr-4" />
 
-    {/* Text */}
-    <div className="text-2xl sm:text-4xl font-bold flex flex-wrap justify-center gap-2 leading-tight">
-      <span className="text-[#3abbf5]">Unlock</span>
-      <span className="text-[#15191e]">Your Path to Excellence</span>
-    </div>
+          {/* Text */}
+          <div className="text-2xl sm:text-4xl font-bold flex flex-wrap justify-center gap-2 leading-tight">
+            <span className="text-[#3abbf5]">Unlock</span>
+            <span className="text-[#15191e]">Your Path to Excellence</span>
+          </div>
 
-  </div>
+        </div>
 
-      <div className="text-center font-semibold mt-8 px-4">
-  <span className="text-2xl sm:text-3xl text-[#fefeff] leading-snug">
-    With Hybrid Test Series and Mentorship.
-  </span>
-</div>
+        <div className="text-center font-semibold mt-8 px-4">
+          <span className="text-2xl sm:text-3xl text-[#fefeff] leading-snug">
+            With Hybrid Test Series and Mentorship.
+          </span>
+        </div>
 
-<div className="text-center mt-3 px-4">
-  <span className="text-lg sm:text-xl text-[#fefeff] leading-snug">
-    Learn from Experts and Enhance Your Preparation.
-  </span>
-</div>
+        <div className="text-center mt-3 px-4">
+          <span className="text-lg sm:text-xl text-[#fefeff] leading-snug">
+            Learn from Experts and Enhance Your Preparation.
+          </span>
+        </div>
 
-      <SmallMediaSlider
+        <SmallMediaSlider
 
-      images={achievementImages}
+          images={achievementImages}
 
-/>
+        />
 
 
 
-      {/* 📌 Section Title */}
-<div className="mt-20 text-center">
-  <h2 className="text-3xl sm:text-5xl font-semibold text-white">Chapter Wise PYQs</h2>
-</div>
+        {/* 📌 Section Title */}
+        <div className="mt-20 text-center">
+          <h2 className="text-3xl sm:text-5xl font-semibold text-white">Chapter Wise PYQs</h2>
+        </div>
 
-{/* 📌 Buttons Grid */}
-<div className="mt-6 flex justify-center">
-  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-4 py-6 max-w-5xl">
+        {/* 📌 Buttons Grid */}
+        <div className="mt-6 flex justify-center">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-4 py-6 max-w-5xl">
 
-    {subjects.map((title) => (
-      <button
-        key={title.name}
-        onClick={() => protection(`/${title.path}`)}
-        className="
+            {subjects.map((title) => (
+              <button
+                key={title.name}
+                onClick={() => protection(`/${title.path}`)}
+                className="
           rounded-md text-lg sm:text-xl font-medium
           h-12 sm:h-14 w-full sm:w-[260px] md:w-[300px] lg:w-[320px]
           bg-[#3BBAF4] hover:bg-blue-500 text-white
           flex items-center justify-center transition p-3
         "
-      >
-        {title.name}
-      </button>
-    ))}
+              >
+                {title.name}
+              </button>
+            ))}
 
-  </div>
-</div>
+          </div>
+        </div>
 
-{/* 📌 Second Section */}
-<div className="mt-20 text-center">
-  <h2 className="text-3xl sm:text-5xl font-semibold text-white">Hybrid Material</h2>
-</div>
+        {/* 📌 Second Section */}
+        <div className="mt-20 text-center">
+          <h2 className="text-3xl sm:text-5xl font-semibold text-white">Hybrid Material</h2>
+        </div>
 
-<div className="mt-6 flex justify-center">
-  <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-4 py-6 max-w-5xl">
+        <div className="mt-6 flex justify-center">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-4 py-6 max-w-5xl">
 
-    {hybrid.map((title) => (
-      <button
-        key={title.name}
-        onClick={() => protection(`/${title.path}`)}
-        className="
+            {hybrid.map((title) => (
+              <button
+                key={title.name}
+                onClick={() => protection(`/${title.path}`)}
+                className="
           rounded-md text-lg sm:text-xl font-medium
           h-12 sm:h-14 w-full sm:w-[260px] md:w-[300px] lg:w-[320px]
           bg-[#42BA96] hover:bg-green-500 text-white
           flex items-center justify-center transition p-3
         "
-      >
-        {title.name}
-      </button>
-    ))}
+              >
+                {title.name}
+              </button>
+            ))}
 
-  </div>
-</div>
+          </div>
+        </div>
 
-          {/*Payment ka abhi kaam ka nhi h */}
-       {/*<div className="mt-10 flex justify-center text-5xl">
+        {/*Payment ka abhi kaam ka nhi h */}
+        {/*<div className="mt-10 flex justify-center text-5xl">
         <h2 className="font-semibold text-white">Our Pricing</h2>
       </div>
           
@@ -264,33 +268,33 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
         </div>
       </div> */}
 
-      <section className=" justify-center mt-30 text-white">
-        <h1 className="text-center text-5xl font-bold mb-10">Frequently Asked Questions</h1>
+        <section className=" justify-center mt-30 text-white">
+          <h1 className="text-center text-5xl font-bold mb-10">Frequently Asked Questions</h1>
 
-        <div className="max-w-4xl mx-auto space-y-4">
-          {faqs.map((item, i) => (
-            <div key={i} className="bg-[#2A2F36] rounded-lg overflow-hidden cursor-pointer"
+          <div className="max-w-4xl mx-auto space-y-4">
+            {faqs.map((item, i) => (
+              <div key={i} className="bg-[#2A2F36] rounded-lg overflow-hidden cursor-pointer"
                 onClick={() => handleToggle(i)}>
-              <div className="p-5 text-lg font-medium flex justify-between items-center">
-                {item.question}
-                <span className="text-xl">{openIndex === i ? "−" : "+"}</span>
-              </div>
-
-              {openIndex === i && (
-                <div className="px-5 pb-5 text-gray-300 text-sm border-t border-gray-700">
-                  {item.answer}
+                <div className="p-5 text-lg font-medium flex justify-between items-center">
+                  {item.question}
+                  <span className="text-xl">{openIndex === i ? "−" : "+"}</span>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-    </section>
-      
-    </div>
-    {showLoginModel && (
-  <LoginModal onClose={() => setshowLoginModel(false)} />
-)}
-    <Footer />
+
+                {openIndex === i && (
+                  <div className="px-5 pb-5 text-gray-300 text-sm border-t border-gray-700">
+                    {item.answer}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+      </div>
+      {showLoginModel && (
+        <LoginModal onClose={() => setshowLoginModel(false)} />
+      )}
+      <Footer />
     </>
   );
 };

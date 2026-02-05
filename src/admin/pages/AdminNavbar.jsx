@@ -32,10 +32,10 @@ export default function AdminNavbar() {
             onClick={() => navigate("/")}
           >
             Home
-          </li> 
+          </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/admin")}
           >
             Students Info
           </li>
@@ -47,9 +47,9 @@ export default function AdminNavbar() {
           </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate("/contact_us")}
+            onClick={() => navigate("/dashboard")}
           >
-            Analytics
+            Dashboard
           </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"

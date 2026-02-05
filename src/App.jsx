@@ -19,6 +19,7 @@ import AdminAttendance from "./admin/pages/AdminAttendance";
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminProtectedRoute from "./AdminProtectedRoute";
 import AttendanceCalendar from "./components/AttendanceCalendar";
 import MainsPYQ from "./pages/MainsQuestions";
 
@@ -33,13 +34,15 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/navbar" element={<Navbar />} />
-
         <Route path="/hybrid" element={<Hybrid />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/attendance" element={<AdminAttendance />} />
-        <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
-        <Route path="/admin/attendance" element={<AdminAttendance />} />
-        
+
+        {/* Admin-only routes - protected by AdminProtectedRoute */}
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/attendance" element={<AdminAttendance />} />
+          <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
+        </Route>
+
 
         {/* some protected routes jo bina login kai nhi khulengai */}
 
@@ -50,13 +53,11 @@ function App() {
           <Route path="/jeemains/chemistry" element={<Chemistry />} />
           <Route path="/jeemains/maths" element={<Maths />} />
           <Route path="/jeemains/physics" element={<Physics />} />
-          <Route path="/jeemains/:subject/:chapter/:questionId" element={<SingleQuestion />} />    
+          <Route path="/jeemains/:subject/:chapter/:questionId" element={<SingleQuestion />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
           <Route path="/dpp/:id" element={<DppResult />} />
-          <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
-          <Route path = "/jeemains/:subject/:chapter" element={<MainsPYQ />} />
-
+          <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
         </Route>
 
       </Routes>
