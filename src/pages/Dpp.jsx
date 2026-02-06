@@ -61,7 +61,7 @@ export default function Dpp() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl md:text-2xl text-blue-200 text-center mb-8"
           >
-            Daily Dose to Boost Rank
+            This feature is under Construction
           </motion.p>
 
           {/* Description cards */}
