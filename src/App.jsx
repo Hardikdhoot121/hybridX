@@ -12,7 +12,9 @@ import SingleQuestion from "./pages/MainsPYQ";
 import Maths from "./pages/mathematicsmains";
 import Dashboard from "./pages/dashboard";
 import DppResult from "./pages/dppResult";
+import Dpp from "./pages/Dpp";
 import Hybrid from "./pages/hybrid";
+import JeeAdv from "./pages/JeeAdv";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
 import AdminAttendance from "./admin/pages/AdminAttendance";
@@ -56,7 +58,9 @@ function App() {
           <Route path="/jeemains/:subject/:chapter/:questionId" element={<SingleQuestion />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/attendance-calendar" element={<AttendanceCalendar />} />
+          <Route path="/dpp" element={<Dpp />} />
           <Route path="/dpp/:id" element={<DppResult />} />
+          <Route path="/jeeadv" element={<JeeAdv />} />
           <Route path="/jeemains/:subject/:chapter" element={<MainsPYQ />} />
         </Route>
 
