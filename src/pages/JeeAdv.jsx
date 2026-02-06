@@ -61,7 +61,7 @@ export default function JeeAdv() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-xl md:text-2xl text-blue-200 text-center mb-8"
           >
-            Previous Year Questions with Real-time Analysis
+            This feature is under Construction  
           </motion.p>
 
           {/* Description cards */}
