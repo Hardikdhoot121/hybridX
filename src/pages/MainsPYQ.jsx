@@ -6,6 +6,7 @@ import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import MathRenderer from "./mathrender";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://hybridx-uhj9.onrender.com/api';
 
@@ -16,6 +17,7 @@ function SingleQuestion() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showResult, setShowResult] = useState(false);
   const [integerAnswer, setIntegerAnswer] = useState("");
+  const [typedAnswer, setTypedAnswer] = useState("");
 
   /* ---------------- CLEANERS ---------------- */
   const cleanHTML = (html) => {
@@ -156,11 +158,11 @@ useEffect(() => {
           {/* Header */}
 <div className="flex justify-between text-slate-400 mb-4">
   {/* This replaces currIndex + 1 */}
-  <p>Question {currIndex} / {questions.length}</p>
+  <p>Question {currIndex + 1} / {questions.length}</p>
   <p>{subject.toUpperCase()}</p>
 </div>
           <div className="text-lg font-medium">
-            {renderQuestion(fixLatex(cleanHTML(currVal.question)))}
+            <MathRenderer content={currVal.question}></MathRenderer>
           </div>
 
           {currVal.question_type === "mcq" && (
@@ -176,13 +178,51 @@ useEffect(() => {
                 }
                 return (
                   <button key={i} onClick={() => setSelectedOption(i)} disabled={showResult} className={`${bg} ${border} rounded-xl p-4 text-left`}>
-                    {renderQuestion(fixLatex(cleanHTML(opt.content)))}
+                    <MathRenderer content={opt.content}></MathRenderer>
+                    
                   </button>
                 );
               })}
             </div>
           )}
-        </div>
+          {currVal.question_type === "integer" && (
+            <div className="mt-6 flex gap-4 items-center">
+
+              <input
+                type="number"
+                value={typedAnswer}
+                onChange={(e) => setTypedAnswer(e.target.value)}
+                disabled={showResult}
+                placeholder="Enter answer"
+                className="bg-[#1F252B] border border-white/20 rounded-xl px-4 py-2 w-40"
+              />
+
+              <button
+                onClick={() => setShowResult(true)}
+                disabled={!typedAnswer}
+                className="bg-blue-600 px-4 py-2 rounded-xl"
+              >
+                Submit
+              </button>
+
+              {showResult && (
+                <span
+                  className={
+                    Number(typedAnswer) === Number(currVal.answer)
+                      ? "text-green-400"
+                      : "text-red-400"
+                  }
+                >
+                  {Number(typedAnswer) === Number(currVal.answer)
+                    ? "Correct ✓"
+                    : `Wrong ✗ (Ans: ${currVal.answer})`}
+                </span>
+              )}
+
+            </div>
+            
+          )}
+          </div>
 
         {/* Options grid ends here */}
 
@@ -194,9 +234,9 @@ useEffect(() => {
       <h3 className="text-[#3DBBF4] font-bold text-lg">Solution</h3>
     </div>
     <div className="text-slate-200 leading-relaxed bg-[#1F252B] p-5 rounded-xl border border-white/5">
-      {renderQuestion(
-        fixLatex(cleanHTML(solutionText))
-      )}
+      
+      <MathRenderer content={solutionText}></MathRenderer>
+      
     </div>
   </div>
 )}
