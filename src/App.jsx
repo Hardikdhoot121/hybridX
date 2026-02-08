@@ -24,6 +24,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminProtectedRoute from "./AdminProtectedRoute";
 import AttendanceCalendar from "./components/AttendanceCalendar";
 import MainsPYQ from "./pages/MainsQuestions";
+import ScrollToHash from "./pages/scrolltohash";
 
 
 function App() {

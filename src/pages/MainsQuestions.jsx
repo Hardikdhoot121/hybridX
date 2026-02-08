@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
 import Data from "../jee_mains_clean.json";
-import "katex/dist/katex.min.css";
-import { BlockMath } from "react-katex";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import SingleQuestion from "./MainsPYQ";
+import MathRenderer from "./mathrender";
+
+
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://hybridx-uhj9.onrender.com/api';
 
@@ -22,17 +23,6 @@ function MainsPYQ() {
 
 
 
-  const renderQuestion = (text) => {
-    if (!text) return null;
-    const parts = text.split("$$");
-    return parts.map((part, i) =>
-      i % 2 === 0 ? (
-        <span key={i} dangerouslySetInnerHTML={{ __html: part }} />
-      ) : (
-        <BlockMath key={i} math={part} />
-      )
-    );
-  };
 
   /* ---------------- DATA LOAD ---------------- */
 
@@ -62,6 +52,7 @@ function MainsPYQ() {
 
   const currVal = data[currIndex];
   const currOptions = currVal.options;
+  
 
   const getPreviewText = (htmlText, maxLength = 120) => {
   if (!htmlText) return "";
@@ -101,24 +92,7 @@ const formatExamLabel = (slug) => {
 const capitalize = (str) =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
-const cleanQuestionHTML = (text) => {
-  if (!text) return text;
 
-  return text
-    // remove <style> blocks completely
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-
-    // remove css like .tg{border-collapse:...}
-    .replace(/\.[a-zA-Z0-9_-]+\s*\{[^}]*\}/g, "")
-
-    // remove inline style attributes
-    .replace(/style\s*=\s*["'][^"']*["']/gi, "")
-
-    // remove extra junk
-    .replace(/&nbsp;/gi, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
-};
 
   
   /* ---------------- UI ---------------- */
@@ -142,6 +116,7 @@ const cleanQuestionHTML = (text) => {
         </p>
       </div>
 
+
       {/* Question List */}
       <div className="max-w-5xl mx-auto space-y-4">
         {data.map((q, index) => (
@@ -153,20 +128,17 @@ const cleanQuestionHTML = (text) => {
             }
             className="bg-slate-800 p-5 rounded-lg hover:bg-slate-700 transition cursor-pointer"
           >
-            <div className="flex gap-3">
+            <div className="flex gap-5">
               <span className="text-blue-400 font-semibold">
                 {index + 1}.
               </span>
 
-              <div
-                className="text-slate-200"
-                dangerouslySetInnerHTML={{
-                  __html: cleanQuestionHTML(getPreviewText(q.question)),
-                }}
-              />
+            <MathRenderer content={q.question} />
+            
+              
 
               <div
-                className="text-slate-200"
+                className="text-slate-200 text-left"
                 dangerouslySetInnerHTML={{
                 __html: formatExamLabel(q.paper_id)
                 }}
