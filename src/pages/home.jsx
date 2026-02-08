@@ -15,6 +15,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import SmallMediaSlider from "./SmallMediaSlider";
 import LoginModal from "./loginModel";
+import { useRef } from "react";
 
 // images 
 import img1 from "../images/10th Achievement hybrid.jpeg";
@@ -115,16 +116,17 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
           </span>
         </div>
 
+      <div id= "achievements">
         <SmallMediaSlider
 
           images={achievementImages}
 
         />
-
+      </div>
 
 
         {/* 📌 Section Title */}
-        <div className="mt-20 text-center">
+        <div className="mt-20 text-center" id="Chapterwisepyq">
           <h2 className="text-3xl sm:text-5xl font-semibold text-white">Chapter Wise PYQs</h2>
         </div>
 
@@ -151,7 +153,7 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
         </div>
 
         {/* 📌 Second Section */}
-        <div className="mt-20 text-center">
+        <div className="mt-20 text-center" id="hybridmaterial">
           <h2 className="text-3xl sm:text-5xl font-semibold text-white">Hybrid Material</h2>
         </div>
 
@@ -268,7 +270,7 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
         </div>
       </div> */}
 
-        <section className=" justify-center mt-30 text-white">
+        <section className=" justify-center mt-30 text-white" id="faqs">
           <h1 className="text-center text-5xl font-bold mb-10">Frequently Asked Questions</h1>
 
           <div className="max-w-4xl mx-auto space-y-4">

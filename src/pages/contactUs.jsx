@@ -10,6 +10,8 @@ import img3 from "../images/Hardik.jpeg";
 import img4 from "../images/Garvit.jpeg";
 import img5 from "../images/Utkarsh.webp";
 import img6 from "../images/Paksa.jpeg";
+import img1 from "../images/VineetSir.jpeg";
+import img2 from "../images/VinaySir.jpeg";
 
 const ContactUs = () => {
 
@@ -19,8 +21,8 @@ const ContactUs = () => {
       name: "Vineet Hans",
       role: "Director",
       phone: "99503 64747",
-      email: "director@example.com",
-      img: ""
+      email: "hybrideduhub@gmail.com",
+      img: img1
     }
   ];
 
@@ -29,8 +31,8 @@ const ContactUs = () => {
       name: "Vinay Hans",
       role: "Head of Department",
       phone: "90248 84949",
-      email: "hod@example.com",
-      img: "https://via.placeholder.com/300"
+      email: "hybrideduhub@gmail.com",
+      img: img2
     }
   ];
 
@@ -108,17 +110,21 @@ const ContactUs = () => {
         <section className="mb-16 text-center">
           <h2 className="text-3xl font-semibold mb-10 text-center w-full">Leadership Team</h2>
 
-          <div className="flex flex-wrap gap-6 justify-center">
-            {director.map((d, i) => <Card key={`director-${i}`} {...d} />)}
-            {hod.map((h, i) => <Card key={`hod-${i}`} {...h} />)}
+          <div className="flex flex-wrap gap-6 justify-center " id="leaders" >
+           
+              {director.map((d, i) => <Card key={`director-${i}`} {...d} />)}
+              {hod.map((h, i) => <Card key={`hod-${i}`} {...h} />)}
           </div>
+  
         </section>
 
 
 
 
         {/* ===== Tech Team ===== */}
-        <Section title="Dev Team" data={tech} Card={Card} />
+        <div id="techteam">
+          <Section title="Dev Team" data={tech} Card={Card} />
+        </div>
 
       </div>
       <Footer />
