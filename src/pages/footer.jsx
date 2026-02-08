@@ -64,13 +64,13 @@ const Footer = () => {
             </h2>
             <nav className="mb-6 list-none space-y-2">
               <li><a className="hover:text-gray-800 cursor-pointer"
-              onClick={() => navigate(`/`)}>Our Achievements</a></li>
+              onClick={() => navigate('/#achievements')}>Our Achievements</a></li>
               <li><a className="hover:text-gray-800 cursor-pointer"
-              onClick={() => navigate(`/`)}>Chapter-Wise PYQs</a></li>
+              onClick={() => navigate(`/#chapterwisepyq`)}>Chapter-Wise PYQs</a></li>
               <li><a  className="hover:text-gray-800 cursor-pointer"
-              onClick={() => navigate(`/`)}>Hybrid Material</a></li>
+              onClick={() => navigate(`/#hybridmaterial`)}>Hybrid Material</a></li>
               <li><a className="hover:text-gray-800 cursor-pointer"
-              onClick={() => navigate(`/`)}>FAQs</a></li>
+              onClick={() => navigate(`/#faqs`)}>FAQs</a></li>
             </nav>
           </div>
 
@@ -87,7 +87,7 @@ const Footer = () => {
               <li>
                 <a
                   className="hover:text-gray-800 cursor-pointer"
-                  onClick={() => navigate(`/contact_us`)}
+                  onClick={() => navigate(`/contact_us/#leaders`)}
                 >
                   Director
                 </a>
@@ -95,7 +95,7 @@ const Footer = () => {
               <li>
                 <a
                   className="hover:text-gray-800 cursor-pointer"
-                  onClick={() => navigate(`/contact_us`)}
+                  onClick={() => navigate(`/contact_us/#leaders`)}
                 >
                   HOD
                 </a>
@@ -103,7 +103,7 @@ const Footer = () => {
               <li>
                 <a
                   className="hover:text-gray-800 cursor-pointer"
-                  onClick={() => navigate(`/contact_us`)}
+                  onClick={() => navigate(`/contact_us/#techteam`)}
                 >
                   Dev Team
                 </a>
