@@ -17,9 +17,9 @@ export default function Dpp() {
             transition={{ duration: 0.5, type: "spring" }}
             className="mb-8"
           >
-            <div className="w-32 h-32 bg-gradient-to-br from-green-500 via-blue-500 to-blue-600 rounded-full flex items-center justify-center animate-pulse shadow-2xl shadow-blue-500/50 relative overflow-hidden">
+            <div className="w-32 h-32 bg-linear-to-br from-green-500 via-blue-500 to-blue-600 rounded-full flex items-center justify-center animate-pulse shadow-2xl shadow-blue-500/50 relative overflow-hidden">
               {/* Animated background pattern */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
+              <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
               
               {/* Buffering/Loading symbol */}
               <svg
@@ -38,7 +38,7 @@ export default function Dpp() {
               </svg>
               
               {/* Glowing effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-green-400/20 to-blue-400/20 blur-xl animate-pulse"></div>
+              <div className="absolute inset-0 rounded-full bg-linear-to-t from-green-400/20 to-blue-400/20 blur-xl animate-pulse"></div>
             </div>
           </motion.div>
 
@@ -49,7 +49,7 @@ export default function Dpp() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-5xl md:text-6xl font-bold text-center mb-4"
           >
-            <span className="bg-gradient-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
               Exclusive DPPs
             </span>
           </motion.h1>
@@ -110,13 +110,13 @@ export default function Dpp() {
             className="bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-8 max-w-4xl w-full mb-8 border border-gray-700"
           >
             <h3 className="text-2xl font-bold text-white mb-6 text-center">
-              <span className="bg-gradient-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
                 Why Choose Our DPPs?
               </span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 mt-1">
                   <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                   </svg>
@@ -127,7 +127,7 @@ export default function Dpp() {
                 </div>
               </div>
               <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center shrink-0 mt-1">
                   <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                   </svg>
@@ -138,7 +138,7 @@ export default function Dpp() {
                 </div>
               </div>
               <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shrink-0 mt-1">
                   <svg className="w-3 h-3 text-gray-800" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                   </svg>
@@ -149,7 +149,7 @@ export default function Dpp() {
                 </div>
               </div>
               <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shrink-0 mt-1">
                   <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                   </svg>
@@ -169,7 +169,7 @@ export default function Dpp() {
             transition={{ duration: 0.6, delay: 1 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-green-500 via-blue-500 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+            className="bg-linear-to-r from-green-500 via-blue-500 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
           >
             Access Exclusive DPPs
           </motion.button>
@@ -188,7 +188,7 @@ export default function Dpp() {
                 transition={{ duration: 0.5, delay: 1.4 }}
                 className="inline-block"
               >
-                <span className="bg-gradient-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent text-2xl font-bold">
+                <span className="bg-linear-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent text-2xl font-bold">
                   Feature Coming Soon
                 </span>
               </motion.div>
@@ -217,7 +217,7 @@ export default function Dpp() {
                   repeat: Infinity,
                   ease: "linear"
                 }}
-                className="bg-gradient-to-r from-green-500 via-blue-500 to-blue-600 h-2 rounded-full w-full"
+                className="bg-linear-to-r from-green-500 via-blue-500 to-blue-600 h-2 rounded-full w-full"
               />
             </div>
           </motion.div>

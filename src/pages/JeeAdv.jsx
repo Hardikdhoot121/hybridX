@@ -17,9 +17,9 @@ export default function JeeAdv() {
             transition={{ duration: 0.5, type: "spring" }}
             className="mb-8"
           >
-            <div className="w-32 h-32 bg-gradient-to-br from-green-500 via-blue-500 to-blue-600 rounded-full flex items-center justify-center animate-pulse shadow-2xl shadow-blue-500/50 relative overflow-hidden">
+            <div className="w-32 h-32 bg-linear-to-br from-green-500 via-blue-500 to-blue-600 rounded-full flex items-center justify-center animate-pulse shadow-2xl shadow-blue-500/50 relative overflow-hidden">
               {/* Animated background pattern */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
+              <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
               
               {/* Buffering/Loading symbol */}
               <svg
@@ -38,7 +38,7 @@ export default function JeeAdv() {
               </svg>
               
               {/* Glowing effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-t from-green-400/20 to-blue-400/20 blur-xl animate-pulse"></div>
+              <div className="absolute inset-0 rounded-full bg-linear-to-t from-green-400/20 to-blue-400/20 blur-xl animate-pulse"></div>
             </div>
           </motion.div>
 
@@ -49,7 +49,7 @@ export default function JeeAdv() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-5xl md:text-6xl font-bold text-center mb-4"
           >
-            <span className="bg-gradient-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent">
               JEE Advanced PYQs
             </span>
           </motion.h1>
@@ -114,7 +114,7 @@ export default function JeeAdv() {
             transition={{ duration: 0.6, delay: 0.8 }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-green-500 via-blue-500 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+            className="bg-linear-to-r from-green-500 via-blue-500 to-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
           >
             Access PYQs & Analysis
           </motion.button>
@@ -133,7 +133,7 @@ export default function JeeAdv() {
                 transition={{ duration: 0.5, delay: 1.2 }}
                 className="inline-block"
               >
-                <span className="bg-gradient-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent text-2xl font-bold">
+                <span className="bg-linear-to-r from-green-400 via-blue-400 to-white bg-clip-text text-transparent text-2xl font-bold">
                   Feature Coming Soon
                 </span>
               </motion.div>
@@ -162,7 +162,7 @@ export default function JeeAdv() {
                   repeat: Infinity,
                   ease: "linear"
                 }}
-                className="bg-gradient-to-r from-green-500 via-blue-500 to-blue-600 h-2 rounded-full w-full"
+                className="bg-linear-to-r from-green-500 via-blue-500 to-blue-600 h-2 rounded-full w-full"
               />
             </div>
           </motion.div>
