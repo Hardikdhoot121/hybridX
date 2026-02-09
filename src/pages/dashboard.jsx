@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, Edit2, Check, X, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import LogoutModal from "./LogoutModal";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
@@ -43,10 +44,19 @@ const getAuthHeaders = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login", { replace: true });
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("currentStudent");
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Even if there's an error, still redirect to login
+      navigate("/login", { replace: true });
+    }
   };
 
   /* ================= PROFILE ================= */
@@ -379,7 +389,7 @@ const Dashboard = () => {
             {/* LOGOUT */}
             <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
               <button
-                onClick={handleLogout}
+                onClick={() => setShowLogoutModal(true)}
                 className="px-5 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all font-medium"
               >
                 🚪 Logout
@@ -477,6 +487,14 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {/* LOGOUT MODAL */}
+      {showLogoutModal && (
+        <LogoutModal
+          onClose={() => setShowLogoutModal(false)}
+          onConfirm={handleLogout}
+        />
       )}
     </div>
   );
