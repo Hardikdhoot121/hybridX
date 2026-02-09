@@ -65,7 +65,7 @@ const ContactUs = () => {
       name: "Prakshit Mathur",
       role: "Website Development Member",
       phone: "98295 91055",
-      email: "prakshitmathur8@gmail.com",
+      email: "mathurprakshit8@gmail.com",
       img: img6
     },
   ];

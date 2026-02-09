@@ -20,25 +20,49 @@ function SingleQuestion() {
   const [typedAnswer, setTypedAnswer] = useState("");
 
   /* ---------------- CLEANERS ---------------- */
-  const cleanHTML = (html) => {
-    if (!html) return html;
-    return html
-      .replace(/style\s*=\s*["'][^"']*["']/gi, "")
-      .replace(/align\s*=\s*["']?(right|left|center)["']?/gi, "")
-      .replace(/<\/?table[^>]*>/gi, " ")
-      .replace(/<\/?tr[^>]*>/gi, " ")
-      .replace(/<\/?td[^>]*>/gi, " ")
-      .replace(/&nbsp;/gi, " ")
-      .replace(/\s{2,}/g, " ")
-      .trim();
-  };
 
-  const fixLatex = (text) => {
-    if (!text) return text;
-    return text
-      .replace(/\\buildrel\s*\{([^}]*)\}\s*\\over\s*\\longrightarrow/g, "\\xrightarrow{$1}")
-      .replace(/\\mathrel\s*\{\\mathop\{\\kern0pt\\longrightarrow\}\\limits_\{([^}]*)\}\^\{([^}]*)\}\}/g, "\\xrightarrow[$1]{$2}");
-  };
+const formatSlugToTitle = (slug) => {
+  if (!slug) return "";
+  return slug
+    .split("-")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+const formatExamLabel = (slug) => {
+  if (!slug) return "";
+
+  const parts = slug.toLowerCase().split("-");
+
+  const months = [
+    "january","february","march","april","may","june",
+    "july","august","september","october","november","december"
+  ];
+
+  const year = parts.find(p => /^\d{4}$/.test(p));
+  const day = parts.find(p => /^(?:\d{1,2})(st|nd|rd|th)$/.test(p));
+  const month = parts.find(p => months.includes(p));
+
+  const shiftIndex = parts.findIndex(p =>
+    ["morning","afternoon","evening"].includes(p)
+  );
+
+  const shift =
+    shiftIndex !== -1
+      ? `${capitalize(parts[shiftIndex])} ${capitalize(parts[shiftIndex + 1])}`
+      : "";
+
+  const exam = parts.includes("jee") && parts.includes("main")
+    ? "JEE Mains"
+    : "";
+
+  return `${shift} ${day} ${capitalize(month)} ${exam} ${year}`.trim();
+};
+
+const capitalize = (str = "") =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
+
 
   const renderQuestion = (text) => {
     if (!text) return null;
@@ -150,19 +174,29 @@ useEffect(() => {
     submitPracticeAttempt();
   };
 
+  
+
   return (
     <div className="bg-[#15191E] min-h-screen text-white px-6 py-10">
       <Navbar />
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto mt-10">
         <div className="bg-[#272E36] rounded-xl p-6">
           {/* Header */}
 <div className="flex justify-between text-slate-400 mb-4">
-  {/* This replaces currIndex + 1 */}
-  <p>Question {currIndex + 1} / {questions.length}</p>
+  <p> Question {currIndex + 1} / {questions.length}</p>
   <p>{subject.toUpperCase()}</p>
 </div>
           <div className="text-lg font-medium">
             <MathRenderer content={currVal.question}></MathRenderer>
+            <div
+                className="text-slate-200 text-sm mt-3 w-full ml-0 pl-0 text-right"
+                dangerouslySetInnerHTML={{
+                __html: formatExamLabel(currVal.paper_id)
+                }}
+            />
+
+            
+
           </div>
 
           {currVal.question_type === "mcq" && (
@@ -253,9 +287,8 @@ useEffect(() => {
           </button>
         </div>
       </div>
-      <Footer />
     </div>
   );
-}
+  }
 
 export default SingleQuestion;
