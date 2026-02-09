@@ -57,7 +57,7 @@ const ContactUs = () => {
       name: "Utkarsh Mathur",
       role: "Website Development Member",
       phone: "86962 44108",
-      email: "tech@example.com",
+      email: "utkarshmathur6456@gmail.com",
       img: img5
     },
 
@@ -65,7 +65,7 @@ const ContactUs = () => {
       name: "Prakshit Mathur",
       role: "Website Development Member",
       phone: "98295 91055",
-      email: "tech@example.com",
+      email: "mathurprakshit8@gmail.com",
       img: img6
     },
   ];
