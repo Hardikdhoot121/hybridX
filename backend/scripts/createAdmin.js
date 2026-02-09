@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import User from "../models/User.js";
 
 dotenv.config({ path: './.env' });
-
+  
 const createAdmin = async () => {
   try {
     console.log("🔍 Environment variables loaded:");
