@@ -1,150 +1,362 @@
-# HybridX - Advanced Education Platform
+# 🚀 HybridX – Full Stack MERN EdTech Platform
 
-HybridX is a comprehensive educational platform designed to bridge the gap between traditional learning and modern technology. It provides a robust interface for students to access study materials, track their progress, and for administrators to manage attendance and student performance.
+HybridX is a production-ready MERN stack educational platform built to help students prepare for competitive exams like JEE Mains through structured practice, analytics tracking, attendance management, and role-based dashboards.
 
-## 🚀 Features
+This project demonstrates full-stack architecture, secure authentication, production deployment, CORS handling, and real-world debugging.
 
-### Student Portal
-- **Dashboard**: A personalized dashboard displaying daily goals, attendance stats, and test performance.
-- **Study Materials**: Access to NCERT+ resources, notes, and JEE Main/Advanced practice questions.
-- **Practice & Assessment**: 
-  - **DPP (Daily Practice Problems)**: Daily assignments with result tracking.
-  - **Mock Tests**: Full-length tests for JEE Mains and Advanced.
-  - **PYQ (Previous Year Questions)**: Extensive archive of past questions.
-- **Analytics**: Detailed performance analysis with graphical representation.
+---
 
-### Admin Portal
-- **Dashboard**: Overview of student statistics and system status.
-- **Attendance Management**: Tools to mark and track student attendance (manual or QR based).
-- **Student Management**: View and edit student details, including performance history.
-- **Content Management**: Upload and manage study resources (PDFs, Videos).
+# 🌐 Live Demo
 
-## 🛠️ Technology Stack
+Frontend:  
+👉 https://hybrideducationhub.in  
 
-### Frontend
-- **React.js**: Core library for building the user interface.
-- **Vite**: Fast build tool and development server.
-- **Tailwind CSS**: Utility-first CSS framework for styling.
-- **Framer Motion**: For smooth animations and transitions.
-- **React Router DOM**: For client-side routing.
-- **Recharts**: For data visualization and analytics charts.
-- **PDF.js / React-PDF**: For rendering PDF documents directly in the browser.
+Backend API:  
+👉 https://hybridx-uhj9.onrender.com/api  
 
-### Backend
-- **Node.js & Express**: Server-side runtime and framework.
-- **MongoDB & Mongoose**: NoSQL database for flexible data storage.
-- **JWT (JSON Web Token)**: Secure authentication and authorization.
-- **Bcrypt**: Password hashing for security.
-- **Cors**: Cross-Origin Resource Sharing configuration.
+---
 
-## 📂 Project Structure
+# 📌 Features
 
-```bash
-HybridX/
-├── backend/                 # Backend server code
-│   ├── config/              # Database configuration (db.js)
-│   ├── controllers/         # Request handlers (auth, attendance, analytics)
-│   ├── models/              # Mongoose schemas (User, Student, etc.)
-│   ├── routes/              # API routes definition
-│   └── server.js            # Entry point for backend
-├── src/                     # Frontend source code
-│   ├── admin/               # Admin-specific components and pages
-│   ├── assets/              # Static assets (images, icons)
-│   ├── components/          # Reusable UI components
-│   ├── data/                # Static data (sampleData.js)
-│   ├── pages/               # Main application pages (Home, Login, Dashboard)
-│   ├── protectingRoute/     # Route protection logic
-│   ├── App.jsx              # Main application component & Routing
-│   └── main.jsx             # Entry point for React
-├── public/                  # Public assets
-└── README.md                # Project documentation
+## 🔐 Authentication & Authorization
+- JWT-based authentication  
+- Secure password hashing using bcrypt  
+- Role-based access control (Admin / Student)  
+- Protected routes  
+- Token-based session management  
+
+## 📊 Student Dashboard
+- Weekly goal tracking  
+- Performance analytics  
+- Practice progress monitoring  
+- Attendance tracking  
+- LocalStorage-based state persistence  
+
+## 📚 Practice System
+- Chapter-wise filtering  
+- MCQ and numerical question types  
+- Real-time attempt recording  
+- Analytics updates on submission  
+- Clean question navigation UI  
+
+## 🛠 Admin Panel
+- Student management  
+- Role-based access middleware  
+- Attendance overview  
+- Analytics monitoring  
+
+## 📈 Analytics Engine
+- Weekly stats tracking  
+- Practice attempt logging  
+- Goal-based performance visualization  
+- Dashboard refresh event handling  
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+- React (Vite)  
+- React Router DOM  
+- Tailwind CSS  
+- React Toastify  
+- Fetch API  
+- Environment-based configuration  
+
+## Backend
+- Node.js  
+- Express.js  
+- MongoDB Atlas  
+- Mongoose  
+- JWT Authentication  
+- Bcrypt  
+- CORS Middleware  
+
+## Deployment
+- Frontend: Vercel  
+- Backend: Render  
+- Database: MongoDB Atlas  
+- Media Hosting: Cloudinary  
+- Custom Domain: hybrideducationhub.in  
+
+---
+
+# 🏗 Architecture
+
+HybridX follows a clean MVC-based backend architecture.
+
+## Backend Structure
+
+```
+backend/
+│
+├── config/
+│   └── db.js
+│
+├── controllers/
+│   ├── authController.js
+│   ├── analyticsController.js
+│   └── attendanceController.js
+│
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── roleMiddleware.js
+│   └── isAdmin.js
+│
+├── models/
+│   ├── User.js
+│   ├── Attendance.js
+│   ├── PracticeAttempt.js
+│   └── WeeklyGoal.js
+│
+├── routes/
+│   ├── authRoutes.js
+│   ├── userRoutes.js
+│   ├── adminRoutes.js
+│   ├── analyticsRoutes.js
+│   ├── practiceRoutes.js
+│   └── attendanceRoutes.js
+│
+└── server.js
 ```
 
-## 🚦 Routing & Navigation
+### Design Principles Used
+- Separation of concerns  
+- Modular routing  
+- Middleware-based authorization  
+- Environment-specific configuration  
+- Centralized error handling  
+- Secure token generation  
 
-The application uses `react-router-dom` for handling navigation. Routes are split into three main categories:
+---
 
-### 1. Public Routes
-Accessible to everyone without login.
-- `/` - **Home**: Landing page of the website.
-- `/login` - **Login**: User authentication page.
-- `/signup` - **Signup**: User registration page.
-- `/contact_us` - **Contact Us**: Support and inquiry page.
-- `/pyq` - **PYQ**: Previous Year Questions preview.
+# 🔁 API Endpoints
 
-### 2. Student Protected Routes
-Requires valid student authentication.
-- `/dashboard` - **Student Dashboard**: Main hub for students.
-- `/jeemains` - **JEE Mains Section**: Subject-wise practice.
-- `/jeemains/:subject/:chapter` - **Chapter Questions**.
-- `/ncert+` - **NCERT+**: Advanced NCERT resources.
-- `/notes` - **Notes**: Study notes section.
-- `/dpp` - **DPP**: Daily Practice Problems.
-- `/attendance-calendar` - **Attendance**: detailed view.
+All routes are prefixed with:
 
-### 3. Admin Protected Routes
-Requires admin privileges.
-- `/admin` - **Admin Dashboard**: Administrator overview.
-- `/admin/attendance` - **Attendance Manager**: Mark/View attendance.
-- `/admin/student/:_id` - **Student Details**: Detailed view of a specific student.
-
-## ⚙️ Installation & Setup
-
-Follow these steps to get the project running locally.
-
-### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB (Local or Atlas URL)
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/your-username/hybridx.git
-cd hybridx
+```
+/api
 ```
 
-### 2. Frontend Setup
-```bash
-# Install dependencies
-npm install
+### Example Routes
 
-# Start development server
-npm run dev
 ```
-The frontend will run on `http://localhost:5173`.
+POST   /api/auth/signup  
+POST   /api/auth/login  
+GET    /api/users/profile  
+GET    /api/analytics/weekly  
+POST   /api/practice/attempt  
+GET    /api/attendance  
+```
 
-### 3. Backend Setup
+---
+
+# ⚙️ Local Development Setup
+
+## 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/Hardikdhoot121/hybridX.git
+cd hybridX
+```
+
+---
+
+## 2️⃣ Backend Setup
+
 ```bash
 cd backend
-
-# Install dependencies
 npm install
-
-# Create .env file
-# Add: PORT=5000, MONGO_URI=your_mongo_url, JWT_SECRET=your_secret
-
-# Start server
-npm run dev # or node server.js
 ```
-The backend will run on `http://localhost:5000`.
 
-## 🔐 Environment Variables
+Create a `.env` file inside `backend`:
 
-Create a `.env` file in the `backend` directory with the following:
-
-```env
+```
 PORT=5000
-MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/hybridx
-JWT_SECRET=your_super_secret_key_123
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+NODE_ENV=development
 ```
 
-## 🤝 Contributing
+Run backend:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+```bash
+npm run dev
+```
 
-## 📄 License
+Backend runs at:
 
-Distributed under the MIT License. See `LICENSE` for more information.
+```
+http://localhost:5000
+```
+
+---
+
+## 3️⃣ Frontend Setup
+
+```bash
+cd ..
+npm install
+```
+
+Create `.env.development` in root:
+
+```
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+Run frontend:
+
+```bash
+npm run dev
+```
+
+Frontend runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+# 🌍 Production Configuration
+
+## Frontend (.env.production)
+
+```
+VITE_API_BASE_URL=https://hybridx-uhj9.onrender.com/api
+```
+
+## Backend CORS Setup
+
+```javascript
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://hybrideducationhub.in"
+  ],
+  credentials: true
+}));
+```
+
+---
+
+# 📸 Screenshots
+
+Create a folder named `screenshots` and add images:
+
+```
+screenshots/
+├── login.png
+├── dashboard.png
+├── practice.png
+├── admin.png
+└── analytics.png
+```
+
+Then add:
+
+```markdown
+## Login Page
+![Login](./screenshots/login.png)
+
+## Dashboard
+![Dashboard](./screenshots/dashboard.png)
+
+## Practice Interface
+![Practice](./screenshots/practice.png)
+
+## Admin Panel
+![Admin](./screenshots/admin.png)
+
+## Analytics Section
+![Analytics](./screenshots/analytics.png)
+```
+
+---
+
+# 🚧 Problems Faced & Solutions
+
+## 1️⃣ CORS Policy Error
+**Issue:** Frontend was blocked while calling backend API.  
+**Solution:** Configured proper CORS in `server.js` allowing both localhost and production domain.
+
+---
+
+## 2️⃣ 500 Internal Server Error During Login
+**Issue:** Unexpected JSON parsing error.  
+**Cause:** `JWT_SECRET` missing in `.env`.  
+**Solution:** Added proper environment variables.
+
+---
+
+## 3️⃣ Production vs Local API Conflict
+**Issue:** Backend working in production but not locally.  
+**Solution:** Implemented environment-based configuration using:
+- `.env.development`
+- `.env.production`
+
+---
+
+## 4️⃣ Cloudinary 401 Image Error
+**Issue:** Images failed to load with 401 error.  
+**Solution:** Corrected public asset URLs and verified Cloudinary access settings.
+
+---
+
+## 5️⃣ Git Non-Fast-Forward Push Error
+**Issue:** Push rejected due to remote branch being ahead.  
+**Solution:**
+
+```bash
+git pull
+git push
+```
+
+---
+
+# 🔐 Environment Variables
+
+## Backend
+- PORT  
+- MONGO_URI  
+- JWT_SECRET  
+- NODE_ENV  
+
+## Frontend
+- VITE_API_BASE_URL  
+
+---
+
+# 📈 Future Improvements
+- Payment gateway integration  
+- AI-based performance recommendations  
+- Real-time WebSocket analytics  
+- Leaderboard system  
+- Progressive Web App (PWA)  
+- Mobile application version  
+
+---
+
+# 🧠 What This Project Demonstrates
+- Full-stack MERN development  
+- Production deployment experience  
+- Authentication & authorization  
+- CORS handling  
+- Environment configuration management  
+- Real-world debugging  
+- Secure REST API design  
+- Clean scalable architecture  
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+# 👨‍💻 Author
+
+Hardik Dhoot  
+Full Stack MERN Developer  
