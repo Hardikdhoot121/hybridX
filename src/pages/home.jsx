@@ -22,7 +22,7 @@ import img1 from "../images/10th Achievement hybrid.jpeg";
 import img2 from "../images/NEET.jpeg";
 import img3 from "../images/JEE.jpeg";
 import img4 from "../images/RBSE.jpeg";
-
+import img5 from "../images/mains_2026.jpeg";
 
 const Home = ({ images = [], videos = [], instagram = [] }) => {
 
@@ -30,7 +30,8 @@ const Home = ({ images = [], videos = [], instagram = [] }) => {
     img1,
     img2,
     img3,
-    img4
+    img4,
+    img5,
   ];
   const navigate = useNavigate();
   const [showLoginModel, setshowLoginModel] = useState(false);
