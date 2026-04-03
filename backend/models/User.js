@@ -17,7 +17,23 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: true,
+      required: false, // optional — Google users won't have a password
+    },
+
+    googleId: {
+      type: String,
+      default: null,
+    },
+
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+
+    isProfileComplete: {
+      type: Boolean,
+      default: false,
     },
 
     role: {
@@ -25,13 +41,15 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "admin"],
       default: "student",
     },
-    phone:{
-      type:String,
-      default:"",
+
+    phone: {
+      type: String,
+      default: "",
     },
+
     classLevel: {
       type: String,
-      enum: ["9th","10th","11th", "12th", "Dropper"],
+      enum: ["9th", "10th", "11th", "12th", "Dropper"],
       default: "12th",
     },
 

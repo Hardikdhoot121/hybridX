@@ -73,7 +73,6 @@ function PYQ() {
       },
       body: JSON.stringify({
         questionId: currVal.question_id,          // from JSON
-        questionId: currVal.question_id,          // ✅ from JSON
         subject: currVal.subject,                 // physics / chemistry / maths
         topic: currVal.topic || currVal.chapter,  // fallback
         difficulty: "Medium",                     // static for now

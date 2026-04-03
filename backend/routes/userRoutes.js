@@ -76,4 +76,47 @@ router.put("/profile", protect, async (req, res) => {
     });
   }
 });
-export default router;
+/**
+ * =========================
+ * COMPLETE PROFILE (Google OAuth new users)
+ * PATCH /api/users/complete-profile
+ * =========================
+ */
+router.patch("/complete-profile", protect, async (req, res) => {
+  try {
+    const { phone, classLevel, batch, targetYear } = req.body;
+
+    if (!phone || !classLevel || !batch) {
+      return res.status(400).json({
+        success: false,
+        message: "phone, classLevel and batch are required",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        phone,
+        classLevel,
+        batch,
+        ...(targetYear && { targetYear }),
+        isProfileComplete: true,
+      },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    res.json({
+      success: true,
+      message: "Profile completed successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to complete profile",
+      error: error.message,
+    });
+  }
+});
+
+export default router;

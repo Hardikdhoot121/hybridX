@@ -25,6 +25,8 @@ import AdminProtectedRoute from "./AdminProtectedRoute";
 import AttendanceCalendar from "./components/AttendanceCalendar";
 import MainsPYQ from "./pages/MainsQuestions";
 import ScrollToHash from "./pages/scrolltohash";
+import AuthSuccess from "./pages/AuthSuccess";
+import CompleteProfile from "./pages/CompleteProfile";
 
 
 function App() {
@@ -32,6 +34,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/auth/success" element={<AuthSuccess />} />
+        <Route path="/complete-profile" element={<CompleteProfile />} />
         <Route path="/contact_us" element={<ContactUs />} />
         <Route path="/pyq" element={<PYQ />} />
         <Route path="/login" element={<Login />} />

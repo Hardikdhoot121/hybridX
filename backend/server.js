@@ -1,10 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import passport from "passport";
+import { initPassport } from "./config/passport.js";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 
 dotenv.config();
+initPassport(); // must run after dotenv.config() so env vars are available
 
 const app = express();
 
@@ -24,14 +27,15 @@ app.use(cors({
     }
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 /* 🔥 IMPORTANT: handle preflight */
-app.options("*", cors());
+app.options("{*id}", cors());
 
 app.use(express.json());
+app.use(passport.initialize()); // stateless — no session needed (we use JWT)
 app.use("/api", routes);
 
 app.get("/ping", (req, res) => {
