@@ -141,7 +141,12 @@ const Footer = () => {
       {/* Bottom Bar */}
       <div className="bg-gray-100 py-4">
         <p className="text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} Hybrid Education Hub. All rights reserved.
+          © {new Date().getFullYear()} Hybrid Education Hub. All rights reserved. 
+        </p>
+        <p className="text-center text-sm text-gray-500 mt-2 space-x-4">
+          <span className="cursor-pointer hover:text-gray-800" onClick={() => navigate('/privacy-policy')}>Privacy Policy</span>
+          <span>|</span>
+          <span className="cursor-pointer hover:text-gray-800" onClick={() => navigate('/terms-of-service')}>Terms of Service</span>
         </p>
       </div>
     </footer>

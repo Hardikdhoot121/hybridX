@@ -27,6 +27,8 @@ import MainsPYQ from "./pages/MainsQuestions";
 import ScrollToHash from "./pages/scrolltohash";
 import AuthSuccess from "./pages/AuthSuccess";
 import CompleteProfile from "./pages/CompleteProfile";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
         <Route path="/auth/success" element={<AuthSuccess />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />
         <Route path="/contact_us" element={<ContactUs />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/pyq" element={<PYQ />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
