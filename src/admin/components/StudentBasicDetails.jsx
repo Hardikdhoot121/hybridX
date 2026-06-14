@@ -12,8 +12,15 @@ const StudentBasicDetails = () => {
 
   useEffect(() => {
     const fetchStudent = async () => {
+      const token = localStorage.getItem('token');
       const res = await axios.get(
-        `https://hybridx-uhj9.onrender.com/api/admin/student/${_id}`
+        `https://hybridx-uhj9.onrender.com/api/admin/student/${_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          // bearer token addition to this page 
+        }
       );
       setStudent(res.data);
     };
