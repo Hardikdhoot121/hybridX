@@ -9,8 +9,16 @@ const StudentsTable = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       const { data } = await axios.get(
-        "https://hybridx-uhj9.onrender.com/api/admin/students"
+        "https://hybridx-uhj9.onrender.com/api/admin/students",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          // bearer token addition 
+        }
       );
+
+      // bug is that authourization token nhi bheja hua idhar
       setStudents(data);
     };
     fetchStudents();
