@@ -8,6 +8,7 @@ const StudentsTable = () => {
 
   useEffect(() => {
     const fetchStudents = async () => {
+      const token = localStorage.getItem('token');
       const { data } = await axios.get(
         "https://hybridx-uhj9.onrender.com/api/admin/students",
         {
