@@ -34,7 +34,7 @@ router.get(
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     const isNewUser = !user.isProfileComplete;

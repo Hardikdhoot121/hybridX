@@ -1,17 +1,20 @@
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 import express from "express";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 import cors from "cors";
 import passport from "passport";
 import { initPassport } from "./config/passport.js";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
 
-dotenv.config();
+dotenv.config({ path: fileURLToPath(new URL('.env', import.meta.url)) });
 initPassport(); // must run after dotenv.config() so env vars are available
 
 const app = express();
 
-/* 🔥 CORS FIX (PRODUCTION SAFE) */
+/* CORS FIX (PRODUCTION SAFE) */
 app.use(cors({
   origin: (origin, callback) => {
     const allowedOrigins = [

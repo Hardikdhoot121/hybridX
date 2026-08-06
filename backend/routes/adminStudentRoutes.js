@@ -13,4 +13,4 @@ router.get("/student/:id", async (req, res) => {
   res.json(student);
 });
 
-export default router;   // ✅ THIS LINE IS REQUIRED
+export default router;   

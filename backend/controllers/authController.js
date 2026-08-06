@@ -2,7 +2,7 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-// ================= SIGNUP =================
+// 1. Signup
 export const signup = async (req, res) => {
   try {
     const { name, email, password, phone,classLevel,batch,targetYear } = req.body;
@@ -53,7 +53,7 @@ export const signup = async (req, res) => {
   }
 };
 
-// ================= LOGIN =================
+// 2. login 
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -100,7 +100,7 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "1d" }
     );
 
     return res.status(200).json({
