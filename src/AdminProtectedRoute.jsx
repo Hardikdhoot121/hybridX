@@ -1,20 +1,25 @@
+// // Decode JWT payload (Signature can't be tampered by user! rather than using user.role)
 import { Navigate, Outlet } from "react-router-dom";
 
 export default function AdminProtectedRoute() {
-    const isLoggedIn = !!localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const isAdmin = user.role === "admin";
+    const token = localStorage.getItem("token");
 
-    // Not logged in - redirect to login
-    if (!isLoggedIn) {
+    if (!token) {
         return <Navigate to="/login" replace />;
     }
 
-    // Logged in but not admin - redirect to user dashboard
-    if (!isAdmin) {
-        return <Navigate to="/dashboard" replace />;
-    }
+    try {
+        
+        const isLoggedIn = !!localStorage.getItem("token");
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const isAdmin = payload.role === "admin";
 
-    // Admin user - allow access
-    return <Outlet />;
+        if (!isAdmin) {
+            return <Navigate to="/dashboard" replace />;
+        }
+
+        return <Outlet />;
+    } catch (e) {
+        return <Navigate to="/login" replace />;
+    }
 }
