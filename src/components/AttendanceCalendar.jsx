@@ -52,10 +52,12 @@ const AttendanceCalendar = () => {
           return;
         }
 
-        const studentId = user._id;         // MongoDB ObjectId string (e.g. "64abc123...")
-        const classLevel = user.classLevel;  // "11th" or "12th"
+        // authController sends { id, name, classLevel, role, ... }
+        // 'id' = MongoDB ObjectId (user._id on server side)
+        const studentId = user.id;
+        const classLevel = user.classLevel;
 
-        // _id missing means old session data or corrupted object - cannot query backend
+        // id missing means session is from old format or corrupted - cannot query backend
         if (!studentId || !classLevel) {
           if (isMounted) setCurrentStudent(null);
           return;
@@ -92,7 +94,7 @@ const AttendanceCalendar = () => {
 
       // Re-fetch from backend to get latest data
       const data = await attendanceService.getStudentAttendance(
-        currentStudent._id,
+        currentStudent.id,
         currentStudent.classLevel
       );
       setAttendanceData(data);
