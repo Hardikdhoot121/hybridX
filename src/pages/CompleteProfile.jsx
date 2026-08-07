@@ -45,7 +45,7 @@ function CompleteProfile() {
         localStorage.setItem("user", JSON.stringify(result.user));
         localStorage.setItem("currentStudent", JSON.stringify(result.user));
 
-        handleSuccess("Profile complete! Welcome to HybridX 🎉");
+        handleSuccess("Profile complete! Welcome to Hybrid Education Hub 🎉");
         setTimeout(() => navigate("/dashboard"), 1000);
       } else {
         handleError(result.message || "Something went wrong");
