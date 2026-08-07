@@ -5,7 +5,7 @@ import User from '../models/User.js';
 export const saveAttendance = async (req, res) => {
   try {
     const { date, classLevel, attendanceRecord } = req.body;
-    
+
     // Validate required fields
     if (!date || !classLevel || !attendanceRecord) {
       return res.status(400).json({
@@ -22,9 +22,9 @@ export const saveAttendance = async (req, res) => {
 
     // Create or update attendance record
     const attendance = await Attendance.findOneAndUpdate(
-      { 
-        date: new Date(date), 
-        classLevel 
+      {
+        date: new Date(date),
+        classLevel
       },
       {
         date: new Date(date),
@@ -32,8 +32,8 @@ export const saveAttendance = async (req, res) => {
         studentRecords,
         markedBy: req.user.id
       },
-      { 
-        upsert: true, 
+      {
+        upsert: true,
         new: true,
         runValidators: true
       }
@@ -59,7 +59,7 @@ export const saveAttendance = async (req, res) => {
 export const getAttendance = async (req, res) => {
   try {
     const { date, classLevel } = req.query;
-    
+
     if (!date || !classLevel) {
       return res.status(400).json({
         success: false,
@@ -104,11 +104,19 @@ export const getAttendance = async (req, res) => {
 export const getStudentAttendance = async (req, res) => {
   try {
     const { studentId, classLevel } = req.query;
-    
+
     if (!studentId || !classLevel) {
       return res.status(400).json({
         success: false,
         message: 'StudentId and classLevel are required'
+      });
+    }
+
+    // Admin -> all students , but students only fetch their own attendance 
+    if (req.user.role !== 'admin' && req.user.id !== studentId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied: You can only view your own attendance'
       });
     }
 
@@ -118,13 +126,13 @@ export const getStudentAttendance = async (req, res) => {
     }).populate('studentRecords.studentId', 'name email');
 
     const studentAttendance = {};
-    
+
     attendanceRecords.forEach(record => {
       const dateKey = record.date.toISOString().split('T')[0]; // YYYY-MM-DD format
       const studentRecord = record.studentRecords.find(
         sr => sr.studentId._id.toString() === studentId
       );
-      
+
       if (studentRecord) {
         studentAttendance[dateKey] = studentRecord.isPresent;
       }
@@ -149,7 +157,7 @@ export const getStudentAttendance = async (req, res) => {
 export const getAttendanceStats = async (req, res) => {
   try {
     const { date, classLevel } = req.query;
-    
+
     if (!date || !classLevel) {
       return res.status(400).json({
         success: false,

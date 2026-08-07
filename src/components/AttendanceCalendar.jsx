@@ -23,10 +23,9 @@ const AttendanceCalendar = () => {
   // Logged-in student's user object (from localStorage 'user' key set at login)
   const [currentStudent, setCurrentStudent] = useState(null);
 
-  // ─────────────────────────────────────────────────────────
   // EFFECT 1: Load student identity + fetch their attendance from backend
   // Runs ONCE when component mounts (no dependencies = no re-runs on month change)
-  // ─────────────────────────────────────────────────────────
+
   useEffect(() => {
     let isMounted = true;
 
@@ -42,11 +41,21 @@ const AttendanceCalendar = () => {
           return;
         }
 
-        const user = JSON.parse(userData);
-        const studentId = user._id;       // MongoDB ObjectId (e.g. "64abc123...")
-        const classLevel = user.classLevel; // "11th" or "12th"
+        let user;
+        try {
+          user = JSON.parse(userData);
+        } catch {
+          // localStorage 'user' is corrupted then change it ...
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          if (isMounted) setCurrentStudent(null);
+          return;
+        }
 
-        // Both are required to query the correct attendance records
+        const studentId = user._id;         // MongoDB ObjectId string (e.g. "64abc123...")
+        const classLevel = user.classLevel;  // "11th" or "12th"
+
+        // _id missing means old session data or corrupted object - cannot query backend
         if (!studentId || !classLevel) {
           if (isMounted) setCurrentStudent(null);
           return;

@@ -8,6 +8,7 @@ const Attendance = () => {
   const [selectedClass, setSelectedClass] = useState('12th')
   const [attendance, setAttendance] = useState({})
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [statsData, setStatsData] = useState({ present: 0, absent: 0, total: 0, percentage: 0 })
   
   // Fetch dynamic student data from backend
   const { students: students11th, loading: loading11th, error: error11th } = use11thStudents();
@@ -30,6 +31,10 @@ const Attendance = () => {
       // GET /api/attendance?date=...&classLevel=... → load previously saved attendance
       const savedAttendance = await attendanceService.getAttendance(selectedDate, selectedClass);
       if (isMounted) setAttendance(savedAttendance);
+
+      // GET /api/attendance/stats?date=...&classLevel=... → fetch real DB stats
+      const stats = await attendanceService.getAttendanceStats(selectedDate, selectedClass);
+      if (isMounted) setStatsData(stats);
     };
     
     loadAttendance();
@@ -81,10 +86,8 @@ const Attendance = () => {
     }
   };
 
-  // Get attendance statistics
-  const presentCount = Object.values(attendance).filter(Boolean).length
-  const totalCount = currentStudents.length
-  const attendancePercentage = totalCount > 0 ? Math.round((presentCount / totalCount) * 100) : 0
+  // Stats from backend (real DB values, not in-memory count)
+  const { present: presentCount, absent: absentCount, total: totalCount, percentage: attendancePercentage } = statsData
 
   // Handle loading state
   if (loading) {
