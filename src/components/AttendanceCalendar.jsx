@@ -52,12 +52,11 @@ const AttendanceCalendar = () => {
           return;
         }
 
-        // authController sends { id, name, classLevel, role, ... }
-        // 'id' = MongoDB ObjectId (user._id on server side)
-        const studentId = user.id;
+        // Flexible ID extraction (supports both MongoDB _id and virtual id)
+        const studentId = user._id || user.id;
         const classLevel = user.classLevel;
 
-        // id missing means session is from old format or corrupted - cannot query backend
+        // Missing ID or classLevel means session object is incomplete
         if (!studentId || !classLevel) {
           if (isMounted) setCurrentStudent(null);
           return;
@@ -66,7 +65,6 @@ const AttendanceCalendar = () => {
         if (isMounted) setCurrentStudent(user);
 
         // GET /api/attendance/student?studentId=...&classLevel=...
-        // Returns: { "2026-08-01": true, "2026-08-03": false, ... }
         const data = await attendanceService.getStudentAttendance(studentId, classLevel);
         if (isMounted) setAttendanceData(data);
 
@@ -78,23 +76,18 @@ const AttendanceCalendar = () => {
 
     loadStudentData();
 
-    // Cleanup: prevent setState after component unmounts (memory leak prevention)
+    // Cleanup: prevent setState after component unmounts
     return () => { isMounted = false; };
-  }, []); // Empty array = runs only once on mount
+  }, []);
 
-  // ─────────────────────────────────────────────────────────
-  // EFFECT 2: Listen for admin marking attendance
-  // When admin saves attendance in Attendance.jsx, it fires:
-  // window.dispatchEvent(new CustomEvent('attendanceUpdated', ...))
-  // This effect catches that event and re-fetches student's calendar
-  // ─────────────────────────────────────────────────────────
   useEffect(() => {
     const handleAttendanceUpdate = async () => {
       if (!currentStudent) return;
 
+      const studentId = currentStudent._id || currentStudent.id;
       // Re-fetch from backend to get latest data
       const data = await attendanceService.getStudentAttendance(
-        currentStudent.id,
+        studentId,
         currentStudent.classLevel
       );
       setAttendanceData(data);
