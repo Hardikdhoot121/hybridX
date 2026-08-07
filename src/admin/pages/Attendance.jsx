@@ -27,17 +27,9 @@ const Attendance = () => {
     let isMounted = true;
     
     const loadAttendance = async () => {
-      console.log('📅 Loading attendance for:', { 
-        date: selectedDate.toLocaleDateString(), 
-        class: selectedClass 
-      });
-      
+      // GET /api/attendance?date=...&classLevel=... → load previously saved attendance
       const savedAttendance = await attendanceService.getAttendance(selectedDate, selectedClass);
-      
-      if (isMounted) {
-        console.log('📊 Loaded attendance:', savedAttendance);
-        setAttendance(savedAttendance);
-      }
+      if (isMounted) setAttendance(savedAttendance);
     };
     
     loadAttendance();
@@ -49,77 +41,42 @@ const Attendance = () => {
 
   // Handle checkbox change
   const handleAttendanceChange = (studentId) => {
-    console.log('🔄 Attendance toggle for student:', { 
-      studentId, 
-      studentIdType: typeof studentId, 
-      studentName: currentStudents.find(s => s._id === studentId)?.name || 'Unknown',
-      currentClass: selectedClass,
-      selectedDate: selectedDate.toDateString(),
-      currentValue: attendance[studentId],
-      newValue: !attendance[studentId]
-    });
-    
-    // Explicitly set the boolean value to ensure false is preserved
-    const newValue = !attendance[studentId];
     setAttendance(prev => ({
       ...prev,
-      [studentId]: newValue
+      [studentId]: !prev[studentId]
     }))
   }
 
-  // Handle mark all present/absent
+  // Mark ALL students present (true) or absent (false) in one click
   const handleMarkAll = (present) => {
     const newAttendance = {}
     currentStudents.forEach(student => {
-      console.log('📝 Marking attendance for student:', { 
-        studentId: student._id, 
-        studentIdType: typeof student._id, 
-        studentName: student.name, 
-        present 
-      });
       newAttendance[student._id] = present
     })
     setAttendance(newAttendance)
   }
 
   // Save attendance to storage
+  // Save attendance to MongoDB via attendanceService → POST /api/attendance/save
   const handleSaveAttendance = async () => {
-    const currentDate = selectedDate;
-    const dateKey = attendanceService.formatDateKey(currentDate);
-    
-    console.log('💾 Saving attendance for date:', dateKey);
-    console.log('📝 Attendance record to save:', attendance);
-    console.log('👥 Students being marked:', Object.keys(attendance));
-    console.log('📊 Selected class:', selectedClass);
-    
-    // Show which students are present/absent
-    const presentStudents = Object.keys(attendance).filter(id => attendance[id]);
-    const absentStudents = Object.keys(attendance).filter(id => !attendance[id]);
-    console.log('✅ Present students:', presentStudents.length, presentStudents);
-    console.log('❌ Absent students:', absentStudents.length, absentStudents);
-    
+    const dateKey = attendanceService.formatDateKey(selectedDate);
+    const presentCount = Object.values(attendance).filter(Boolean).length;
+
     try {
-      const success = await attendanceService.saveAttendance(currentDate, selectedClass, attendance);
-      
+      const success = await attendanceService.saveAttendance(selectedDate, selectedClass, attendance);
+
       if (success) {
-        console.log('✅ Attendance saved successfully for:', dateKey);
-        alert(`Attendance saved for ${dateKey}!\n${Object.values(attendance).filter(Boolean).length} students marked present`);
-        
-        // The attendance service already dispatches the event, but we can add additional notification
+        alert(`Attendance saved for ${dateKey}!\n${presentCount} students marked present`);
+
+        // Notify AttendanceCalendar component to refresh student's calendar view
         window.dispatchEvent(new CustomEvent('attendanceUpdated', {
-          detail: { 
-            date: currentDate, 
-            class: selectedClass, 
-            attendance, 
-            dateKey,
-            timestamp: new Date().toISOString()
-          }
+          detail: { date: dateKey, class: selectedClass }
         }));
       } else {
         alert('Error saving attendance. Please try again.');
       }
     } catch (error) {
-      console.error('❌ Error saving attendance:', error);
+      console.error('Error saving attendance:', error);
       alert('Error saving attendance. Please try again.');
     }
   };

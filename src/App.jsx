@@ -17,7 +17,7 @@ import Hybrid from "./pages/hybrid";
 import JeeAdv from "./pages/JeeAdv";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import AdminAllDetails from "./admin/pages/AdminAllDetails";
-import AdminAttendance from "./admin/pages/AdminAttendance";
+
 import Ncertplus from "./pages/ncert+";
 import Notes from "./pages/notes";
 import ProtectedRoute from "./ProtectedRoute";
@@ -50,7 +50,6 @@ function App() {
         {/* Admin-only routes - protected by AdminProtectedRoute */}
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/attendance" element={<AdminAttendance />} />
           <Route path="/admin/student/:_id" element={<AdminAllDetails />} />
         </Route>
 

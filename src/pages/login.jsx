@@ -10,7 +10,7 @@ function Login() {
   });
 
   const navigate = useNavigate();
-
+  // this is special type of funciton which handles change , such that even user changes email only its other data does not gets lost ... that will be preverved just like key value 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -20,10 +20,9 @@ function Login() {
     }));
   };
 
-  console.log("loginInfo ->", loginInfo);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault();// no refresh upon submission 
 
     const { email, password } = loginInfo;
     if (!email || !password) {
@@ -44,23 +43,10 @@ function Login() {
       const result = await response.json();
 
       if (result.success) {
-        // Store JWT token and user info in localStorage
         localStorage.setItem("token", result.token);
         localStorage.setItem("user", JSON.stringify(result.user));
-        localStorage.setItem("currentStudent", JSON.stringify(result.user)); // Add this for dashboard compatibility
-
-        console.log('Login successful:', { user: result.user, token: result.token });
-
-        // Dispatch student login event to notify attendance components
-        window.dispatchEvent(new CustomEvent('studentLoggedIn', {
-          detail: { student: result.user }
-        }));
-
         handleSuccess(`Welcome back, ${result.user.name}!`);
-
-        // Role-based redirect
         const redirectPath = result.user.role === "admin" ? "/admin" : "/dashboard";
-        console.log(`Redirecting ${result.user.role} to ${redirectPath}`);
         setTimeout(() => navigate(redirectPath), 1000);
       } else {
         handleError(result.message || "Login failed");
