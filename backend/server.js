@@ -8,11 +8,18 @@ import passport from "passport";
 import { initPassport } from "./config/passport.js";
 import { connectDB } from "./config/db.js";
 import routes from "./routes/index.js";
+import helmet from "helmet";
+import compression from "compression";
 
 dotenv.config({ path: fileURLToPath(new URL('.env', import.meta.url)) });
 initPassport(); // must run after dotenv.config() so env vars are available
 
+
 const app = express();
+
+// Security & Performance Middlewares
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(compression());
 
 /* CORS FIX (PRODUCTION SAFE) */
 app.use(cors({
@@ -42,7 +49,7 @@ app.use(passport.initialize()); // stateless — no session needed (we use JWT)
 app.use("/api", routes);
 
 app.get("/ping", (req, res) => {
-  res.send("Backend is alive");
+  res.status(200).send("Backend is alive");
 });
 
 const PORT = process.env.PORT || 5000;
