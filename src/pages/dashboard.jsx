@@ -9,11 +9,8 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api
 /* ================= AUTH HEADERS ================= */
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
-  console.log('🔑 Getting auth headers, token exists:', !!token);
-  console.log('🔑 Token value:', token ? token.substring(0, 50) + '...' : 'null');
 
   if (!token) {
-    console.log('❌ No token found, user might need to login again');
     return null;
   }
 
@@ -24,7 +21,6 @@ const getAuthHeaders = () => {
       const payload = JSON.parse(atob(tokenParts[1]));
       const currentTime = Date.now() / 1000;
       if (payload.exp && payload.exp < currentTime) {
-        console.log('❌ Token expired, clearing and redirecting to login');
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         localStorage.removeItem("currentStudent");
@@ -33,7 +29,7 @@ const getAuthHeaders = () => {
       }
     }
   } catch (error) {
-    console.log('❌ Token validation error:', error);
+    // Silent catch
   }
 
   return {
@@ -53,8 +49,6 @@ const Dashboard = () => {
       localStorage.removeItem("currentStudent");
       navigate("/login", { replace: true });
     } catch (error) {
-      console.error("Logout error:", error);
-      // Even if there's an error, still redirect to login
       navigate("/login", { replace: true });
     }
   };
@@ -79,71 +73,49 @@ const Dashboard = () => {
 
   /* ================= FETCH DASHBOARD (PARALLEL) ================= */
   const fetchWeeklyStats = async () => {
-    console.log('🔄 Fetching weekly stats...');
     const headers = getAuthHeaders();
     if (!headers) return;
 
     try {
       const statsRes = await fetch(`${API_BASE}/analytics/weekly`, { headers });
-      console.log('📡 Weekly stats API response status:', statsRes.status);
-
       if (statsRes.ok) {
         const statsJson = await statsRes.json();
-        console.log('✅ Weekly stats updated:', statsJson);
-        console.log('📊 Previous weeklyStats:', weeklyStats);
         setWeeklyStats(statsJson);
-        console.log('📊 New weeklyStats set:', statsJson);
-      } else {
-        console.error('❌ Failed to fetch weekly stats:', statsRes.status);
       }
     } catch (err) {
-      console.log('❌ Failed to fetch weekly stats:', err);
+      // Silent error handling
     }
   };
 
   useEffect(() => {
     const loadDashboard = async () => {
-      console.log('🚀 Starting dashboard load...');
       const headers = getAuthHeaders();
-      console.log('📋 Headers for API calls:', headers);
 
       // Try to get student data from localStorage first
       const localStudent = localStorage.getItem("currentStudent");
-      console.log('👤 Local student data exists:', !!localStudent);
       if (localStudent) {
         const student = JSON.parse(localStudent);
-        console.log('👤 Using local student data:', student);
         setProfile(student);
         setProfileDraft(student);
         setLoading(false);
       }
 
       if (!headers) {
-        console.log('❌ No headers available, skipping API calls');
         return;
       }
 
       try {
-        console.log('📡 Making parallel API calls...');
         const [profileRes, statsRes, goalRes] = await Promise.all([
           fetch(`${API_BASE}/users/profile`, { headers }),
           fetch(`${API_BASE}/analytics/weekly`, { headers }),
           fetch(`${API_BASE}/analytics/weekly-goal`, { headers }),
         ]);
 
-        console.log('📊 API Response Statuses:', {
-          profile: profileRes.status,
-          stats: statsRes.status,
-          goal: goalRes.status
-        });
-
         if (!profileRes.ok) throw new Error("Profile fetch failed");
 
         const profileJson = await profileRes.json();
         const statsJson = await statsRes.json();
         const goalJson = await goalRes.json();
-
-        console.log('✅ API Responses received:', { profileJson, statsJson, goalJson });
 
         setProfile(profileJson.user);
         setProfileDraft(profileJson.user);
@@ -152,8 +124,7 @@ const Dashboard = () => {
         setGoalInput(goalJson.target ?? 15);
 
       } catch (err) {
-        console.log('❌ Dashboard load failed (using local data only):', err);
-        // Don't show error to user since we have local data fallback
+        // Fallback to local data
       } finally {
         setLoading(false);
       }
@@ -162,75 +133,41 @@ const Dashboard = () => {
     loadDashboard();
   }, []);
 
-  /* ================= WEEKLY STATS DEBUG ================= */
-  useEffect(() => {
-    console.log('📊 weeklyStats state changed:', weeklyStats);
-    console.log('🎯 weeklyGoal state changed:', weeklyGoal);
-  }, [weeklyStats, weeklyGoal]);
-
   /* ================= STORAGE EVENT LISTENER ================= */
   useEffect(() => {
     const handleStorageChange = (e) => {
-      console.log('📡 Storage event detected:', e.key, e.newValue);
-
       if (e.key === 'dashboard-refresh-trigger') {
-        console.log('📡 Dashboard refresh trigger received:', e.newValue);
         try {
           const data = JSON.parse(e.newValue);
-          console.log('🔍 Parsed refresh trigger data:', data);
-
           if (data.type === 'correct-answer') {
-            console.log('🎯 Correct answer detected, refreshing weekly stats...');
-            console.log('📊 Stats from trigger:', data.weeklyStats);
-
-            // Option 1: Use the stats from the trigger (immediate)
             if (data.weeklyStats) {
-              console.log('⚡ Using immediate stats from trigger');
-              console.log('🔄 Previous stats:', weeklyStats);
-              console.log('📈 New stats:', data.weeklyStats);
               setWeeklyStats(data.weeklyStats);
-
-              // Force a re-render by updating the state
-              setTimeout(() => {
-                console.log('🔄 Forced re-render with new stats');
-              }, 100);
             }
-
-            // Option 2: Fetch fresh stats from API (fallback/confirmation)
             setTimeout(() => {
-              console.log('🔄 Fetching fresh stats from API as confirmation...');
               fetchWeeklyStats();
             }, 500);
           }
         } catch (err) {
-          console.log('❌ Failed to parse refresh trigger:', err);
+          // Silent catch
         }
       }
     };
 
-    // Listen for storage events (cross-tab)
     window.addEventListener('storage', handleStorageChange);
-    console.log('👂 Storage event listener attached');
 
-    // Also check for direct localStorage changes (same tab)
     const checkLocalStorage = () => {
       const trigger = localStorage.getItem('dashboard-refresh-trigger');
       if (trigger) {
-        console.log('🔍 Found trigger in localStorage:', trigger);
         handleStorageChange({ key: 'dashboard-refresh-trigger', newValue: trigger });
-        // Clear the trigger after processing
         localStorage.removeItem('dashboard-refresh-trigger');
-        console.log('🗑️ Trigger cleared from localStorage');
       }
     };
 
     const interval = setInterval(checkLocalStorage, 1000);
-    console.log('⏰ Started localStorage polling interval');
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
-      console.log('🔇 Storage event listener removed');
     };
   }, []);
 
@@ -301,19 +238,6 @@ const Dashboard = () => {
     weeklyGoal > 0
       ? Math.min(weeklyStats.correct / weeklyGoal, 1)
       : 0;
-
-  // Debug logging for wheel calculation
-  console.log('🎯 Weekly Goal Wheel Debug:', {
-    weeklyStats,
-    weeklyGoal,
-    correct: weeklyStats.correct,
-    totalSolved: weeklyStats.totalSolved,
-    accuracy: weeklyStats.accuracy,
-    progress,
-    progressPercentage: Math.round(progress * 100),
-    circumference,
-    strokeDasharray: `${progress * circumference} ${circumference}`
-  });
 
   /* ================= UI ================= */
   return (
