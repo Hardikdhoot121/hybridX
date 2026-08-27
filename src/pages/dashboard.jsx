@@ -67,8 +67,8 @@ const Dashboard = () => {
     challengesTaken: 0,
   });
 
-  const [weeklyGoal, setWeeklyGoal] = useState(15);
-  const [goalInput, setGoalInput] = useState(15);
+  const [weeklyGoal, setWeeklyGoal] = useState(30);
+  const [goalInput, setGoalInput] = useState(30);
   const [showGoalModal, setShowGoalModal] = useState(false);
 
   /* ================= FETCH DASHBOARD (PARALLEL) ================= */
@@ -120,8 +120,8 @@ const Dashboard = () => {
         setProfile(profileJson.user);
         setProfileDraft(profileJson.user);
         setWeeklyStats(statsJson);
-        setWeeklyGoal(goalJson.target ?? 15);
-        setGoalInput(goalJson.target ?? 15);
+        setWeeklyGoal(goalJson.target ?? 30);
+        setGoalInput(goalJson.target ?? 30);
 
       } catch (err) {
         // Fallback to local data
@@ -236,7 +236,7 @@ const Dashboard = () => {
   const circumference = 2 * Math.PI * radius;
   const progress =
     weeklyGoal > 0
-      ? Math.min(weeklyStats.correct / weeklyGoal, 1)
+      ? Math.min(weeklyStats.totalSolved / weeklyGoal, 1)
       : 0;
 
   /* ================= UI ================= */
@@ -359,7 +359,7 @@ const Dashboard = () => {
 
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <div className="text-4xl font-bold">
-                  {weeklyStats.correct}
+                  {weeklyStats.totalSolved}
                   <span className="text-white/50"> / {weeklyGoal}</span>
                 </div>
               </div>
