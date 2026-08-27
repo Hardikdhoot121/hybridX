@@ -9,9 +9,6 @@ export default function ProtectedRoute() {
     return <Navigate to="/login" replace />;
   }
 
-  // Google user who hasn't completed their profile yet
-  // isProfileComplete can be on the user object (fetched from /me)
-  // or it's simply absent/false for new Google signups
   if (user.isProfileComplete === false) {
     return <Navigate to="/complete-profile" replace />;
   }
