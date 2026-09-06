@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import attendanceService from '../data/attendanceService';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
 const AttendanceCalendar = () => {
+  const navigate = useNavigate();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [attendanceData, setAttendanceData] = useState({});
   const [currentStudent, setCurrentStudent] = useState(null);
@@ -150,6 +153,13 @@ const AttendanceCalendar = () => {
 
   return (
     <div className="rounded-xl bg-[#0e1628] p-6">
+      <button
+        onClick={() => navigate('/dashboard')}
+        className="flex items-center gap-2 text-gray-400 hover:text-white mb-4 text-sm font-medium transition-colors cursor-pointer"
+      >
+        <ArrowLeft size={16} /> Back to Dashboard
+      </button>
+
       <div className="flex justify-between items-center mb-4">
         <div>
           <h3 className="font-semibold text-white">Your Attendance</h3>
