@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { lazy, Suspense, useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 // Eagerly loaded critical landing & auth routes for immediate render
 import Home from "./pages/home";
@@ -8,6 +8,15 @@ import Signup from "./pages/signup";
 import AuthSuccess from "./pages/AuthSuccess";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminProtectedRoute from "./AdminProtectedRoute";
+
+// Global Top scrll feature => use effect 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
 
 // Lazy Loaded Pages & Features (Code Splitting for Production Performance)
 const ContactUs = lazy(() => import("./pages/contactUs"));
@@ -44,6 +53,7 @@ const PageLoader = () => (
 function App() {
   return (
     <Suspense fallback={<PageLoader />}>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/auth/success" element={<AuthSuccess />} />
