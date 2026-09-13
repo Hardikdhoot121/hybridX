@@ -39,7 +39,7 @@ export const getWeeklyGoal = async (req, res) => {
       goal = await WeeklyGoal.create({
         userId,
         weekStart,
-        target: 15, // default
+        target: 30, // default
       });
     }
 

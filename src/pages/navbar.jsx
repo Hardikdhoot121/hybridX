@@ -4,15 +4,21 @@ import { FiMenu, FiX } from "react-icons/fi";
 import logo from "../images/hybrid_logo.jpg";
 import { FcBusinessman } from "react-icons/fc";
 import { IoPersonCircle } from "react-icons/io5";
+import LoginModal from "./loginModel";
+
 export default function Navbar() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
 
-  // Get user role safely
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const isAdmin = user.role === "admin";
-  const dashboardPath = isAdmin ? "/dashboard" : "/dashboard";
+  const handleDashboardClick = () => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    } else {
+      setShowLoginModal(true);
+    }
+  };
 
   return (
     <>
@@ -49,7 +55,7 @@ export default function Navbar() {
           </li>
           <li
             className="px-3 py-2 rounded-md hover:bg-white hover:text-blue-600 cursor-pointer transition-all duration-200"
-            onClick={() => navigate(dashboardPath)}
+            onClick={handleDashboardClick}
           >
             Dashboard
           </li>
@@ -67,7 +73,7 @@ export default function Navbar() {
             <>
               <FcBusinessman
                 className="h-14 w-14 rounded-full bg-gray-800"
-                onClick={() => navigate(dashboardPath)}
+                onClick={handleDashboardClick}
               />
 
               {/* Tooltip */}
@@ -120,9 +126,13 @@ export default function Navbar() {
 
           <p onClick={() => { navigate("/"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Home</p>
           <p onClick={() => { window.open("https://hybrideduhub.collegedoors.com"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Tests</p>
-          <p onClick={() => { navigate(dashboardPath); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Dashboard</p>
+          <p onClick={() => { handleDashboardClick(); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Dashboard</p>
           <p onClick={() => { navigate("/contact_us"); setOpen(false); }} className="py-2 hover:text-blue-400 cursor-pointer">Contact Us</p>
         </div>
+      )}
+
+      {showLoginModal && (
+        <LoginModal onClose={() => setShowLoginModal(false)} />
       )}
     </>
   );

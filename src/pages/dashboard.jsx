@@ -198,10 +198,10 @@ const Dashboard = () => {
     await fetch(`${API_BASE}/analytics/weekly-goal`, {
       method: "POST",
       headers: getAuthHeaders(),
-      body: JSON.stringify({ target: parseInt(goalInput) || 15 }),
+      body: JSON.stringify({ target: parseInt(goalInput) || 30 }),
     });
 
-    setWeeklyGoal(parseInt(goalInput) || 15);
+    setWeeklyGoal(parseInt(goalInput) || 30);
     setShowGoalModal(false);
   };
 

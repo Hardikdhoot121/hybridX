@@ -5,7 +5,8 @@ const dateKey = (day) =>
   `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
 export const dashboardData = {
-  dailyGoal: { solved: 10, target: 15 },
+  // even it would have worked if i have not changed this file but for the code consistency and he goal I am changing this. 
+  dailyGoal: { solved: 10, target: 30 },
   attendance: {
     month: currentMonth, // 0-indexed
     year: currentYear,
