@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
 import { handleError, handleSuccess } from "../utils";
 
 function Login() {
@@ -59,11 +60,18 @@ function Login() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
         <form
-          className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg"
+          className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg relative"
           onSubmit={handleLogin}
         >
+          <button
+            type="button"
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-2 text-slate-400 hover:text-white mb-4 text-sm font-medium transition-colors cursor-pointer"
+          >
+            <ArrowLeft size={16} /> Back to Dashboard
+          </button>
           <div className="text-center mb-6">
             <span className="text-blue-500 font-bold tracking-wider text-xs uppercase block mb-1">
               SIGN IN
