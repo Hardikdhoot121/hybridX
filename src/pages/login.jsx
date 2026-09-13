@@ -64,7 +64,17 @@ function Login() {
           className="w-full max-w-md bg-slate-800 p-8 rounded-xl shadow-lg"
           onSubmit={handleLogin}
         >
-          <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
+          <div className="text-center mb-6">
+            <span className="text-blue-500 font-bold tracking-wider text-xs uppercase block mb-1">
+              SIGN IN
+            </span>
+            <h1 className="text-3xl font-extrabold text-white mb-2">
+              Welcome back
+            </h1>
+            <p className="text-slate-400 text-sm">
+              Log in to continue practicing and competing.
+            </p>
+          </div>
 
           <label className="text-white">Email</label>
           <input
