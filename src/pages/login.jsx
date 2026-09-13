@@ -67,10 +67,10 @@ function Login() {
         >
           <button
             type="button"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/")}
             className="flex items-center gap-2 text-slate-400 hover:text-white mb-4 text-sm font-medium transition-colors cursor-pointer"
           >
-            <ArrowLeft size={16} /> Back to Dashboard
+            <ArrowLeft size={16} /> Back to Home
           </button>
           <div className="text-center mb-6">
             <span className="text-blue-500 font-bold tracking-wider text-xs uppercase block mb-1">

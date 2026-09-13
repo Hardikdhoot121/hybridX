@@ -74,7 +74,7 @@ function Signup() {
             onClick={() => navigate("/")}
             className="flex items-center gap-2 text-slate-400 hover:text-white mb-4 text-sm font-medium transition-colors cursor-pointer"
           >
-            <ArrowLeft size={16} /> Back
+            <ArrowLeft size={16} /> Back to Home
           </button>
           <h1 className="text-2xl font-bold text-white mb-6">Sign Up</h1>
 
