@@ -22,7 +22,7 @@ export const setWeeklyGoal = async (req, res) => {
     );
 
     if (redis && redis.status === "ready") {
-      redis.del(`goal:weekly:${userId}:${dateKey}`).catch(() => { });
+      redis.del(`goal:weekly:${userId}:${dateKey}`).catch(() => {});
     }
 
     res.json({
@@ -46,7 +46,7 @@ export const getWeeklyGoal = async (req, res) => {
       try {
         const cached = await redis.get(cacheKey);
         if (cached) return res.json(JSON.parse(cached));
-      } catch (e) { }
+      } catch (e) {}
     }
 
     let goal = await WeeklyGoal.findOne({ userId, weekStart });
@@ -54,7 +54,7 @@ export const getWeeklyGoal = async (req, res) => {
       goal = await WeeklyGoal.create({
         userId,
         weekStart,
-        target: 30, // default
+        target: 30,
       });
     }
 
@@ -64,7 +64,7 @@ export const getWeeklyGoal = async (req, res) => {
     };
 
     if (redis && redis.status === "ready") {
-      redis.setex(cacheKey, 86400, JSON.stringify(responseData)).catch(() => { });
+      redis.setex(cacheKey, 86400, JSON.stringify(responseData)).catch(() => {});
     }
 
     res.json(responseData);
@@ -78,17 +78,7 @@ export const getWeeklyAnalytics = async (req, res) => {
     const userId = req.user.id;
     const weekStart = getWeekStart();
     const now = new Date();
-    const dateKey = weekStart.toISOString().slice(0, 10);
-    const cacheKey = `analytics:weekly:${userId}:${dateKey}`;
 
-    if (redis && redis.status === "ready") {
-      try {
-        const cached = await redis.get(cacheKey);
-        if (cached) return res.json(JSON.parse(cached));
-      } catch (e) { }
-    }
-
-    // cache miss -> fetch from MongoDB
     const attempts = await PracticeAttempt.find({
       userId,
       solvedAt: { $gte: weekStart, $lte: now },
@@ -100,19 +90,12 @@ export const getWeeklyAnalytics = async (req, res) => {
       ? Math.round((correct / totalSolved) * 100)
       : 0;
 
-    const responseData = {
+    res.json({
       totalSolved,
       correct,
       accuracy,
       challengesTaken: totalSolved,
-    };
-
-    // Cache in Redis 3600 sec 
-    if (redis && redis.status === "ready") {
-      redis.setex(cacheKey, 3600, JSON.stringify(responseData)).catch(() => { });
-    }
-
-    res.json(responseData);
+    });
   } catch (err) {
     res.status(500).json({ message: "Weekly analytics failed" });
   }

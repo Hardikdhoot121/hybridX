@@ -20,10 +20,6 @@ router.post("/attempt", protect, async (req, res) => {
       solvedAt: { $gte: weekStart, $lte: now },
     });
 
-    if (redis && redis.status === "ready") {
-      const dateKey = weekStart.toISOString().slice(0, 10);
-      redis.del(`analytics:weekly:${req.user.id}:${dateKey}`).catch(() => {});
-    }
 
     const totalSolved = attempts.length;
     const correct = attempts.filter((a) => a.isCorrect).length;
