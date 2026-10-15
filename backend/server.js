@@ -13,6 +13,7 @@ import compression from "compression";
 
 dotenv.config({ path: fileURLToPath(new URL('.env', import.meta.url)) });
 initPassport(); // must run after dotenv.config() so env vars are available
+import("./config/redis.js");
 
 
 const app = express();

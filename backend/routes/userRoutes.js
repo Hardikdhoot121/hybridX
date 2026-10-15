@@ -1,6 +1,7 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
 import User from "../models/User.js";
+import redis from "../config/redis.js";
 
 const router = express.Router();
 
@@ -11,27 +12,10 @@ const router = express.Router();
  * =========================
  */
 router.get("/profile", protect, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select("-password");
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    res.json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Failed to fetch profile",
-      error: error.message,
-    });
-  }
+  res.json({
+    success: true,
+    user: req.user,
+  });
 });
 
 /**
@@ -62,6 +46,10 @@ router.put("/profile", protect, async (req, res) => {
       updates,
       { new: true, runValidators: true }
     ).select("-password");
+    // cache invalidation 
+    if (redis && redis.status === "ready") {
+      redis.del(`user:${req.user._id}`).catch(() => { });
+    }
 
     res.json({
       success: true,
@@ -104,6 +92,10 @@ router.patch("/complete-profile", protect, async (req, res) => {
       },
       { new: true, runValidators: true }
     ).select("-password");
+    // cache invalidation
+    if (redis && redis.status === "ready") {
+      redis.del(`user:${req.user._id}`).catch(() => { });
+    }
 
     res.json({
       success: true,
@@ -119,4 +111,4 @@ router.patch("/complete-profile", protect, async (req, res) => {
   }
 });
 
-export default router;
+export default router;
