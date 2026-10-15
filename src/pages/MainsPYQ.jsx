@@ -123,17 +123,25 @@ useEffect(() => {
   /* ---------------- BACKEND SUBMIT ---------------- */
   const submitPracticeAttempt = async () => {
     const token = localStorage.getItem("token");
-    if (!token || !currVal || selectedOption === null) return;
+    if (!token || !currVal) return;
+
+    const isInteger = currVal.question_type === "integer";
+    if (!isInteger && selectedOption === null) return;
+    if (isInteger && (!typedAnswer || typedAnswer.trim() === "")) return;
+
+    const isCorrect = isInteger
+      ? Number(typedAnswer) === Number(currVal.answer)
+      : selectedOption === currVal.correct_option_index;
 
     const payload = {
       questionId: currVal.question_id,
-      subject: currVal.subject.toLowerCase(),
-      topic: currVal.topic || currVal.chapter,
+      subject: currVal.subject ? currVal.subject.toLowerCase() : "physics",
+      topic: currVal.topic || currVal.chapter || "General",
       difficulty: "Medium",
-      isCorrect: selectedOption === currVal.correct_option_index,
+      isCorrect,
       questionType: currVal.question_type || "mcq",
-      userAnswer: selectedOption,
-      correctAnswer: currVal.correct_option_index,
+      userAnswer: isInteger ? typedAnswer : selectedOption,
+      correctAnswer: isInteger ? currVal.answer : currVal.correct_option_index,
     };
 
     try {
@@ -147,7 +155,7 @@ useEffect(() => {
       });
 
       if (response.ok && payload.isCorrect) {
-        const trigger = { type: 'correct-answer', timestamp: Date.now(), subject: currVal.subject.toLowerCase(), questionId: currVal.question_id };
+        const trigger = { type: 'correct-answer', timestamp: Date.now(), subject: payload.subject, questionId: currVal.question_id };
         localStorage.setItem('dashboard-refresh-trigger', JSON.stringify(trigger));
         window.dispatchEvent(new StorageEvent('storage', { key: 'dashboard-refresh-trigger', newValue: JSON.stringify(trigger) }));
       }
@@ -160,16 +168,19 @@ useEffect(() => {
   const handleNext = () => {
     setCurrIndex((i) => Math.min(i + 1, questions.length - 1));
     setSelectedOption(null);
+    setTypedAnswer("");
     setShowResult(false);
   };
 
   const handlePrev = () => {
     setCurrIndex((i) => Math.max(i - 1, 0));
     setSelectedOption(null);
+    setTypedAnswer("");
     setShowResult(false);
   };
 
   const handleSubmit = () => {
+    if (showResult) return;
     setShowResult(true);
     submitPracticeAttempt();
   };
@@ -232,9 +243,9 @@ useEffect(() => {
               />
 
               <button
-                onClick={() => setShowResult(true)}
-                disabled={!typedAnswer}
-                className="bg-blue-600 px-4 py-2 rounded-xl"
+                onClick={handleSubmit}
+                disabled={!typedAnswer || showResult}
+                className="bg-blue-600 px-4 py-2 rounded-xl disabled:opacity-50"
               >
                 Submit
               </button>
@@ -279,7 +290,14 @@ useEffect(() => {
           <button onClick={handlePrev} disabled={currIndex === 0} className="px-6 py-3 border border-white/40 rounded-xl disabled:opacity-50">
             Previous
           </button>
-          <button onClick={handleSubmit} disabled={selectedOption === null || showResult} className="px-6 py-3 bg-[#3DBBF4] rounded-xl text-black font-semibold disabled:opacity-50">
+          <button
+            onClick={handleSubmit}
+            disabled={
+              showResult ||
+              (currVal.question_type === "integer" ? !typedAnswer : selectedOption === null)
+            }
+            className="px-6 py-3 bg-[#3DBBF4] rounded-xl text-black font-semibold disabled:opacity-50"
+          >
             Submit
           </button>
           <button onClick={handleNext} disabled={currIndex === questions.length - 1} className="px-6 py-3 border border-white/40 rounded-xl disabled:opacity-50">
