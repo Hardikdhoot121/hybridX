@@ -119,7 +119,7 @@ function Login() {
           </div>
 
           <a
-            href={`${import.meta.env.VITE_API_BASE_URL}/auth/google`}
+            href="/api/auth/google"
             className="flex items-center justify-center gap-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded font-semibold transition-colors"
           >
             {/* Google g logo configuraitons */}
